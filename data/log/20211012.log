@@ -1,0 +1,9 @@
+Oct 12 10:57:51  [info] -- (172.17.2.201) op.Login
+Oct 12 10:58:50  [info] admin (172.17.2.201) op.Settings.php&action=savesettings
+Oct 12 11:08:52  [info] admin (172.17.2.201) op.SubstituteUser.php?userid=8&formtoken=1be18f01ab0a5e0760f7789e04f9eade?userid=8
+Oct 12 11:09:45  [error] 81020021 (172.17.2.201) op.GroupMgr UI::exitError error=Access denied. pagetitle=Admin-Tools
+Oct 12 11:09:59  [info] 81020021 (172.17.2.201) op.ResetSu
+Oct 12 11:22:41  [info] -- (172.17.2.201) op.Login
+Oct 12 11:25:52  [error] 81020021 (172.17.2.201) op.GroupMgr UI::exitError error=Access denied. pagetitle=Admin-Tools
+Oct 12 11:30:30  [info] -- (172.17.2.201) op.Login
+Oct 12 11:30:30  [error] -- (172.17.2.201) op.Loginlogin failed

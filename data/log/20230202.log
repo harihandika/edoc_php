@@ -1,0 +1,7 @@
+Feb 02 04:26:53  [info] -- (172.16.57.113) op.Login
+Feb 02 04:26:53  [error] -- (172.16.57.113) op.Loginlogin failed
+Feb 02 04:27:00  [info] -- (172.16.57.113) op.Login
+Feb 02 04:28:37  [info] Notification service 'email': Sending notification 'send_login_data_subject' to user 'jeniffer.basa@acset.co' (2) successful.
+Feb 02 04:28:37  [info] admin (172.16.57.113) op.UsrMgr.php&action=adduser&login=21720517
+Feb 02 04:29:20  [info] admin (172.16.57.113) op.AddSubFolder?name=BPIIT & SCM&folderid=1
+Feb 02 04:29:53  [info] admin (172.16.57.113) op.UsrMgr.php&action=edituser&userid=25

@@ -1,0 +1,134 @@
+Jan 02 03:19:21  [info] -- (172.16.57.144) op.Login
+Jan 02 03:24:54  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=2
+Jan 02 03:25:52  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=12021d6c0824c2f00c8688fd1c39b47f&folderid=3&action=inherit
+Jan 02 03:29:29  [info] Notification service 'email': Sending notification 'send_login_data_subject' to user 'anggifebrianto@gmail.com' (2) successful.
+Jan 02 03:29:29  [info] admin (172.16.57.144) op.UsrMgr.php&action=adduser&login=80111528
+Jan 02 03:30:00  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=12021d6c0824c2f00c8688fd1c39b47f&action=setowner&folderid=3&ownerid=19
+Jan 02 03:30:04  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=12021d6c0824c2f00c8688fd1c39b47f&action=setowner&folderid=3&ownerid=19
+Jan 02 03:30:07  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=12021d6c0824c2f00c8688fd1c39b47f&folderid=3&action=notinherit&mode=empty
+Jan 02 03:30:25  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=12021d6c0824c2f00c8688fd1c39b47f&folderid=3&action=addaccess&userid=19&groupid=-1&mode=3
+Jan 02 03:31:08  [info] admin (172.16.57.144) op.SubstituteUser.php?userid=19&formtoken=33e613a43a81c791b22b534d9f4aad48?userid=19
+Jan 02 03:31:26  [info] 80111528 (172.16.57.144) op.ResetSu
+Jan 02 03:31:37  [info] -- (172.16.57.144) op.Login
+Jan 02 03:31:55  [info] -- (172.16.57.144) op.Login
+Jan 02 03:32:28  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=19
+Jan 02 03:32:41  [info] -- (172.16.57.144) op.Login
+Jan 02 03:33:00  [info] -- (172.16.57.144) op.Login
+Jan 02 03:33:15  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=589a29c0e8604f44f11e829f89436271&folderid=3&action=editaccess&userid=19&mode=2
+Jan 02 03:33:38  [info] -- (172.16.57.144) op.Login
+Jan 02 03:33:53  [info] -- (172.16.57.144) op.Login
+Jan 02 03:35:56  [info] admin (172.16.57.144) op.RoleMgr.php&action=editrole&roleid=2
+Jan 02 03:36:09  [info] -- (172.16.57.144) op.Login
+Jan 02 03:40:03  [info] -- (172.16.57.144) op.Login
+Jan 02 03:40:20  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=c35ce859e263b7bb42433c77877b7e68&folderid=3&action=editaccess&userid=19&mode=3
+Jan 02 03:40:28  [info] admin (172.16.57.144) op.SubstituteUser.php?userid=19&formtoken=027f4f1f973db47a97ed8e8d4a931113?userid=19
+Jan 02 04:29:12  [info] 80111528 (172.16.57.144) op.ResetSu
+Jan 02 04:31:07  [info] Notification service 'email': Sending notification 'send_login_data_subject' to user 'Bhakti@acset.co' (2) successful.
+Jan 02 04:31:07  [info] admin (172.16.57.144) op.UsrMgr.php&action=adduser&login=81160546
+Jan 02 04:31:41  [info] admin (172.16.57.144) op.RoleMgr.php&action=editrole&roleid=2
+Jan 02 04:32:03  [info] -- (172.16.57.144) op.Login
+Jan 02 04:32:54  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=20
+Jan 02 04:33:28  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=19
+Jan 02 04:34:05  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=20
+Jan 02 04:34:15  [info] -- (172.16.57.144) op.Login
+Jan 02 04:34:35  [info] -- (172.16.57.144) op.Login
+Jan 02 04:34:59  [info] -- (172.16.57.144) op.Login
+Jan 02 04:37:07  [info] Notification service 'email': Sending notification 'send_login_data_subject' to user 'ahmad.sukoco@acset.co' (2) successful.
+Jan 02 04:37:07  [info] admin (172.16.57.144) op.UsrMgr.php&action=adduser&login=81220255
+Jan 02 04:37:17  [info] -- (172.16.57.155) op.Login
+Jan 02 04:37:18  [error] 81160546 (172.16.57.155) out.UsrMgr UI::exitError error=Access denied. pagetitle=Admin-Tools
+Jan 02 04:37:34  [info] -- (172.16.57.155) op.Login
+Jan 02 04:37:34  [error] 81160546 (172.16.57.155) out.UsrMgr UI::exitError error=Access denied. pagetitle=Admin-Tools
+Jan 02 04:38:02  [info] -- (172.16.57.155) op.Login
+Jan 02 04:38:03  [error] 81160546 (172.16.57.155) out.UsrMgr UI::exitError error=Access denied. pagetitle=Admin-Tools
+Jan 02 04:40:21  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=20
+Jan 02 04:41:03  [info] -- (172.16.57.144) op.Login
+Jan 02 04:41:28  [info] -- (172.16.57.144) op.Login
+Jan 02 04:41:28  [error] -- (172.16.57.144) op.Loginlogin failed
+Jan 02 04:41:36  [info] -- (172.16.57.144) op.Login
+Jan 02 04:43:06  [info] admin (172.16.57.144) op.RoleMgr.php&action=addrole&name=Guest
+Jan 02 04:44:25  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=20
+Jan 02 04:45:32  [info] admin (172.16.57.144) op.UsrMgr.php&action=removeuser&userid=20
+Jan 02 04:46:38  [info] Notification service 'email': Sending notification 'send_login_data_subject' to user 'Bhakti.jatnika@acset.co' (2) successful.
+Jan 02 04:46:38  [info] admin (172.16.57.144) op.UsrMgr.php&action=adduser&login=81160546
+Jan 02 04:46:51  [info] -- (172.16.57.158) op.Login
+Jan 02 04:46:51  [error] 81220255 (172.16.57.158) out.UsrMgr UI::exitError error=Access denied. pagetitle=Admin-Tools
+Jan 02 04:47:17  [info] -- (172.16.57.158) op.Login
+Jan 02 04:47:17  [error] 81220255 (172.16.57.158) out.UsrMgr UI::exitError error=Access denied. pagetitle=Admin-Tools
+Jan 02 04:47:29  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=1860b7a9904a199102ea2f5a9ab9f8cb&folderid=1&action=addaccess&userid=21&groupid=-1&mode=3
+Jan 02 04:47:59  [info] -- (172.16.57.155) op.Login
+Jan 02 04:47:59  [error] 81160546 (172.16.57.155) out.UsrMgr UI::exitError error=Access denied. pagetitle=Admin-Tools
+Jan 02 04:49:31  [info] admin (172.16.57.144) op.UsrMgr.php&action=removeuser&userid=22
+Jan 02 04:50:26  [info] Notification service 'email': Sending notification 'send_login_data_subject' to user 'Bhakti.jatnika@acset.co' (2) successful.
+Jan 02 04:50:26  [info] admin (172.16.57.144) op.UsrMgr.php&action=adduser&login=81160546
+Jan 02 04:52:03  [info] Notification service 'email': Sending notification 'send_login_data_subject' to user 'Bhakti.jatnika@acset.co' (2) successful.
+Jan 02 04:52:03  [info] admin (172.16.57.144) op.UsrMgr.php&action=adduser&login=81160547
+Jan 02 04:52:41  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=24
+Jan 02 04:59:41  [info] admin (172.16.57.144) op.UsrMgr.php&action=removeuser&userid=23
+Jan 02 05:00:20  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=24
+Jan 02 05:00:40  [info] -- (172.16.57.144) op.Login
+Jan 02 05:01:24  [info] -- (172.16.57.155) op.Login
+Jan 02 05:01:24  [error] -- (172.16.57.155) op.Loginlogin failed
+Jan 02 05:01:40  [info] -- (172.16.57.155) op.Login
+Jan 02 05:03:48  [info] -- (172.16.57.144) op.Login
+Jan 02 05:06:17  [info] -- (172.16.57.144) op.Login
+Jan 02 05:08:36  [info] -- (172.16.57.144) op.Login
+Jan 02 05:09:04  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=21
+Jan 02 05:10:01  [info] -- (172.16.57.158) op.Login
+Jan 02 05:12:17  [info] -- (172.16.57.144) op.Login
+Jan 02 05:12:17  [error] -- (172.16.57.144) op.Loginlogin failed
+Jan 02 05:12:30  [info] -- (172.16.57.144) op.Login
+Jan 02 05:13:45  [info] admin (172.16.57.144) op.UsrMgr.php&action=edituser&userid=19
+Jan 02 05:14:12  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=d81ac148fb86287acf3e3e93494e18bd&folderid=3&action=delaccess&userid=19
+Jan 02 05:14:21  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=d81ac148fb86287acf3e3e93494e18bd&folderid=3&action=addaccess&userid=19&groupid=-1&mode=3
+Jan 02 05:16:27  [info] Notification service 'email': Sending notification 'new_document_email_subject' to user 'ahmad.sukoco@acset.co' (1) successful.
+Jan 02 05:16:28  [info] Notification service 'email': Sending notification 'review_request_email_subject' to user 'anggifebrianto@gmail.com' (3) successful.
+Jan 02 05:16:28  [info] 81220255 (172.16.57.158) op.AddDocument?name=Dokumen Kontrak&folderid=10
+Jan 02 05:17:16  [info] -- (172.16.57.144) op.Login
+Jan 02 05:20:24  [info] -- (172.16.57.144) op.Login
+Jan 02 05:20:37  [info] admin (172.16.57.144) op.FolderAccess.php?formtoken=2054c9d71e0634c1e5771d051594cdda&folderid=3&action=editaccess&userid=19&mode=4
+Jan 02 05:20:48  [info] admin (172.16.57.144) op.SubstituteUser.php?userid=19&formtoken=75e6f17d4926f624cb0cb3cef422f615?userid=19
+Jan 02 05:21:46  [error] Notification service 'email': Sending notification 'review_submit_email_subject' to user 'ahmad.sukoco@acset.co' (1) failed.
+Jan 02 05:21:46  [error] Notification service 'email': Sending notification 'document_status_changed_email_subject' to user 'ahmad.sukoco@acset.co' (1) failed.
+Jan 02 05:21:46  [info] Notification service 'email': Sending notification 'approval_request_email_subject' to user 'Bhakti.jatnika@acset.co' (4) successful.
+Jan 02 05:28:08  [error] Notification service 'email': Sending notification 'approval_submit_email_subject' to user 'ahmad.sukoco@acset.co' (2) failed.
+Jan 02 05:28:08  [error] Notification service 'email': Sending notification 'approval_submit_email_subject' to user 'ahmad.sukoco@acset.co' (1) failed.
+Jan 02 05:28:08  [error] Notification service 'email': Sending notification 'document_status_changed_email_subject' to user 'ahmad.sukoco@acset.co' (1) failed.
+Jan 02 05:28:08  [info] 81160547 (172.16.57.155) op.ApproveDocument?documentid=134&version=1&approvalType=ind&approvalStatus=1
+Jan 02 05:28:46  [info] 81220255 (172.16.57.158) op.ViewOnline.php?documentid=134&version=1
+Jan 02 06:45:11  [info] -- (172.16.57.162) op.Login
+Jan 02 06:45:11  [error] 80111528 (172.16.57.162) out.ViewFolder.php?folderid=1 UI::exitError error=Invalid Folder ID pagetitle=Folder 'Invalid Folder ID'
+Jan 02 06:45:19  [info] -- (172.16.57.162) op.Login
+Jan 02 06:45:20  [error] 80111528 (172.16.57.162) out.ViewFolder.php?folderid=1 UI::exitError error=Invalid Folder ID pagetitle=Folder 'Invalid Folder ID'
+Jan 02 06:45:25  [error] 80111528 (172.16.57.162) out.ViewFolder.php?folderid=1 UI::exitError error=Invalid Folder ID pagetitle=Folder 'Invalid Folder ID'
+Jan 02 06:45:29  [info] 80111528 (172.16.57.162) op.ResetSu
+Jan 02 06:46:26  [info] admin (172.16.57.162) op.SubstituteUser.php?userid=19&formtoken=75e6f17d4926f624cb0cb3cef422f615?userid=19
+Jan 02 06:51:40  [info] Notification service 'email': Sending notification 'review_request_email_subject' to user 'Bhakti.jatnika@acset.co' (3) successful.
+Jan 02 06:51:40  [info] 80111528 (172.16.57.162) op.AddDocument?name=Dokumen Transmitall&folderid=10
+Jan 02 06:52:43  [info] 80111528 (172.16.57.162) op.ResetSu
+Jan 02 06:53:20  [info] -- (172.16.57.162) op.Login
+Jan 02 06:54:20  [info] admin (172.16.57.162) op.UsrMgr.php&action=edituser&userid=7
+Jan 02 06:54:51  [info] -- (172.16.57.162) op.Login
+Jan 02 06:56:05  [info] -- (172.16.57.162) op.Login
+Jan 02 06:59:41  [info] -- (172.16.57.162) op.Login
+Jan 02 07:02:03  [info] Notification service 'email': Sending notification 'new_document_email_subject' to user 'arief.dwi@acset.co' (1) successful.
+Jan 02 07:02:04  [info] Notification service 'email': Sending notification 'new_document_email_subject' to user 'anggifebrianto@gmail.com' (1) successful.
+Jan 02 07:02:04  [info] Notification service 'email': Sending notification 'review_request_email_subject' to user 'arief.dwi@acset.co' (3) successful.
+Jan 02 07:02:04  [info] 80111528 (172.16.57.162) op.AddDocument?name=Dokumen Transmitall2&folderid=10
+Jan 02 07:03:03  [info] -- (172.16.57.162) op.Login
+Jan 02 07:04:48  [error] Notification service 'email': Sending notification 'review_submit_email_subject' to user 'arief.dwi@acset.co' (1) failed.
+Jan 02 07:04:48  [error] Notification service 'email': Sending notification 'review_submit_email_subject' to user 'anggifebrianto@gmail.com' (1) failed.
+Jan 02 07:04:48  [error] Notification service 'email': Sending notification 'document_status_changed_email_subject' to user 'arief.dwi@acset.co' (1) failed.
+Jan 02 07:04:48  [error] Notification service 'email': Sending notification 'document_status_changed_email_subject' to user 'anggifebrianto@gmail.com' (1) failed.
+Jan 02 07:04:49  [info] Notification service 'email': Sending notification 'approval_request_email_subject' to user 'Bhakti.jatnika@acset.co' (4) successful.
+Jan 02 07:05:14  [info] -- (172.16.57.162) op.Login
+Jan 02 07:06:13  [error] Notification service 'email': Sending notification 'approval_submit_email_subject' to user 'anggifebrianto@gmail.com' (2) failed.
+Jan 02 07:06:13  [error] Notification service 'email': Sending notification 'approval_submit_email_subject' to user 'arief.dwi@acset.co' (1) failed.
+Jan 02 07:06:13  [error] Notification service 'email': Sending notification 'approval_submit_email_subject' to user 'anggifebrianto@gmail.com' (1) failed.
+Jan 02 07:06:13  [error] Notification service 'email': Sending notification 'document_status_changed_email_subject' to user 'arief.dwi@acset.co' (1) failed.
+Jan 02 07:06:13  [error] Notification service 'email': Sending notification 'document_status_changed_email_subject' to user 'anggifebrianto@gmail.com' (1) failed.
+Jan 02 07:06:13  [info] 81160547 (172.16.57.162) op.ApproveDocument?documentid=136&version=1&approvalType=ind&approvalStatus=1
+Jan 02 07:07:16  [info] -- (172.16.57.162) op.Login
+Jan 02 07:08:01  [info] admin (172.16.57.162) op.FolderAccess.php?formtoken=29e777a1b352292c5f0353729e575421&folderid=3&action=addaccess&userid=21&groupid=-1&mode=3
+Jan 02 07:08:47  [error] Notification service 'email': Sending notification 'access_permission_changed_email_subject' to user 'anggifebrianto@gmail.com' (1) failed.
+Jan 02 07:08:47  [info] admin (172.16.57.162) op.FolderAccess.php?formtoken=29e777a1b352292c5f0353729e575421&folderid=3&action=setdefault&mode=3

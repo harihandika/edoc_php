@@ -1,0 +1,10 @@
+Mar 27 04:36:25  [info] -- (172.16.14.189) op.Login
+Mar 27 04:36:25  [error] -- (172.16.14.189) op.Loginlogin failed
+Mar 27 04:36:41  [info] -- (172.16.14.189) op.Login
+Mar 27 04:38:00  [info] -- (172.16.56.43) op.Login
+Mar 27 04:39:08  [info] admin (172.16.56.43) op.UsrMgr.php&action=edituser&userid=25
+Mar 27 04:39:37  [info] admin (172.16.56.43) op.AddSubFolder?name=IT - Infrastructure&folderid=23
+Mar 27 04:40:07  [info] admin (172.16.56.43) op.UsrMgr.php&action=edituser&userid=25
+Mar 27 04:43:37  [info] 21720517 (172.16.14.189) op.AddSubFolder?name=Lisensi Autodesk 2023&folderid=24
+Mar 27 04:49:40  [info] 21720517 (172.16.14.189) op.AddDocument?name=Bhactiar&folderid=25
+Mar 27 04:57:51  [info] admin (172.16.56.43) op.UsrMgr.php&action=edituser&userid=25

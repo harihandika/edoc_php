@@ -1,0 +1,1 @@
+C:\xampp\htdocs\seeddms\views\bootstrap\class.ObjectCheck.php on line 618, error tipe data

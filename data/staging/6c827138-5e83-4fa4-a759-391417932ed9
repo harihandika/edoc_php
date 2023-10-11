@@ -1,0 +1,24 @@
+- tabel grops
+- buat authorization berdasarkan group
+- cari $groups pada folder UsrMgr
+- liat class.ViewDocument
+- untuk role admin, user, owner liat di file Inc.ClassUser.php
+- M_NONE 1, M_READ 2, M_READWRITE 3, M_ALL 4 semua ada di inc.AccessUtils.php
+- liat class.FolderAccess
+- cek di class.ViewDocument untuk $accessobject
+- cek Home Folder untuk akses user di user management
+- getFolderChooserHtml, formField
+- di class.bootstrap.php ada : 	1. delete-folder-btn
+				2. btn btn-mini
+				3. access-folder-btn
+				4. delete-document-btn
+				5. lock-document-btn
+				6. fa fa-edit
+				7. lock-document-btn
+				8. access-document
+
+inc.classUser.php
+- function isAdmin
+- function isGuest
+
+folder di edit pada file 
