@@ -85,6 +85,9 @@ class SeedDMS_View_AdminTools extends SeedDMS_Bootstrap_Style {
 		if ($logfileenable && ($accessop->check_view_access('LogManagement')))
 			echo self::rowButton("../out/out.LogManagement.php", "list", "log_management");
 ?>
+<?php if($accessop->check_view_access('WorkLocation')) { ?>
+		<?= self::rowButton("../out/out.WorkLocation.php", "building", "work_location"); ?>
+<?php } ?>
 		<?php echo $this->callHook('endOfRow', 2); ?>
 	</div>
 	<?= self::startRow(); ?>
@@ -97,6 +100,9 @@ class SeedDMS_View_AdminTools extends SeedDMS_Bootstrap_Style {
 <?php } ?>
 <?php if($accessop->check_view_access('AttributeMgr')) { ?>
 		<?= self::rowButton("../out/out.AttributeMgr.php", "tags", "global_attributedefinitions"); ?>
+<?php } ?>
+<?php if($accessop->check_view_access('RackLocation')) { ?>
+		<?= self::rowButton("../out/out.AttributeMgr.php", "table", "rack_location"); ?>
 <?php } ?>
 		<?php echo $this->callHook('endOfRow', 3); ?>
 	<?= self::endRow(); ?>

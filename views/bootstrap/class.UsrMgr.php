@@ -253,9 +253,6 @@ $(document).ready( function() {
 		$workflowmode = $this->params['workflowmode'];
 		$quota = $this->params['quota'];
 		
-		echo "<pre>";
-		var_dump($groups);
-		echo "<pre>";
 ?>
 	<form class="form-horizontal" action="../op/op.UsrMgr.php" method="post" enctype="multipart/form-data" name="form" id="form">
 <?php

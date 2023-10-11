@@ -2889,6 +2889,11 @@ class SeedDMS_Core_DMS {
 		return $classname::getInstance($id, $this, '');
 	} /* }}} */
 
+	function getWorklocation($id) { /* {{{ */
+		$classname = $this->classnames['group'];
+		return $classname::getInstance($id, $this, '');
+	} /* }}} */
+
 	/**
 	 * Get a group by its name
 	 *

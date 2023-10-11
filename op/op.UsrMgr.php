@@ -95,6 +95,14 @@ if ($action == "adduser") {
 			}
 		}
 
+		
+		if(isset($_POST["worklocations"]) && $_POST["worklocations"]) {
+			foreach($_POST["worklocations"] as $worklocationid) {
+				$worklocation = $dms->getWorklocation($worklocationid);
+				$worklocation->addUser($newUser);
+			}
+		}
+
 		/* Set substitute user if set */
 		if(isset($_POST["substitute"]) && $_POST["substitute"]) {
 			foreach($_POST["substitute"] as $substitute) {
