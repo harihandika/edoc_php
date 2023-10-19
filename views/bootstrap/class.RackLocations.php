@@ -111,7 +111,7 @@ $(document).ready( function() {
 		$accessop = $this->params['accessobject'];
 
 		if($selrole) {
-			if(!$selrole->isUsed() && $accessop->check_controller_access('RoleMgr', array('action'=>'removerole'))) {
+			if(!$selrole->isUsed() && $accessop->check_controller_access('RackLocation', array('action'=>'removerole'))) {
 ?>
 			<form style="display: inline-block;" method="post" action="../op/op.RackLocations.php" >
 				<?php echo createHiddenFieldWithKey('removerole'); ?>
@@ -234,16 +234,16 @@ $(document).ready( function() {
 		);
 ?>
 </form>
-	<div class="ajax" style="margin-bottom: 15px;" data-view="RoleMgr" data-action="actionmenu" <?php echo ($selrole ? "data-query=\"roleid=".$selrole->getID()."\"" : "") ?>></div>
+	<div class="ajax" style="margin-bottom: 15px;" data-view="RackLocation" data-action="actionmenu" <?php echo ($selrole ? "data-query=\"roleid=".$selrole->getID()."\"" : "") ?>></div>
 <?php if($accessop->check_view_access($this, array('action'=>'info'))) { ?>
-	<div class="ajax" data-view="RoleMgr" data-action="info" <?php echo ($selrole ? "data-query=\"roleid=".$selrole->getID()."\"" : "") ?>></div>
+	<div class="ajax" data-view="RackLocation" data-action="info" <?php echo ($selrole ? "data-query=\"roleid=".$selrole->getID()."\"" : "") ?>></div>
 <?php } ?>
 </div>
 
 <div class="span8">
 <?php if($accessop->check_view_access($this, array('action'=>'form'))) { ?>
 	<div class="well">
-		<div class="ajax" data-view="RoleMgr" data-action="form" <?php echo ($selrole ? "data-query=\"roleid=".$selrole->getID()."\"" : "") ?>></div>
+		<div class="ajax" data-view="RackLocation" data-action="form" <?php echo ($selrole ? "data-query=\"roleid=".$selrole->getID()."\"" : "") ?>></div>
 	</div>
 <?php } else {
 	$this->errorMsg(getMLText('access_denied'));
