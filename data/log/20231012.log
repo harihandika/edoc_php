@@ -1,0 +1,10 @@
+Oct 12 05:04:22  [info] -- (::1) op.Login
+Oct 12 05:04:22  [error] admin (::1) out.WorkLocation UI::exitError error=Access denied. pagetitle=Admin-Tools
+Oct 12 05:04:38  [info] -- (::1) op.Login
+Oct 12 05:04:38  [error] admin (::1) out.WorkLocation UI::exitError error=Access denied. pagetitle=Admin-Tools
+Oct 12 05:04:56  [info] -- (::1) op.Login
+Oct 12 05:04:56  [error] admin (::1) out.WorkLocation UI::exitError error=Access denied. pagetitle=Admin-Tools
+Oct 12 05:05:21  [error] admin (::1) out.WorkLocation UI::exitError error=Access denied. pagetitle=Admin-Tools
+Oct 12 05:38:44  [error] admin (::1) out.WorkLocation UI::exitError error=Access denied. pagetitle=Admin-Tools
+Oct 12 05:38:47  [error] admin (::1) out.WorkLocation UI::exitError error=Access denied. pagetitle=Admin-Tools
+Oct 12 06:00:28  [error] admin (::1) out.WorkLocation UI::exitError error=Access denied. pagetitle=Admin-Tools

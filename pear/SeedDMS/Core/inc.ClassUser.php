@@ -228,6 +228,213 @@ class SeedDMS_Core_Role { /* {{{ */
 	} /* }}} */
 
 } /* }}} */
+class SeedDMS_Core_Rack { /* {{{ */
+	/**
+	 * @var integer id of role
+	 *
+	 * @access protected
+	 */
+	var $_id;
+
+	/**
+	 * @var string name of role
+	 *
+	 * @access protected
+	 */
+	var $_login;
+
+	/**
+	 * @var string role of user. Can be one of SeedDMS_Core_User::role_user,
+	 *      SeedDMS_Core_User::role_admin, SeedDMS_Core_User::role_guest
+	 *
+	 * @access protected
+	 */
+	var $_role;
+
+	/**
+	 * @var array list of status without access
+	 *
+	 * @access protected
+	 */
+	var $_noaccess;
+
+	/**
+	 * @var object reference to the dms instance this user belongs to
+	 *
+	 * @access protected
+	 */
+	var $_dms;
+
+	const role_user = '0';
+	const role_admin = '1';
+	const role_guest = '2';
+
+	function __construct($id, $name, $role, $noaccess=array()) { /* {{{ */
+		$this->_id = $id;
+		$this->_name = $name;
+		$this->_role = $role;
+		$this->_noaccess = $noaccess;
+		$this->_dms = null;
+	} /* }}} */
+
+	/**
+	 * Create an instance of a role object
+	 *
+	 * @param string|integer $id Id, login name, or email of user, depending
+	 * on the 3rd parameter.
+	 * @param object $dms instance of dms
+	 * @param string $by search by [name|email]. If 'name' is passed, the method
+	 * will check for the 4th paramater and also filter by email. If this
+	 * parameter is left empty, the user will be search by its Id.
+	 * @param string $email optional email address if searching for name
+	 * @return object instance of class SeedDMS_Core_User
+	 */
+	public static function getInstance($id, $dms, $by='') { /* {{{ */
+		$db = $dms->getDB();
+
+		switch($by) {
+		case 'name':
+			$queryStr = "SELECT * FROM `tblRoles` WHERE `name` = ".$db->qstr($id);
+			break;
+		default:
+			$queryStr = "SELECT * FROM `tblRoles` WHERE id = " . (int) $id;
+		}
+
+		$resArr = $db->getResultArray($queryStr);
+		if (is_bool($resArr) && $resArr == false) return false;
+		if (count($resArr) != 1) return false;
+
+		$resArr = $resArr[0];
+
+		$role = new self($resArr["id"], $resArr["name"], $resArr["role"], $resArr['noaccess'] ? explode(',', $resArr['noaccess']) : array());
+		$role->setDMS($dms);
+		return $role;
+	} /* }}} */
+
+	public static function getAllInstances($orderby, $dms) { /* {{{ */
+		$db = $dms->getDB();
+
+		if($orderby == 'name')
+			$queryStr = "SELECT * FROM `tblRoles` ORDER BY `name`";
+		else
+			$queryStr = "SELECT * FROM `tblRoles` ORDER BY `id`";
+		$resArr = $db->getResultArray($queryStr);
+
+		if (is_bool($resArr) && $resArr == false)
+			return false;
+
+		$roles = array();
+
+		for ($i = 0; $i < count($resArr); $i++) {
+			$role = new self($resArr[$i]["id"], $resArr[$i]["name"], $resArr[$i]["role"], explode(',', $resArr[$i]['noaccess']));
+			$role->setDMS($dms);
+			$roles[$i] = $role;
+		}
+
+		return $roles;
+} /* }}} */
+
+	function setDMS($dms) {
+		$this->_dms = $dms;
+	}
+
+	function getID() { return $this->_id; }
+
+	function getName() { return $this->_name; }
+
+	function setName($newName) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblRoles` SET `name` =".$db->qstr($newName)." WHERE `id` = " . $this->_id;
+		$res = $db->getResult($queryStr);
+		if (!$res)
+			return false;
+
+		$this->_name = $newName;
+		return true;
+	} /* }}} */
+
+	function isAdmin() { return ($this->_role == SeedDMS_Core_Role::role_admin); }
+
+	function isGuest() { return ($this->_role == SeedDMS_Core_Role::role_guest); }
+
+	function getRole() { return $this->_role; }
+
+	function setRole($newrole) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblRoles` SET `role` = " . $newrole . " WHERE `id` = " . $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+
+		$this->_role = $newrole;
+		return true;
+	} /* }}} */
+
+	function getNoAccess() { return $this->_noaccess; }
+
+	function setNoAccess($noaccess) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblRoles` SET `noaccess` = " . $db->qstr($noaccess ? implode(',',$noaccess) : '') . " WHERE `id` = " . $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+
+		$this->_noaccess = $noaccess;
+		return true;
+	} /* }}} */
+
+	/**
+	 * Delete role
+	 *
+	 * @return boolean true on success or false in case of an error
+	 */
+	function remove() { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "DELETE FROM `tblRoles` WHERE `id` = " . $this->_id;
+		if (!$db->getResult($queryStr)) {
+			return false;
+		}
+
+		return true;
+	} /* }}} */
+
+	function isUsed() { /* {{{ */
+		$db = $this->_dms->getDB();
+		
+		$queryStr = "SELECT * FROM `tblUsers` WHERE `role`=".$this->_id;
+		$resArr = $db->getResultArray($queryStr);
+		if (is_array($resArr) && count($resArr) == 0)
+			return false;
+		return true;
+	} /* }}} */
+
+	function getUsers() { /* {{{ */
+		$db = $this->_dms->getDB();
+		
+		if (!isset($this->_users)) {
+			$queryStr = "SELECT * FROM `tblUsers` WHERE `role`=".$this->_id;
+			$resArr = $db->getResultArray($queryStr);
+			if (is_bool($resArr) && $resArr == false)
+				return false;
+
+			$this->_users = array();
+
+			$classnamerole = $this->_dms->getClassname('role');
+
+			$classname = $this->_dms->getClassname('user');
+			foreach ($resArr as $row) {
+				$role = $classnamerole::getInstance($row['role'], $this->_dms);
+				$user = new $classname($row["id"], $row["login"], $row["pwd"], $row["fullName"], $row["email"], $row["language"], $row["theme"], $row["comment"], $role, $row['hidden']);
+				$user->setDMS($this->_dms);
+				array_push($this->_users, $user);
+			}
+		}
+		return $this->_users;
+	} /* }}} */
+
+} /* }}} */
 
 /**
  * Class to represent a user in the document management system
@@ -1431,6 +1638,30 @@ class SeedDMS_Core_User { /* {{{ */
 		return $this->_groups;
 	} /* }}} */
 
+	function getWorkLocations() { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		if (!isset($this->_worklocations))
+		{
+			$queryStr = "SELECT `tblWorkLocations`.*, `tblWorkMembers`.`userID` FROM `tblWorkLocations` ".
+				"LEFT JOIN `tblWorkMembers` ON `tblWorkLocations`.`id` = `tblWorkMembers`.`worklocationID` ".
+				"WHERE `tblWorkMembers`.`userID`='". $this->_id ."'";
+			$resArr = $db->getResultArray($queryStr);
+			if (is_bool($resArr) && $resArr == false)
+				return false;
+
+			$this->_worklocations = array();
+			$classname = $this->_dms->getClassname('worklocation');
+			foreach ($resArr as $row) {
+				/** @var SeedDMS_Core_WorkLocation $worklocation */
+				$worklocation = new $classname((int) $row["id"], $row["name"], $row["comment"]);
+				$worklocation->setDMS($this->_dms);
+				array_push($this->_worklocations, $worklocation);
+			}
+		}
+		return $this->_worklocations;
+	} /* }}} */
+
 	/**
 	 * Checks if user is member of a given group
 	 *
@@ -1439,6 +1670,10 @@ class SeedDMS_Core_User { /* {{{ */
 	 */
 	function isMemberOfGroup($group) { /* {{{ */
 		return $group->isMember($this);
+	} /* }}} */
+
+	function isMemberOfWorkLocation($worklocation) { /* {{{ */
+		return $worklocation->isMember($this);
 	} /* }}} */
 
 	/**

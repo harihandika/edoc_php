@@ -48,6 +48,11 @@ if (is_bool($groups)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
 }
 
+$worklocations = $dms->getAllWorkLocations();
+if (is_bool($worklocations)) {
+	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
+}
+
 $roles = $dms->getAllRoles();
 if (is_bool($roles)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
@@ -63,6 +68,7 @@ if($view) {
 	$view->setParam('seluser', $seluser);
 	$view->setParam('allusers', $users);
 	$view->setParam('allgroups', $groups);
+	$view->setParam('allworklocations', $worklocations);
 	$view->setParam('allroles', $roles);
 	$view->setParam('passwordstrength', $settings->_passwordStrength);
 	$view->setParam('passwordexpiration', $settings->_passwordExpiration);

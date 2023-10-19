@@ -252,7 +252,6 @@ $(document).ready( function() {
 		$undeluserids = $this->params['undeluserids'];
 		$workflowmode = $this->params['workflowmode'];
 		$quota = $this->params['quota'];
-		
 ?>
 	<form class="form-horizontal" action="../op/op.UsrMgr.php" method="post" enctype="multipart/form-data" name="form" id="form">
 <?php
@@ -339,7 +338,7 @@ $(document).ready( function() {
 			$options[] = array($worklocation->getID(), htmlspecialchars($worklocation->getName()), ($currUser && $worklocation->isMember($currUser)));
 		}
 		$this->formField(
-			"Work Location",
+			"Work Location",	
 			array(
 				'element'=>'select',
 				'name'=>'worklocations[]',
@@ -595,6 +594,7 @@ $(document).ready( function() {
 		$seluser = $this->params['seluser'];
 		$users = $this->params['allusers'];
 		$groups = $this->params['allgroups'];
+		$worklocations = $this->params['allworklocations'];
 		$passwordstrength = $this->params['passwordstrength'];
 		$passwordexpiration = $this->params['passwordexpiration'];
 		$httproot = $this->params['httproot'];

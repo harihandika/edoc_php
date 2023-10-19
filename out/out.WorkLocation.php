@@ -42,20 +42,22 @@ if (is_bool($allUsers)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
 }
 
-$allGroups = $dms->getAllGroups();
-if (is_bool($allGroups)) {
+$allWorkLocations = $dms->getAllWorkLocations();
+if (is_bool($allWorkLocations)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
 }
 
-if(isset($_GET['groupid']) && $_GET['groupid']) {
-	$selgroup = $dms->getGroup($_GET['groupid']);
+// coba cek
+if(isset($_GET['worklocationid']) && $_GET['worklocationid']) {
+	$selgroup = $dms->getWorkLocation($_GET['worklocationid']);
 } else {
 	$selgroup = null;
 }
 
+
 if($view) {
 	$view->setParam('selgroup', $selgroup);
-	$view->setParam('allgroups', $allGroups);
+	$view->setParam('allworklocations', $allWorkLocations);
 	$view->setParam('allusers', $allUsers);
 	$view->setParam('strictformcheck', $settings->_strictFormCheck);
 	$view->setParam('cachedir', $settings->_cacheDir);

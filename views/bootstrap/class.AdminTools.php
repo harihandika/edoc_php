@@ -102,7 +102,7 @@ class SeedDMS_View_AdminTools extends SeedDMS_Bootstrap_Style {
 		<?= self::rowButton("../out/out.AttributeMgr.php", "tags", "global_attributedefinitions"); ?>
 <?php } ?>
 <?php if($accessop->check_view_access('RackLocation')) { ?>
-		<?= self::rowButton("../out/out.AttributeMgr.php", "table", "rack_location"); ?>
+		<?= self::rowButton("../out/out.RackLocations.php", "table", "rack_location"); ?>
 <?php } ?>
 		<?php echo $this->callHook('endOfRow', 3); ?>
 	<?= self::endRow(); ?>

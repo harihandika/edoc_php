@@ -1,0 +1,10 @@
+Oct 13 04:00:37  [info] -- (::1) op.Login
+Oct 13 09:06:27  [error] admin (::1) op.WorkLocation UI::exitError error=Invalid Request Token pagetitle=Admin-Tools
+Oct 13 09:06:36  [error] admin (::1) op.WorkLocation UI::exitError error=Invalid Request Token pagetitle=Admin-Tools
+Oct 13 09:11:20  [error] admin (::1) op.WorkLocation UI::exitError error=Invalid Request Token pagetitle=Admin-Tools
+Oct 13 09:15:52  [error] admin (::1) op.WorkLocation UI::exitError error=Invalid Request Token pagetitle=Admin-Tools
+Oct 13 09:24:46  [error] admin (::1) op.WorkLocation UI::exitError error=Invalid Request Token pagetitle=Admin-Tools
+Oct 13 09:30:16  [error] admin (::1) op.WorkLocation UI::exitError error=Invalid Request Token pagetitle=Admin-Tools
+Oct 13 09:30:25  [error] admin (::1) op.WorkLocation UI::exitError error=Invalid Request Token pagetitle=Admin-Tools
+Oct 13 09:32:26  [error] admin (::1) op.WorkLocation UI::exitError error=An error has occurred pagetitle=Admin-Tools
+Oct 13 09:32:37  [info] admin (::1) op.WorkLocation&action=addworklocation&name=Sriwijaya University

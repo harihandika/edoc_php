@@ -29,7 +29,7 @@ require_once("class.Bootstrap.php");
  *             2010-2012 Uwe Steinmann
  * @version    Release: @package_version@
  */
-class SeedDMS_View_RoleMgr extends SeedDMS_Bootstrap_Style {
+class SeedDMS_View_RackLocations extends SeedDMS_Bootstrap_Style {
 
 	function js() { /* {{{ */
 		$selrole = $this->params['selrole'];
@@ -63,7 +63,7 @@ $(document).ready( function() {
 	});
 	$( "#selector" ).change(function() {
 		$('div.ajax').trigger('update', {roleid: $(this).val()});
-		window.history.pushState({"html":"","pageTitle":""},"", '../out/out.RoleMgr.php?roleid=' + $(this).val());
+		window.history.pushState({"html":"","pageTitle":""},"", '../out/out.RackLocations.php?roleid=' + $(this).val());
 	});
 });
 <?php
@@ -113,7 +113,7 @@ $(document).ready( function() {
 		if($selrole) {
 			if(!$selrole->isUsed() && $accessop->check_controller_access('RoleMgr', array('action'=>'removerole'))) {
 ?>
-			<form style="display: inline-block;" method="post" action="../op/op.RoleMgr.php" >
+			<form style="display: inline-block;" method="post" action="../op/op.RackLocations.php" >
 				<?php echo createHiddenFieldWithKey('removerole'); ?>
 				<input type="hidden" name="roleid" value="<?php echo $selrole->getID()?>">
 				<input type="hidden" name="action" value="removerole">
@@ -126,17 +126,18 @@ $(document).ready( function() {
 
 	function form() { /* {{{ */
 		$selrole = $this->params['selrole'];
-		
-		$this->showRoleForm($selrole);
+
+		$this->showRackLocationForm($selrole);
 	} /* }}} */
 
-	function showRoleForm($currRole) { /* {{{ */
-		
+	function showRackLocationForm($currRole) { /* {{{ */
+
+		exit();
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
 		$accessop = $this->params['accessobject'];
 ?>
-	<form class="form-horizontal" action="../op/op.RoleMgr.php" method="post" enctype="multipart/form-data" name="form" id="form">
+	<form class="form-horizontal" action="../op/op.RackLocations.php" method="post" enctype="multipart/form-data" name="form" id="form">
 <?php
 		if($currRole) {
 			echo createHiddenFieldWithKey('editrole');
@@ -152,7 +153,7 @@ $(document).ready( function() {
 <?php
 		}
 		$this->formField(
-			getMLText("role_name"),
+			getMLText("role_namess"),
 			array(
 				'element'=>'input',
 				'type'=>'text',
@@ -162,9 +163,9 @@ $(document).ready( function() {
 			)
 		);
 		$options = array();
-		$options[] = array(SeedDMS_Core_Role::role_user, getMLText("role_user"), $currRole && $currRole->getRole() == SeedDMS_Core_Role::role_user);
-		$options[] = array(SeedDMS_Core_Role::role_admin, getMLText("role_admin"), $currRole && $currRole->getRole() == SeedDMS_Core_Role::role_admin);
-		$options[] = array(SeedDMS_Core_Role::role_guest, getMLText("role_guest"), $currRole && $currRole->getRole() == SeedDMS_Core_Role::role_guest);
+		$options[] = array(SeedDMS_Core_Rack::role_user, getMLText("role_user"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_user);
+		$options[] = array(SeedDMS_Core_Rack::role_admin, getMLText("role_admin"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_admin);
+		$options[] = array(SeedDMS_Core_Rack::role_guest, getMLText("role_guest"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_guest);
 		$this->formField(
 			getMLText("role_type"),
 			array(
@@ -208,16 +209,16 @@ $(document).ready( function() {
 		$this->contentStart();
 		$this->pageNavigation(getMLText("admin_tools"), "admin_tools");
 
-		$this->contentHeading(getMLText("role_management"));
+		$this->contentHeading(getMLText("rack_location"));
 ?>
 <div class="row-fluid">
 <div class="span4">
 <form class="form-horizontal">
 <?php
 		$options = array();
-		$options[] = array("-1", getMLText("choose_role"));
+		$options[] = array("-1", getMLText("choose_racklocation"));
 		if($accessop->check_controller_access('RoleMgr', array('action'=>'addrole'))) {
-			$options[] = array("0", getMLText("add_role"));
+			$options[] = array("0", getMLText("add_racklocation"));
 		}
 		foreach ($roles as $currRole) {
 			$options[] = array($currRole->getID(), htmlspecialchars($currRole->getName()), $selrole && $currRole->getID()==$selrole->getID());

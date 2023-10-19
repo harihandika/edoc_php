@@ -1,0 +1,11 @@
+Oct 18 03:49:53  [info] -- (::1) op.Login
+Oct 18 03:57:03  [info] admin (::1) op.Ajax.php?command=deletedocument&id=142&formtoken=ac172129482bac176b0ce472fa040ead
+Oct 18 03:57:08  [info] admin (::1) op.Ajax.php?command=deletedocument&id=139&formtoken=ac172129482bac176b0ce472fa040ead
+Oct 18 03:57:27  [info] admin (::1) op.ViewOnline.php?documentid=137&version=1
+Oct 18 03:57:28  [info] admin (::1) op.ViewOnline.php?documentid=137&version=1
+Oct 18 03:59:06  [info] admin (::1) op.DocumentAccess.php?formtoken=88719621e29c4853da6e0950164682eb&documentid=137&action=notinherit&mode=copy
+Oct 18 04:38:36  [info] admin (::1) op.AttributeMgr&action=addattrdef&name=Atribut
+Oct 18 04:38:56  [info] admin (::1) op.AttributeMgr&action=removeattrdef&attrdefid=1
+Oct 18 09:06:28  [error] admin (::1) op.AttributeMgr UI::exitError error=Attribute must have more than one value, but is not set multiple value pagetitle=Admin-Tools
+Oct 18 09:06:45  [info] admin (::1) op.AttributeMgr&action=addattrdef&name=Sriwijaya University
+Oct 18 09:18:52  [info] admin (::1) op.AttributeMgr&action=removeattrdef&attrdefid=2

@@ -516,6 +516,26 @@ else if ($action == "edituser") {
 		$group->removeUser($editedUser);
 	}
 
+	/***************************cek **********************/
+	if(isset($_POST["worklocation"]))
+		$newworklocation = $_POST["worklocation"];
+	else
+		$newworklocation = array();
+	$oldworklocation = array();
+	foreach($editedUser->getWorkLocations() as $k)
+		$oldworklocations[] = $k->getID();
+
+	$addworklocations = array_diff($newworklocations, $oldworklocations);
+	foreach($addworklocations as $worklocationid) {
+		$worklocation = $dms->getWorkLocation($worklocationid);
+		$worklocation->addUser($editedUser);
+	}
+	$delworklocations = array_diff($oldworklocations, $newworklocations);
+	foreach($delworklocations as $worklocationid) {
+		$worklocation = $dms->getWorkLocation($worklocationid);
+		$worklocation->removeUser($editedUser);
+	}
+
 	/* Set substitute user if set */
 	if(isset($_POST["substitute"]) && $_POST["substitute"]) 
 		$newsubs = $_POST['substitute'];

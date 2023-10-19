@@ -21,6 +21,7 @@ require_once("inc.ClassObject.php");
 require_once("inc.ClassFolder.php");
 require_once("inc.ClassDocument.php");
 require_once("inc.ClassGroup.php");
+require_once("inc.ClassWorkLocation.php");
 require_once("inc.ClassUser.php");
 require_once("inc.ClassKeywords.php");
 require_once("inc.ClassNotification.php");
@@ -489,6 +490,7 @@ class SeedDMS_Core_DMS {
 		$this->classnames['user'] = 'SeedDMS_Core_User';
 		$this->classnames['role'] = 'SeedDMS_Core_Role';
 		$this->classnames['group'] = 'SeedDMS_Core_Group';
+		$this->classnames['worklocation'] = 'SeedDMS_Core_WorkLocation';
 		$this->classnames['transmittal'] = 'SeedDMS_Core_Transmittal';
 		$this->classnames['transmittalitem'] = 'SeedDMS_Core_TransmittalItem';
 		$this->callbacks = array();
@@ -2888,12 +2890,6 @@ class SeedDMS_Core_DMS {
 		$classname = $this->classnames['group'];
 		return $classname::getInstance($id, $this, '');
 	} /* }}} */
-
-	function getWorklocation($id) { /* {{{ */
-		$classname = $this->classnames['group'];
-		return $classname::getInstance($id, $this, '');
-	} /* }}} */
-
 	/**
 	 * Get a group by its name
 	 *
@@ -2904,7 +2900,6 @@ class SeedDMS_Core_DMS {
 		$classname = $this->classnames['group'];
 		return $classname::getInstance($name, $this, 'name');
 	} /* }}} */
-
 	/**
 	 * Get a list of all groups
 	 *
@@ -2942,8 +2937,46 @@ class SeedDMS_Core_DMS {
 				}
 			}
 		}
-
 		return $group;
+	} /* }}} */
+
+	// work locations 
+	function getWorkLocation($id) { /* {{{ */
+		$classname = $this->classnames['worklocation'];
+		return $classname::getInstance($id, $this, '');
+	} /* }}} */
+		
+	function getWorkLocationByName($name) { /* {{{ */
+		$classname = $this->classnames['worklocation'];
+		return $classname::getInstance($name, $this, 'name');
+	} /* }}} */
+	
+	function getAllWorkLocations() { /* {{{ */
+		$classname = $this->classnames['worklocation']; // cek group
+		return $classname::getAllInstances('name', $this);
+	} /* }}} */
+
+	function addWorkLocation($name, $comment) { /* {{{ */
+		if (is_object($this->getWorkLocationByName($name))) {
+			return false;
+		}
+
+		$queryStr = "INSERT INTO `tblWorkLocations` (`name`, `comment`) VALUES (".$this->db->qstr($name).", ".$this->db->qstr($comment).")";
+		if (!$this->db->getResult($queryStr))
+			return false;
+
+		$worklocation = $this->getWorkLocation($this->db->getInsertID('tblWorkLocations'));
+
+		/* Check if 'onPostAddGroup' callback is set */
+		if(isset($this->callbacks['onPostAddWorkLocation'])) {
+			foreach($this->callbacks['onPostAddWorkLocation'] as $callback) {
+				/** @noinspection PhpStatementHasEmptyBodyInspection */
+				if(!call_user_func($callback[0], $callback[1], $worklocation)) {
+				}
+			}
+		}
+
+		return $worklocation;
 	} /* }}} */
 
 	/**
