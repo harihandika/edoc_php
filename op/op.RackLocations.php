@@ -48,17 +48,17 @@ if(!checkFormKey($action)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("invalid_request_token"));
 }
 
-$roleid = 0;
+$racklocationid = 0;
 if(in_array($action, array('removerole', 'editrole'))) {
-	if (isset($_POST["roleid"])) {
-		$roleid = $_POST["roleid"];
+	if (isset($_POST["racklocationid"])) {
+		$racklocationid = $_POST["racklocationid"];
 	}
 
-	if (!isset($roleid) || !is_numeric($roleid) || intval($roleid)<1) {
+	if (!isset($racklocationid) || !is_numeric($racklocationid) || intval($racklocationid)<1) {
 		UI::exitError(getMLText("admin_tools"),getMLText("invalid_role_id"));
 	}
 
-	$roleobj = $dms->getRole($roleid);
+	$roleobj = $dms->getRole($racklocationid);
 	
 	if (!is_object($roleobj)) {
 		UI::exitError(getMLText("admin_tools"),getMLText("invalid_role_id"));
@@ -89,7 +89,7 @@ if ($action == "addrole") {
 	}
 	else UI::exitError(getMLText("admin_tools"),getMLText("error_occured"));
 	
-	$roleid=$newRole->getID();
+	$racklocationid=$newRole->getID();
 	
 	$session->setSplashMsg(array('type'=>'success', 'msg'=>getMLText('splash_add_role')));
 
@@ -103,10 +103,10 @@ else if ($action == "removerole") {
 		UI::exitError(getMLText("admin_tools"),getMLText("error_occured"));
 	}
 		
-	add_log_line(".php&action=".$action."&roleid=".$roleid);
+	add_log_line(".php&action=".$action."&racklocationid=".$racklocationid);
 	
 	$session->setSplashMsg(array('type'=>'success', 'msg'=>getMLText('splash_rm_role')));
-	$roleid=-1;
+	$racklocationid=-1;
 }
 
 // modify role ------------------------------------------------------------
@@ -125,9 +125,9 @@ else if ($action == "editrole") {
 	}
 
 	$session->setSplashMsg(array('type'=>'success', 'msg'=>getMLText('splash_edit_role')));
-	add_log_line(".php&action=".$action."&roleid=".$roleid);
+	add_log_line(".php&action=".$action."&racklocationid=".$racklocationid);
 }
 
-header("Location:../out/out.RackLocations.php?roleid=".$roleid);
+header("Location:../out/out.RackLocations.php?racklocationid=".$racklocationid);
 
 ?>

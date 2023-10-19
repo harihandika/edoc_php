@@ -43,8 +43,8 @@ if (is_bool($roles)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"));
 }
 
-if(isset($_GET['roleid']) && $_GET['roleid']) {
-	$selrole = $dms->getRole($_GET['roleid']);
+if(isset($_GET['racklocationid']) && $_GET['racklocationid']) {
+	$selrole = $dms->getRole($_GET['racklocationid']);
 } else {
 	$selrole = null;
 }

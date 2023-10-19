@@ -228,6 +228,7 @@ class SeedDMS_Core_Role { /* {{{ */
 	} /* }}} */
 
 } /* }}} */
+
 class SeedDMS_Core_Rack { /* {{{ */
 	/**
 	 * @var integer id of role

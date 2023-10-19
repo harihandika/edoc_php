@@ -2,3 +2,4 @@ vendors
 vendor
 styles/bootstrap/*
 views/bootstrap/images/*
+data?cache/js/*

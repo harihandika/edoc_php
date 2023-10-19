@@ -62,8 +62,8 @@ $(document).ready( function() {
 		event.preventDefault();
 	});
 	$( "#selector" ).change(function() {
-		$('div.ajax').trigger('update', {roleid: $(this).val()});
-		window.history.pushState({"html":"","pageTitle":""},"", '../out/out.RackLocations.php?roleid=' + $(this).val());
+		$('div.ajax').trigger('update', {racklocationid: $(this).val()});
+		window.history.pushState({"html":"","pageTitle":""},"", '../out/out.RackLocations.php?racklocationid=' + $(this).val());
 	});
 });
 <?php
@@ -111,11 +111,11 @@ $(document).ready( function() {
 		$accessop = $this->params['accessobject'];
 
 		if($selrole) {
-			if(!$selrole->isUsed() && $accessop->check_controller_access('RackLocation', array('action'=>'removerole'))) {
+			if(!$selrole->isUsed() && $accessop->check_controller_access('RackLocations', array('action'=>'removerole'))) {
 ?>
 			<form style="display: inline-block;" method="post" action="../op/op.RackLocations.php" >
 				<?php echo createHiddenFieldWithKey('removerole'); ?>
-				<input type="hidden" name="roleid" value="<?php echo $selrole->getID()?>">
+				<input type="hidden" name="racklocationid" value="<?php echo $selrole->getID()?>">
 				<input type="hidden" name="action" value="removerole">
 				<button type="submit" class="btn"><i class="fa fa-remove"></i> <?php echo getMLText("rm_role")?></button>
 			</form>
@@ -132,7 +132,6 @@ $(document).ready( function() {
 
 	function showRackLocationForm($currRole) { /* {{{ */
 
-		exit();
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
 		$accessop = $this->params['accessobject'];
@@ -142,18 +141,18 @@ $(document).ready( function() {
 		if($currRole) {
 			echo createHiddenFieldWithKey('editrole');
 ?>
-	<input type="hidden" name="roleid" id="roleid" value="<?php print $currRole->getID();?>">
+	<input type="hidden" name="racklocationid" id="racklocationid" value="<?php print $currRole->getID();?>">
 	<input type="hidden" name="action" value="editrole">
 <?php
 		} else {
 			echo createHiddenFieldWithKey('addrole');
 ?>
-	<input type="hidden" id="roleid" value="0">
+	<input type="hidden" id="racklocationid" value="0">
 	<input type="hidden" name="action" value="addrole">
 <?php
 		}
 		$this->formField(
-			getMLText("role_namess"),
+			getMLText("kode_rak"),
 			array(
 				'element'=>'input',
 				'type'=>'text',
@@ -162,34 +161,56 @@ $(document).ready( function() {
 				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
 			)
 		);
+
 		$options = array();
 		$options[] = array(SeedDMS_Core_Rack::role_user, getMLText("role_user"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_user);
 		$options[] = array(SeedDMS_Core_Rack::role_admin, getMLText("role_admin"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_admin);
 		$options[] = array(SeedDMS_Core_Rack::role_guest, getMLText("role_guest"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_guest);
 		$this->formField(
-			getMLText("role_type"),
+			getMLText("nomor_rak"),
 			array(
 				'element'=>'select',
 				'name'=>'role',
 				'options'=>$options
 			)
 		);
-		if($currRole && $currRole->getRole() != SeedDMS_Core_Role::role_admin) {
-			$options = array();
-			foreach(array(S_DRAFT_REV, S_DRAFT_APP, S_IN_WORKFLOW, S_REJECTED, S_RELEASED, S_IN_REVISION, S_DRAFT, S_EXPIRED, S_OBSOLETE, S_NEEDS_CORRECTION) as $status) {
-				$options[] = array($status, getOverallStatusText($status), in_array($status, $currRole->getNoAccess()));
-			}
-			$this->formField(
-				getMLText("restrict_access"),
-				array(
-					'element'=>'select',
-					'name'=>'noaccess[]',
-					'options'=>$options,
-					'multiple'=>true,
-				)
-			);
-		}
-		if($currRole && $accessop->check_controller_access('RoleMgr', array('action'=>'editrole')) || !$currRole && $accessop->check_controller_access('RoleMgr', array('action'=>'addrole'))) {
+
+		$options = array();
+		$options[] = array(SeedDMS_Core_Rack::role_user, getMLText("role_user"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_user);
+		$options[] = array(SeedDMS_Core_Rack::role_admin, getMLText("role_admin"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_admin);
+		$options[] = array(SeedDMS_Core_Rack::role_guest, getMLText("role_guest"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_guest);
+		$this->formField(
+			getMLText("baris_rak"),
+			array(
+				'element'=>'select',
+				'name'=>'role',
+				'options'=>$options
+			)
+		);
+
+		$this->formField(
+			getMLText("fisik_rak"),
+			array(
+				'element'=>'input',
+				'type'=>'text',
+				'id'=>'name',
+				'name'=>'name',
+				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
+			)
+		);
+
+		$this->formField(
+			getMLText("keterangan"),
+			array(
+				'element'=>'textarea',
+				'type'=>'text',
+				'id'=>'name',
+				'name'=>'name',
+				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
+			)
+		);
+
+		if($currRole && $accessop->check_controller_access('RackLocations', array('action'=>'editrole')) || !$currRole && $accessop->check_controller_access('RackLocations', array('action'=>'addrole'))) {
 			$this->formSubmit("<i class=\"fa fa-save\"></i> ".getMLText($currRole ? "save" : "add_role"));
 		}
 ?>
@@ -217,7 +238,7 @@ $(document).ready( function() {
 <?php
 		$options = array();
 		$options[] = array("-1", getMLText("choose_racklocation"));
-		if($accessop->check_controller_access('RoleMgr', array('action'=>'addrole'))) {
+		if($accessop->check_controller_access('RackLocations', array('action'=>'addrole'))) {
 			$options[] = array("0", getMLText("add_racklocation"));
 		}
 		foreach ($roles as $currRole) {
@@ -234,16 +255,16 @@ $(document).ready( function() {
 		);
 ?>
 </form>
-	<div class="ajax" style="margin-bottom: 15px;" data-view="RackLocation" data-action="actionmenu" <?php echo ($selrole ? "data-query=\"roleid=".$selrole->getID()."\"" : "") ?>></div>
+	<div class="ajax" style="margin-bottom: 15px;" data-view="RackLocations" data-action="actionmenu" <?php echo ($selrole ? "data-query=\"racklocationid=".$selrole->getID()."\"" : "") ?>></div>
 <?php if($accessop->check_view_access($this, array('action'=>'info'))) { ?>
-	<div class="ajax" data-view="RackLocation" data-action="info" <?php echo ($selrole ? "data-query=\"roleid=".$selrole->getID()."\"" : "") ?>></div>
+	<div class="ajax" data-view="RackLocations" data-action="info" <?php echo ($selrole ? "data-query=\"racklocationid=".$selrole->getID()."\"" : "") ?>></div>
 <?php } ?>
 </div>
 
 <div class="span8">
 <?php if($accessop->check_view_access($this, array('action'=>'form'))) { ?>
 	<div class="well">
-		<div class="ajax" data-view="RackLocation" data-action="form" <?php echo ($selrole ? "data-query=\"roleid=".$selrole->getID()."\"" : "") ?>></div>
+		<div class="ajax" data-view="RackLocations" data-action="form" <?php echo ($selrole ? "data-query=\"racklocationid=".$selrole->getID()."\"" : "") ?>></div>
 	</div>
 <?php } else {
 	$this->errorMsg(getMLText('access_denied'));
