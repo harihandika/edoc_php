@@ -158,14 +158,22 @@ $(document).ready( function() {
 				'type'=>'text',
 				'id'=>'name',
 				'name'=>'name',
+				'required'=>true,
 				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
 			)
 		);
 
 		$options = array();
-		$options[] = array(SeedDMS_Core_Rack::role_user, getMLText("role_user"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_user);
-		$options[] = array(SeedDMS_Core_Rack::role_admin, getMLText("role_admin"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_admin);
-		$options[] = array(SeedDMS_Core_Rack::role_guest, getMLText("role_guest"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_guest);
+		$options[] = array('rak 1', 'rak 1');
+		$options[] = array('rak 2', 'rak 2');
+		$options[] = array('rak 3', 'rak 3');
+		$options[] = array('rak 4', 'rak 4');
+		$options[] = array('rak 5', 'rak 5');
+		$options[] = array('rak 6', 'rak 6');
+		$options[] = array('rak 7', 'rak 7');
+		$options[] = array('rak 8', 'rak 8');
+		$options[] = array('rak 9', 'rak 9');
+		$options[] = array('rak 10', 'rak 10');
 		$this->formField(
 			getMLText("nomor_rak"),
 			array(
@@ -176,9 +184,16 @@ $(document).ready( function() {
 		);
 
 		$options = array();
-		$options[] = array(SeedDMS_Core_Rack::role_user, getMLText("role_user"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_user);
-		$options[] = array(SeedDMS_Core_Rack::role_admin, getMLText("role_admin"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_admin);
-		$options[] = array(SeedDMS_Core_Rack::role_guest, getMLText("role_guest"), $currRole && $currRole->getRole() == SeedDMS_Core_Rack::role_guest);
+		$options[] = array('baris 1', 'baris 1');
+		$options[] = array('baris 2', 'baris 2');
+		$options[] = array('baris 3', 'baris 3');
+		$options[] = array('baris 4', 'baris 4');
+		$options[] = array('baris 5', 'baris 5');
+		$options[] = array('baris 6', 'baris 6');
+		$options[] = array('baris 7', 'baris 7');
+		$options[] = array('baris 8', 'baris 8');
+		$options[] = array('baris 9', 'baris 9');
+		$options[] = array('baris 10', 'baris 10');
 		$this->formField(
 			getMLText("baris_rak"),
 			array(
@@ -211,7 +226,7 @@ $(document).ready( function() {
 		);
 
 		if($currRole && $accessop->check_controller_access('RackLocations', array('action'=>'editrole')) || !$currRole && $accessop->check_controller_access('RackLocations', array('action'=>'addrole'))) {
-			$this->formSubmit("<i class=\"fa fa-save\"></i> ".getMLText($currRole ? "save" : "add_role"));
+			$this->formSubmit("<i class=\"fa fa-save\"></i> ".getMLText($currRole ? "save" : "add_racklocation"));
 		}
 ?>
 	</form>

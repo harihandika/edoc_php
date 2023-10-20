@@ -300,7 +300,7 @@ $(document).ready( function() {
 		if($passwordexpiration > 0) {
 			$options = array();
 			if($currUser)
-				$options[] = array('', getMLText("keep"));
+			$options[] = array('', getMLText("keep"));
 			$options[] = array('now', getMLText('now'));
 			$options[] = array(date('Y-m-d H:i:s', time()+$passwordexpiration*86400), getMLText("according_settings"));
 			$options[] = array('never', getMLText("never"));
