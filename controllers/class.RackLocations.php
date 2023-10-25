@@ -25,31 +25,31 @@ class SeedDMS_Controller_RackLocations extends SeedDMS_Controller_Common {
 	public function run() {
 	}
 
-	public function addrole() {
+	public function addracklocations() {
 		$dms = $this->params['dms'];
 		$name = $this->params['name'];
-		$role = $this->params['role'];
+		$racklocations = $this->params['racklocations'];
 
-		return($dms->addRole($name, $role));
+		return($dms->addRackLocations($name, $racklocations));
 	}
 
-	public function removerole() {
-		$roleobj = $this->params['roleobj'];
-		return $roleobj->remove();
+	public function removeracklocations() {
+		$racklocationobj = $this->params['racklocationobj'];
+		return $racklocationobj->remove();
 	}
 
-	public function editrole() {
+	public function editracklocations() {
 		$dms = $this->params['dms'];
 		$name = $this->params['name'];
-		$role = $this->params['role'];
-		$roleobj = $this->params['roleobj'];
+		$racklocations = $this->params['racklocations'];
+		$racklocationobj = $this->params['racklocationobj'];
 		$noaccess = $this->params['noaccess'];
 
-		if ($roleobj->getName() != $name)
-			$roleobj->setName($name);
-		if ($roleobj->getRole() != $role)
-			$roleobj->setRole($role);
-		$roleobj->setNoAccess($noaccess);
+		if ($racklocationobj->getName() != $name)
+			$racklocationobj->setName($name);
+		if ($racklocationobj->getRackLocations() != $racklocations)
+			$racklocationobj->setRackLocations($racklocations);
+		$racklocationobj->setNoAccess($noaccess);
 
 		return true;
 	}

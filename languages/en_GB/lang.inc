@@ -1744,6 +1744,7 @@ ACSET Electronic Document System Team
 'splash_add_worklocation' => 'New work location added',
 'splash_add_group_member' => 'New group member added',
 'splash_add_role' => 'Added new role',
+'splash_add_rack_location' => 'Added new rack location',
 'splash_add_task' => 'Added new task',
 'splash_add_to_transmittal' => 'Add to transmittal',
 'splash_add_transmittal' => 'Added transmittal',

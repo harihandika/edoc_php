@@ -38,8 +38,8 @@ if (is_bool($users)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"));
 }
 
-$roles = $dms->getAllRoles();
-if (is_bool($roles)) {
+$allracklocations = $dms->getAllRackLocations();
+if (is_bool($allracklocations)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"));
 }
 
@@ -52,7 +52,7 @@ if(isset($_GET['racklocationid']) && $_GET['racklocationid']) {
 if($view) {
 	$view->setParam('selrole', $selrole);
 	$view->setParam('allusers', $users);
-	$view->setParam('allroles', $roles);
+	$view->setParam('allracklocations', $allracklocations);
 	$view->setParam('accessobject', $accessop);
 	$view($_GET);
 }

@@ -40,7 +40,7 @@ if (!$accessop->check_controller_access($controller, $_POST)) {
 if (isset($_POST["action"])) $action=$_POST["action"];
 else $action=NULL;
 
-if(!in_array($action, array('addrole', 'removerole', 'editrole')))
+if(!in_array($action, array('addracklocations', 'removeracklocations', 'editracklocations')))
 	UI::exitError(getMLText("admin_tools"),getMLText("unknown_command"));
 
 /* Check if the form data comes for a trusted request */
@@ -49,7 +49,7 @@ if(!checkFormKey($action)) {
 }
 
 $racklocationid = 0;
-if(in_array($action, array('removerole', 'editrole'))) {
+if(in_array($action, array('removeracklocations', 'editracklocations'))) {
 	if (isset($_POST["racklocationid"])) {
 		$racklocationid = $_POST["racklocationid"];
 	}
@@ -58,46 +58,52 @@ if(in_array($action, array('removerole', 'editrole'))) {
 		UI::exitError(getMLText("admin_tools"),getMLText("invalid_role_id"));
 	}
 
-	$roleobj = $dms->getRole($racklocationid);
+	$racklocationobj = $dms->getRackLocations($racklocationid);
 	
-	if (!is_object($roleobj)) {
+	if (!is_object($racklocationobj)) {
 		UI::exitError(getMLText("admin_tools"),getMLText("invalid_role_id"));
 	}
 
-	$controller->setParam('roleobj', $roleobj);
+	$controller->setParam('racklocationobj', $racklocationobj);
 }
 
 // add new role ---------------------------------------------------------
-if ($action == "addrole") {
+if ($action == "addracklocations") {
 	
-	$name    = $_POST["name"];
-	$role    = preg_replace('/[^0-2]+/', '', $_POST["role"]);
+	$kode    = $_POST["kode"];
+	$nomor    = preg_replace('/[^0-8]+/', '', $_POST["nomor"]);
+	$baris    = preg_replace('/[^0-8]+/', '', $_POST["baris"]);
+	$fisik    = $_POST["fisik"];
+	$keterangan    = $_POST["keterangan"];
 
-	if (is_object($dms->getRoleByName($name))) {
+	if (is_object($dms->getRackLocationByName($name))) {
 		UI::exitError(getMLText("admin_tools"),getMLText("role_exists"));
 	}
 
-	if ($role === '') {
+	if ($nomor === '' || $baris === '') {
 		UI::exitError(getMLText("admin_tools"),getMLText("missing_role_type"));
 	}
 
-	$controller->setParam('name', $name);
-	$controller->setParam('role', $role);
+	$controller->setParam('kode', $kode);
+	$controller->setParam('nomor', $nomor);
+	$controller->setParam('baris', $baris);
+	$controller->setParam('fisik', $fisik);
+	$controller->setParam('keterangan', $keterangan);
 
-	$newRole = $controller($_POST);
-	if ($newRole) {
+	$newRackLocations = $controller($_POST);
+	if ($newRackLocations) {
 	}
 	else UI::exitError(getMLText("admin_tools"),getMLText("error_occured"));
 	
-	$racklocationid=$newRole->getID();
+	$racklocationid=$newRackLocations->getID();
 	
-	$session->setSplashMsg(array('type'=>'success', 'msg'=>getMLText('splash_add_role')));
+	$session->setSplashMsg(array('type'=>'success', 'msg'=>getMLText('splash_add_rack_location')));
 
 	add_log_line(".php&action=".$action."&name=".$name);
 }
 
 // delete role ------------------------------------------------------------
-else if ($action == "removerole") {
+else if ($action == "removeracklocations") {
 
 	if (!$controller($_POST)) {
 		UI::exitError(getMLText("admin_tools"),getMLText("error_occured"));
@@ -110,14 +116,20 @@ else if ($action == "removerole") {
 }
 
 // modify role ------------------------------------------------------------
-else if ($action == "editrole") {
+else if ($action == "editracklocations") {
 
-	$name    = $_POST["name"];
-	$role    = preg_replace('/[^0-2]+/', '', $_POST["role"]);
+	$kode    = $_POST["kode"];
+	$nomor    = preg_replace('/[^0-8]+/', '', $_POST["nomor"]);
+	$baris    = preg_replace('/[^0-8]+/', '', $_POST["baris"]);
+	$fisik    = $_POST["fisik"];
+	$keterangan    = $_POST["keterangan"];
 	$noaccess = isset($_POST['noaccess']) ? $_POST['noaccess'] : null;
 	
-	$controller->setParam('name', $name);
-	$controller->setParam('role', $role);
+	$controller->setParam('kode', $kode);
+	$controller->setParam('nomor', $nomor);
+	$controller->setParam('baris', $baris);
+	$controller->setParam('fisik', $fisik);
+	$controller->setParam('keterangan', $keterangan);
 	$controller->setParam('noaccess', $noaccess);
 
 	if (!$controller($_POST)) {

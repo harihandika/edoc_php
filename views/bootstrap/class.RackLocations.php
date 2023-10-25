@@ -34,6 +34,7 @@ class SeedDMS_View_RackLocations extends SeedDMS_Bootstrap_Style {
 	function js() { /* {{{ */
 		$selrole = $this->params['selrole'];
 
+
 		header('Content-Type: application/javascript');
 ?>
 function checkForm()
@@ -77,7 +78,7 @@ $(document).ready( function() {
 		$accessobject = $this->params['accessobject'];
 
 		if($selrole) {
-			$this->contentHeading(getMLText("role_info"));
+			$this->contentHeading("Rack Info");
 			$users = $selrole->getUsers();
 			if($users) {
 				echo "<table class=\"table table-condensed\"><thead><tr><th>".getMLText('name')."</th><th></th></tr></thead><tbody>\n";
@@ -105,18 +106,19 @@ $(document).ready( function() {
 	} /* }}} */
 
 	function actionmenu() { /* {{{ */
+
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
 		$selrole = $this->params['selrole'];
 		$accessop = $this->params['accessobject'];
 
 		if($selrole) {
-			if(!$selrole->isUsed() && $accessop->check_controller_access('RackLocations', array('action'=>'removerole'))) {
+			if(!$selrole->isUsed() && $accessop->check_controller_access('RackLocations', array('action'=>'removeracklocations'))) {
 ?>
 			<form style="display: inline-block;" method="post" action="../op/op.RackLocations.php" >
-				<?php echo createHiddenFieldWithKey('removerole'); ?>
+				<?php echo createHiddenFieldWithKey('removeracklocations'); ?>
 				<input type="hidden" name="racklocationid" value="<?php echo $selrole->getID()?>">
-				<input type="hidden" name="action" value="removerole">
+				<input type="hidden" name="action" value="removeracklocations">
 				<button type="submit" class="btn"><i class="fa fa-remove"></i> <?php echo getMLText("rm_role")?></button>
 			</form>
 <?php
@@ -139,16 +141,16 @@ $(document).ready( function() {
 	<form class="form-horizontal" action="../op/op.RackLocations.php" method="post" enctype="multipart/form-data" name="form" id="form">
 <?php
 		if($currRole) {
-			echo createHiddenFieldWithKey('editrole');
+			echo createHiddenFieldWithKey('editracklocations');
 ?>
 	<input type="hidden" name="racklocationid" id="racklocationid" value="<?php print $currRole->getID();?>">
-	<input type="hidden" name="action" value="editrole">
+	<input type="hidden" name="action" value="editracklocations">
 <?php
 		} else {
-			echo createHiddenFieldWithKey('addrole');
+			echo createHiddenFieldWithKey('addracklocations');
 ?>
 	<input type="hidden" id="racklocationid" value="0">
-	<input type="hidden" name="action" value="addrole">
+	<input type="hidden" name="action" value="addracklocations">
 <?php
 		}
 		$this->formField(
@@ -156,8 +158,8 @@ $(document).ready( function() {
 			array(
 				'element'=>'input',
 				'type'=>'text',
-				'id'=>'name',
-				'name'=>'name',
+				'id'=>'kode',
+				'name'=>'kode',
 				'required'=>true,
 				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
 			)
@@ -178,7 +180,7 @@ $(document).ready( function() {
 			getMLText("nomor_rak"),
 			array(
 				'element'=>'select',
-				'name'=>'role',
+				'name'=>'nomor',
 				'options'=>$options
 			)
 		);
@@ -198,7 +200,7 @@ $(document).ready( function() {
 			getMLText("baris_rak"),
 			array(
 				'element'=>'select',
-				'name'=>'role',
+				'name'=>'baris',
 				'options'=>$options
 			)
 		);
@@ -208,8 +210,8 @@ $(document).ready( function() {
 			array(
 				'element'=>'input',
 				'type'=>'text',
-				'id'=>'name',
-				'name'=>'name',
+				'id'=>'fisik',
+				'name'=>'fisik',
 				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
 			)
 		);
@@ -219,13 +221,13 @@ $(document).ready( function() {
 			array(
 				'element'=>'textarea',
 				'type'=>'text',
-				'id'=>'name',
-				'name'=>'name',
+				'id'=>'keterangan',
+				'name'=>'keterangan',
 				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
 			)
 		);
 
-		if($currRole && $accessop->check_controller_access('RackLocations', array('action'=>'editrole')) || !$currRole && $accessop->check_controller_access('RackLocations', array('action'=>'addrole'))) {
+		if($currRole && $accessop->check_controller_access('RackLocations', array('action'=>'editracklocations')) || !$currRole && $accessop->check_controller_access('RackLocations', array('action'=>'addracklocations'))) {
 			$this->formSubmit("<i class=\"fa fa-save\"></i> ".getMLText($currRole ? "save" : "add_racklocation"));
 		}
 ?>
@@ -238,7 +240,7 @@ $(document).ready( function() {
 		$user = $this->params['user'];
 		$accessop = $this->params['accessobject'];
 		$selrole = $this->params['selrole'];
-		$roles = $this->params['allroles'];
+		$allracklocations = $this->params['allracklocations'];
 
 		$this->htmlStartPage(getMLText("admin_tools"));
 		$this->globalNavigation();
@@ -253,10 +255,10 @@ $(document).ready( function() {
 <?php
 		$options = array();
 		$options[] = array("-1", getMLText("choose_racklocation"));
-		if($accessop->check_controller_access('RackLocations', array('action'=>'addrole'))) {
+		if($accessop->check_controller_access('RackLocations', array('action'=>'addracklocations'))) {
 			$options[] = array("0", getMLText("add_racklocation"));
 		}
-		foreach ($roles as $currRole) {
+		foreach ($allracklocations as $currRole) {
 			$options[] = array($currRole->getID(), htmlspecialchars($currRole->getName()), $selrole && $currRole->getID()==$selrole->getID());
 		}
 		$this->formField(

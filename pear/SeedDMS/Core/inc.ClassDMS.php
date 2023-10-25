@@ -489,6 +489,7 @@ class SeedDMS_Core_DMS {
 		$this->classnames['documentcontent'] = 'SeedDMS_Core_DocumentContent';
 		$this->classnames['user'] = 'SeedDMS_Core_User';
 		$this->classnames['role'] = 'SeedDMS_Core_Role';
+		$this->classnames['racklocations'] = 'SeedDMS_Core_RackLocations';
 		$this->classnames['group'] = 'SeedDMS_Core_Group';
 		$this->classnames['worklocation'] = 'SeedDMS_Core_WorkLocation';
 		$this->classnames['transmittal'] = 'SeedDMS_Core_Transmittal';
@@ -3028,6 +3029,50 @@ class SeedDMS_Core_DMS {
 			return false;
 
 		return $this->getRole($this->db->getInsertID('tblRoles'));
+	} /* }}} */
+	function getRackLocations($id) { /* {{{ */
+		$classname = $this->classnames['racklocations'];
+		return $classname::getInstance($id, $this);
+	} /* }}} */
+
+	/**
+	 * Get a role by its name
+	 *
+	 * @param integer $name name of role
+	 * @return object/boolean role or false if no role was found
+	 */
+	function getRackLocationByName($kode) { /* {{{ */
+		$classname = $this->classnames['racklocations'];
+		return $classname::getInstance($kode, $this, 'kode');
+	} /* }}} */
+
+	/**
+	 * Return list of all roles
+	 *
+	 * @return array of instances of {@link SeedDMS_Core_Role} or false
+	 */
+	function getAllRackLocations($orderby = '') { /* {{{ */
+		$classname = $this->classnames['racklocations'];
+		return $classname::getAllInstances($orderby, $this);
+	} /* }}} */
+
+	/**
+	 * Create a new role
+	 *
+	 * @param string $name name of role
+	 * @return object/boolean instance of {@link SeedDMS_Core_Role} or false in
+	 *         case of an error.
+	 */
+	function addRackLocations($kode, $nomor, $baris, $fisik, $keterangan) { /* {{{ */
+		if (is_object($this->getRackLocationByName($kode))) {
+			return false;
+		}
+
+		$queryStr = "INSERT INTO `tblRackLocations` (`kode`, `nomor`, `baris`, `fisik`, `keterangan`) VALUES (".$this->db->qstr($kode).", ".$nomor.", ".$baris.", ".$this->db->qstr($fisik).", ".$this->db->qstr($keterangan).")";
+		if (!$this->db->getResult($queryStr))
+			return false;
+
+		return $this->getRackLocations($this->db->getInsertID('tblRackLocations'));
 	} /* }}} */
 
 	/**

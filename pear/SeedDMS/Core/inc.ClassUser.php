@@ -34,7 +34,7 @@ class SeedDMS_Core_Role { /* {{{ */
 	 *
 	 * @access protected
 	 */
-	var $_login;
+	var $_name;
 
 	/**
 	 * @var string role of user. Can be one of SeedDMS_Core_User::role_user,
@@ -229,7 +229,7 @@ class SeedDMS_Core_Role { /* {{{ */
 
 } /* }}} */
 
-class SeedDMS_Core_Rack { /* {{{ */
+class SeedDMS_Core_RackLocations { /* {{{ */
 	/**
 	 * @var integer id of role
 	 *
@@ -242,15 +242,35 @@ class SeedDMS_Core_Rack { /* {{{ */
 	 *
 	 * @access protected
 	 */
-	var $_login;
+	var $_kode;
 
 	/**
-	 * @var string role of user. Can be one of SeedDMS_Core_User::role_user,
-	 *      SeedDMS_Core_User::role_admin, SeedDMS_Core_User::role_guest
+	 * @var integer 
 	 *
 	 * @access protected
 	 */
-	var $_role;
+	var $_nomor;
+
+	/**
+	 * @var integer 
+	 *
+	 * @access protected
+	 */
+	var $_baris;
+
+	/**
+	 * @var string name of role
+	 *
+	 * @access protected
+	 */
+	var $_fisik;
+
+	/**
+	 * @var string name of role
+	 *
+	 * @access protected
+	 */
+	var $_keterangan;
 
 	/**
 	 * @var array list of status without access
@@ -270,10 +290,13 @@ class SeedDMS_Core_Rack { /* {{{ */
 	const role_admin = '1';
 	const role_guest = '2';
 
-	function __construct($id, $name, $role, $noaccess=array()) { /* {{{ */
+	function __construct($id, $kode, $nomor, $baris, $fisik, $keterangan, $noaccess=array()) { /* {{{ */
 		$this->_id = $id;
-		$this->_name = $name;
-		$this->_role = $role;
+		$this->_kode = $kode;
+		$this->_nomor = $nomor;
+		$this->_baris = $baris;
+		$this->_fisik = $fisik;
+		$this->_keterangan = $keterangan;
 		$this->_noaccess = $noaccess;
 		$this->_dms = null;
 	} /* }}} */
@@ -294,11 +317,11 @@ class SeedDMS_Core_Rack { /* {{{ */
 		$db = $dms->getDB();
 
 		switch($by) {
-		case 'name':
-			$queryStr = "SELECT * FROM `tblRoles` WHERE `name` = ".$db->qstr($id);
+		case 'kode':
+			$queryStr = "SELECT * FROM `tblRackLocations` WHERE `kode` = ".$db->qstr($id);
 			break;
 		default:
-			$queryStr = "SELECT * FROM `tblRoles` WHERE id = " . (int) $id;
+			$queryStr = "SELECT * FROM `tblRackLocations` WHERE id = " . (int) $id;
 		}
 
 		$resArr = $db->getResultArray($queryStr);
@@ -307,32 +330,33 @@ class SeedDMS_Core_Rack { /* {{{ */
 
 		$resArr = $resArr[0];
 
-		$role = new self($resArr["id"], $resArr["name"], $resArr["role"], $resArr['noaccess'] ? explode(',', $resArr['noaccess']) : array());
-		$role->setDMS($dms);
-		return $role;
+		$racklocations = new self($resArr["id"], $resArr["kode"], $resArr["nomor"], $resArr["baris"], 
+		$resArr["fisik"], $resArr["keterangan"], $resArr['noaccess'] ? explode(',', $resArr['noaccess']) : array());
+		$racklocations->setDMS($dms);
+		return $racklocations;
 	} /* }}} */
 
 	public static function getAllInstances($orderby, $dms) { /* {{{ */
 		$db = $dms->getDB();
 
-		if($orderby == 'name')
-			$queryStr = "SELECT * FROM `tblRoles` ORDER BY `name`";
+		if($orderby == 'kode')
+			$queryStr = "SELECT * FROM `tblRackLocations` ORDER BY `name`";
 		else
-			$queryStr = "SELECT * FROM `tblRoles` ORDER BY `id`";
+			$queryStr = "SELECT * FROM `tblRackLocations` ORDER BY `id`";
 		$resArr = $db->getResultArray($queryStr);
 
 		if (is_bool($resArr) && $resArr == false)
 			return false;
 
-		$roles = array();
+		$allracklocations = array();
 
 		for ($i = 0; $i < count($resArr); $i++) {
-			$role = new self($resArr[$i]["id"], $resArr[$i]["name"], $resArr[$i]["role"], explode(',', $resArr[$i]['noaccess']));
-			$role->setDMS($dms);
-			$roles[$i] = $role;
+			$racklocations = new self($resArr[$i]["id"], $resArr[$i]["kode"], $resArr[$i]["nomor"], $resArr[$i]["baris"], $resArr[$i]["fisik"], $resArr[$i]["keterangan"], explode(',', $resArr[$i]['noaccess']));
+			$racklocations->setDMS($dms);
+			$allrackloactions[$i] = $racklocations;
 		}
 
-		return $roles;
+		return $allrackloactions;
 } /* }}} */
 
 	function setDMS($dms) {
@@ -341,34 +365,34 @@ class SeedDMS_Core_Rack { /* {{{ */
 
 	function getID() { return $this->_id; }
 
-	function getName() { return $this->_name; }
+	function getName() { return $this->_kode; }
 
 	function setName($newName) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblRoles` SET `name` =".$db->qstr($newName)." WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblRackLocations` SET `name` =".$db->qstr($newName)." WHERE `id` = " . $this->_id;
 		$res = $db->getResult($queryStr);
 		if (!$res)
 			return false;
 
-		$this->_name = $newName;
+		$this->_kode = $newName;
 		return true;
 	} /* }}} */
 
-	function isAdmin() { return ($this->_role == SeedDMS_Core_Role::role_admin); }
+	function isAdmin() { return ($this->_kode == SeedDMS_Core_RackLocations::role_admin); }
 
-	function isGuest() { return ($this->_role == SeedDMS_Core_Role::role_guest); }
+	function isGuest() { return ($this->_kode == SeedDMS_Core_RackLocations::role_guest); }
 
-	function getRole() { return $this->_role; }
+	function getRackLocations() { return $this->_kode; }
 
-	function setRole($newrole) { /* {{{ */
+	function setRackLocations($newrole) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblRoles` SET `role` = " . $newrole . " WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblRackLocations` SET `kode` = " . $newrole . " WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 
-		$this->_role = $newrole;
+		$this->_kode = $newrole;
 		return true;
 	} /* }}} */
 
@@ -377,7 +401,7 @@ class SeedDMS_Core_Rack { /* {{{ */
 	function setNoAccess($noaccess) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblRoles` SET `noaccess` = " . $db->qstr($noaccess ? implode(',',$noaccess) : '') . " WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblRackLocations` SET `noaccess` = " . $db->qstr($noaccess ? implode(',',$noaccess) : '') . " WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 
@@ -393,7 +417,7 @@ class SeedDMS_Core_Rack { /* {{{ */
 	function remove() { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "DELETE FROM `tblRoles` WHERE `id` = " . $this->_id;
+		$queryStr = "DELETE FROM `tblRackLocations` WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr)) {
 			return false;
 		}
