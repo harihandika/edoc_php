@@ -56,6 +56,10 @@ if($settings->_quota > 0) {
 		UI::exitError(getMLText("folder_title", array("foldername" => htmlspecialchars($folder->getName()))),getMLText("quota_exceeded", array('bytes'=>SeedDMS_Core_File::format_filesize(abs($remain)))));
 	}
 }
+$worklocations = $dms->getAllWorkLocations();
+if (is_bool($worklocations)) {
+	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
+}
 
 if($settings->_libraryFolder) {
 	$libfolder = $dms->getFolder($settings->_libraryFolder);
@@ -93,6 +97,7 @@ if($view) {
 	$view->setParam('defaultposition', $settings->_defaultDocPosition);
 	$view->setParam('orderby', $settings->_sortFoldersDefault);
 	$view->setParam('accessobject', $accessop);
+	$view->setParam('allworklocations', $worklocations);
 	$view($_GET);
 	exit;
 }
