@@ -177,6 +177,7 @@ $(document).ready(function() {
 		$orderby = $this->params['orderby'];
 		$folderid = $folder->getId();
 		$accessop = $this->params['accessobject'];
+		$racklocations = $this->params['racloactions'];
 
 		$this->htmlAddHeader('<script type="text/javascript" src="../views/'.$this->theme.'/vendors/jquery-validation/jquery.validate.js"></script>'."\n", 'js');
 		if($enablelargefileupload) {
@@ -353,9 +354,9 @@ $(document).ready(function() {
 		$this->contentSubHeading(getMLText("version_info"));
 		$this->contentContainerStart();
 		if(!$nodocumentformfields || !in_array('version', $nodocumentformfields)) {
-		$this->formField(
-			getMLText("version"),
-			array(
+			$this->formField(
+				getMLText("version"),
+				array(
 				'element'=>'input',
 				'type'=>'text',
 				'id'=>'reqversion',
@@ -380,6 +381,18 @@ $(document).ready(function() {
 				$this->getDocumentChooserHtml("adddocform", M_READ, -1, null, 'librarydoc', $libraryfolder, 1)
 			);
 		}
+
+		$this->formField(
+			getMLText("fisik_location"),
+			array(
+				'element'=>'input',
+				'type'=>'text',
+				'id'=>'fisik',
+				'name'=>'fisik',
+				'value'=>($racklocations ? htmlspecialchars($racklocations->getFisik()) : '')
+			)
+		);
+
 		if(!$nodocumentformfields || !in_array('version_comment', $nodocumentformfields)) {
 		$this->formField(
 			getMLText("comment_for_current_version"),
@@ -391,7 +404,7 @@ $(document).ready(function() {
 			)
 		);
 		$this->formField(
-			getMLText("use_comment_of_document"),
+			getMLText("use_comment_of_document"),	
 			array(
 				'element'=>'input',
 				'type'=>'checkbox',

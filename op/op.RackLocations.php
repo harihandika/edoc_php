@@ -76,7 +76,7 @@ if ($action == "addracklocations") {
 	$fisik    = $_POST["fisik"];
 	$keterangan    = $_POST["keterangan"];
 
-	if (is_object($dms->getRackLocationByName($name))) {
+	if (is_object($dms->getRackLocationByName($kode))) {
 		UI::exitError(getMLText("admin_tools"),getMLText("role_exists"));
 	}
 

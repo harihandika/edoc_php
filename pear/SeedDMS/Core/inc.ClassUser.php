@@ -353,10 +353,10 @@ class SeedDMS_Core_RackLocations { /* {{{ */
 		for ($i = 0; $i < count($resArr); $i++) {
 			$racklocations = new self($resArr[$i]["id"], $resArr[$i]["kode"], $resArr[$i]["nomor"], $resArr[$i]["baris"], $resArr[$i]["fisik"], $resArr[$i]["keterangan"], explode(',', $resArr[$i]['noaccess']));
 			$racklocations->setDMS($dms);
-			$allrackloactions[$i] = $racklocations;
+			$allracklocations[$i] = $racklocations;
 		}
 
-		return $allrackloactions;
+		return $allracklocations;
 } /* }}} */
 
 	function setDMS($dms) {
@@ -365,7 +365,15 @@ class SeedDMS_Core_RackLocations { /* {{{ */
 
 	function getID() { return $this->_id; }
 
-	function getName() { return $this->_kode; }
+	function getKode() { return $this->_kode; }
+
+	function getNomor() { return $this->_nomor; }
+
+	function getBaris() { return $this->_baris; }
+
+	function getFisik() { return $this->_fisik; }
+	
+	function getKeterangan() { return $this->_keterangan; }
 
 	function setName($newName) { /* {{{ */
 		$db = $this->_dms->getDB();

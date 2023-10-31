@@ -151,6 +151,8 @@ $(document).ready( function() {
 	<input type="hidden" name="action" value="addrole">
 <?php
 		}
+
+
 		$this->formField(
 			getMLText("role_name"),
 			array(
@@ -161,6 +163,7 @@ $(document).ready( function() {
 				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
 			)
 		);
+
 		$options = array();
 		$options[] = array(SeedDMS_Core_Role::role_user, getMLText("role_user"), $currRole && $currRole->getRole() == SeedDMS_Core_Role::role_user);
 		$options[] = array(SeedDMS_Core_Role::role_admin, getMLText("role_admin"), $currRole && $currRole->getRole() == SeedDMS_Core_Role::role_admin);

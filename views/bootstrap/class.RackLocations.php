@@ -80,28 +80,28 @@ $(document).ready( function() {
 		if($selrole) {
 			$this->contentHeading("Rack Info");
 			$users = $selrole->getUsers();
-			if($users) {
-				echo "<table class=\"table table-condensed\"><thead><tr><th>".getMLText('name')."</th><th></th></tr></thead><tbody>\n";
-				foreach($users as $currUser) {
-					echo "<tr>";
-					echo "<td>";
-					echo htmlspecialchars($currUser->getFullName())." (".htmlspecialchars($currUser->getLogin()).")";
-					echo "<br /><a href=\"mailto:".htmlspecialchars($currUser->getEmail())."\">".htmlspecialchars($currUser->getEmail())."</a>";
-					if($currUser->getComment())
-						echo "<br /><small>".htmlspecialchars($currUser->getComment())."</small>";
-					echo "</td>";
-					echo "<td>";
-					if($accessobject->check_view_access(array('UsrMgr', 'RemoveUser'))) {
-						echo "<div class=\"list-action\">";
-						echo $this->html_link('UsrMgr', array('userid'=>$currUser->getID()), array(), '<i class="fa fa-edit"></i>', false);
-						echo $this->html_link('RemoveUser', array('userid'=>$currUser->getID()), array(), '<i class="fa fa-remove"></i>', false);
-						echo "</div>";
-					}
-					echo "</td>";
-					echo "</tr>";
-				}
-				echo "</tbody></table>";
-			}
+			// if($users) {
+			// 	echo "<table class=\"table table-condensed\"><thead><tr><th>".getMLText('name')."</th><th></th></tr></thead><tbody>\n";
+			// 	foreach($users as $currUser) {
+			// 		echo "<tr>";
+			// 		echo "<td>";
+			// 		echo htmlspecialchars($currUser->getFullName())." (".htmlspecialchars($currUser->getLogin()).")";
+			// 		echo "<br /><a href=\"mailto:".htmlspecialchars($currUser->getEmail())."\">".htmlspecialchars($currUser->getEmail())."</a>";
+			// 		if($currUser->getComment())
+			// 			echo "<br /><small>".htmlspecialchars($currUser->getComment())."</small>";
+			// 		echo "</td>";
+			// 		echo "<td>";
+			// 		if($accessobject->check_view_access(array('UsrMgr', 'RemoveUser'))) {
+			// 			echo "<div class=\"list-action\">";
+			// 			echo $this->html_link('UsrMgr', array('userid'=>$currUser->getID()), array(), '<i class="fa fa-edit"></i>', false);
+			// 			echo $this->html_link('RemoveUser', array('userid'=>$currUser->getID()), array(), '<i class="fa fa-remove"></i>', false);
+			// 			echo "</div>";
+			// 		}
+			// 		echo "</td>";
+			// 		echo "</tr>";
+			// 	}
+			// 	echo "</tbody></table>";
+			// }
 		}
 	} /* }}} */
 
@@ -132,18 +132,20 @@ $(document).ready( function() {
 		$this->showRackLocationForm($selrole);
 	} /* }}} */
 
-	function showRackLocationForm($currRole) { /* {{{ */
+	function showRackLocationForm($racklocations) { /* {{{ */
 
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
 		$accessop = $this->params['accessobject'];
+
 ?>
+
 	<form class="form-horizontal" action="../op/op.RackLocations.php" method="post" enctype="multipart/form-data" name="form" id="form">
 <?php
-		if($currRole) {
+		if($racklocations) {
 			echo createHiddenFieldWithKey('editracklocations');
 ?>
-	<input type="hidden" name="racklocationid" id="racklocationid" value="<?php print $currRole->getID();?>">
+	<input type="hidden" name="racklocationid" id="racklocationid" value="<?php print $racklocations->getID();?>">
 	<input type="hidden" name="action" value="editracklocations">
 <?php
 		} else {
@@ -161,21 +163,21 @@ $(document).ready( function() {
 				'id'=>'kode',
 				'name'=>'kode',
 				'required'=>true,
-				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
+				'value'=>($racklocations ? htmlspecialchars($racklocations->getKode()) : '')
 			)
 		);
 
 		$options = array();
-		$options[] = array('rak 1', 'rak 1');
-		$options[] = array('rak 2', 'rak 2');
-		$options[] = array('rak 3', 'rak 3');
-		$options[] = array('rak 4', 'rak 4');
-		$options[] = array('rak 5', 'rak 5');
-		$options[] = array('rak 6', 'rak 6');
-		$options[] = array('rak 7', 'rak 7');
-		$options[] = array('rak 8', 'rak 8');
-		$options[] = array('rak 9', 'rak 9');
-		$options[] = array('rak 10', 'rak 10');
+		$options[] = array('1','rak 1', $racklocations && $racklocations->getNomor() == '1');
+		$options[] = array('2','rak 2', $racklocations && $racklocations->getNomor() == '2');
+		$options[] = array('3','rak 3', $racklocations && $racklocations->getNomor() == '3');
+		$options[] = array('4','rak 4', $racklocations && $racklocations->getNomor() == '4');
+		$options[] = array('5','rak 5', $racklocations && $racklocations->getNomor() == '5');
+		$options[] = array('6','rak 6', $racklocations && $racklocations->getNomor() == '6');
+		$options[] = array('7','rak 7', $racklocations && $racklocations->getNomor() == '7');
+		$options[] = array('8','rak 8', $racklocations && $racklocations->getNomor() == '8');
+		$options[] = array('9','rak 9', $racklocations && $racklocations->getNomor() == '9');
+		$options[] = array('10','rak 10', $racklocations && $racklocations->getNomor() == '10');
 		$this->formField(
 			getMLText("nomor_rak"),
 			array(
@@ -184,18 +186,19 @@ $(document).ready( function() {
 				'options'=>$options
 			)
 		);
-
+		
 		$options = array();
-		$options[] = array('baris 1', 'baris 1');
-		$options[] = array('baris 2', 'baris 2');
-		$options[] = array('baris 3', 'baris 3');
-		$options[] = array('baris 4', 'baris 4');
-		$options[] = array('baris 5', 'baris 5');
-		$options[] = array('baris 6', 'baris 6');
-		$options[] = array('baris 7', 'baris 7');
-		$options[] = array('baris 8', 'baris 8');
-		$options[] = array('baris 9', 'baris 9');
-		$options[] = array('baris 10', 'baris 10');
+		$options[] = array('1','baris 1', $racklocations && $racklocations->getBaris() == '1');
+		$options[] = array('2','baris 2', $racklocations && $racklocations->getBaris() == '2');
+		$options[] = array('3','baris 3', $racklocations && $racklocations->getBaris() == '3');
+		$options[] = array('4','baris 4', $racklocations && $racklocations->getBaris() == '4');
+		$options[] = array('5','baris 5', $racklocations && $racklocations->getBaris() == '5');
+		$options[] = array('6','baris 6', $racklocations && $racklocations->getBaris() == '6');
+		$options[] = array('7','baris 7', $racklocations && $racklocations->getBaris() == '7');
+		$options[] = array('8','baris 8', $racklocations && $racklocations->getBaris() == '8');
+		$options[] = array('9','baris 9', $racklocations && $racklocations->getBaris() == '9');
+		$options[] = array('10','baris 10', $racklocations && $racklocations->getBaris() == '10');
+
 		$this->formField(
 			getMLText("baris_rak"),
 			array(
@@ -206,13 +209,13 @@ $(document).ready( function() {
 		);
 
 		$this->formField(
-			getMLText("fisik_rak"),
+			getMLText("fisik_location"),
 			array(
 				'element'=>'input',
 				'type'=>'text',
 				'id'=>'fisik',
 				'name'=>'fisik',
-				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
+				'value'=>($racklocations ? htmlspecialchars($racklocations->getFisik()) : '')
 			)
 		);
 
@@ -223,12 +226,12 @@ $(document).ready( function() {
 				'type'=>'text',
 				'id'=>'keterangan',
 				'name'=>'keterangan',
-				'value'=>($currRole ? htmlspecialchars($currRole->getName()) : '')
+				'value'=>($racklocations ? htmlspecialchars($racklocations->getKeterangan()) : '')
 			)
 		);
 
-		if($currRole && $accessop->check_controller_access('RackLocations', array('action'=>'editracklocations')) || !$currRole && $accessop->check_controller_access('RackLocations', array('action'=>'addracklocations'))) {
-			$this->formSubmit("<i class=\"fa fa-save\"></i> ".getMLText($currRole ? "save" : "add_racklocation"));
+		if($racklocations && $accessop->check_controller_access('RackLocations', array('action'=>'editracklocations')) || !$racklocations && $accessop->check_controller_access('RackLocations', array('action'=>'addracklocations'))) {
+			$this->formSubmit("<i class=\"fa fa-save\"></i> ".getMLText($racklocations ? "save" : "add_racklocation"));
 		}
 ?>
 	</form>
@@ -259,7 +262,7 @@ $(document).ready( function() {
 			$options[] = array("0", getMLText("add_racklocation"));
 		}
 		foreach ($allracklocations as $currRole) {
-			$options[] = array($currRole->getID(), htmlspecialchars($currRole->getName()), $selrole && $currRole->getID()==$selrole->getID());
+			$options[] = array($currRole->getID(), htmlspecialchars($currRole->getKode()), $selrole && $currRole->getID()==$selrole->getID());
 		}
 		$this->formField(
 			null, //getMLText("selection"),

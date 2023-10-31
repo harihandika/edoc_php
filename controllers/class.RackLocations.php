@@ -27,10 +27,13 @@ class SeedDMS_Controller_RackLocations extends SeedDMS_Controller_Common {
 
 	public function addracklocations() {
 		$dms = $this->params['dms'];
-		$name = $this->params['name'];
-		$racklocations = $this->params['racklocations'];
+		$kode = $this->params['kode'];
+		$nomor = $this->params['nomor'];
+		$baris = $this->params['baris'];
+		$fisik = $this->params['fisik'];
+		$keterangan = $this->params['keterangan'];
 
-		return($dms->addRackLocations($name, $racklocations));
+		return($dms->addRackLocations($kode, $nomor, $baris, $fisik, $keterangan));
 	}
 
 	public function removeracklocations() {
@@ -40,15 +43,25 @@ class SeedDMS_Controller_RackLocations extends SeedDMS_Controller_Common {
 
 	public function editracklocations() {
 		$dms = $this->params['dms'];
-		$name = $this->params['name'];
-		$racklocations = $this->params['racklocations'];
+		$kode = $this->params['kode'];
+		$nomor = $this->params['nomor'];
+		$baris = $this->params['baris'];
+		$fisik = $this->params['fisik'];
+		$keterangan = $this->params['keterangan'];
 		$racklocationobj = $this->params['racklocationobj'];
 		$noaccess = $this->params['noaccess'];
 
-		if ($racklocationobj->getName() != $name)
-			$racklocationobj->setName($name);
-		if ($racklocationobj->getRackLocations() != $racklocations)
-			$racklocationobj->setRackLocations($racklocations);
+
+		if ($racklocationobj->getKode() != $kode)
+			$racklocationobj->setKode($kode);
+		if ($racklocationobj->getNomor() != $nomor)
+			$racklocationobj->setNomor($nomor);
+		if ($racklocationobj->getBaris() != $baris)
+			$racklocationobj->setBaris($baris);
+		if ($racklocationobj->getFisik() != $fisik)
+			$racklocationobj->setFisik($fisik);
+		if ($racklocationobj->getKeterangan() != $keterangan)
+			$racklocationobj->setKeterangan($keterangan);
 		$racklocationobj->setNoAccess($noaccess);
 
 		return true;

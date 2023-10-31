@@ -193,6 +193,7 @@ $(document).ready( function() {
 	<input type="hidden" name="action" value="addgroup">
 <?php
 		}
+
 		$this->formField(
 			getMLText("name"),
 			array(

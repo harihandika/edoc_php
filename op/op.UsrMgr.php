@@ -517,11 +517,11 @@ else if ($action == "edituser") {
 	}
 
 	/***************************cek **********************/
-	if(isset($_POST["worklocation"]))
-		$newworklocation = $_POST["worklocation"];
+	if(isset($_POST["worklocations"]))
+		$newworklocations = $_POST["worklocations"];
 	else
-		$newworklocation = array();
-	$oldworklocation = array();
+		$newworklocations = array();
+	$oldworklocations = array();
 	foreach($editedUser->getWorkLocations() as $k)
 		$oldworklocations[] = $k->getID();
 

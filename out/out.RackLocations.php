@@ -44,7 +44,7 @@ if (is_bool($allracklocations)) {
 }
 
 if(isset($_GET['racklocationid']) && $_GET['racklocationid']) {
-	$selrole = $dms->getRole($_GET['racklocationid']);
+	$selrole = $dms->getRackLocations($_GET['racklocationid']);
 } else {
 	$selrole = null;
 }
