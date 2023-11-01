@@ -380,7 +380,7 @@ $(document).ready(function() {
 				getMLText("librarydoc"),
 				$this->getDocumentChooserHtml("adddocform", M_READ, -1, null, 'librarydoc', $libraryfolder, 1)
 			);
-		}
+		}		
 		$options = array();
 		foreach($worklocations as $worklocation) {
 			$options[] = array($worklocation->getID(), htmlspecialchars($worklocation->getName()), ($currUser && $worklocation->isMember($currUser)));
@@ -391,6 +391,7 @@ $(document).ready(function() {
 				'element'=>'select',
 				'name'=>'worklocations[]',
 				'class'=>'chzn-select',
+				'multiple'=>true,
 				'placeholder'=>'Click to select work location',
 				'options'=>$options
 			)
