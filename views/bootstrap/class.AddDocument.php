@@ -380,23 +380,47 @@ $(document).ready(function() {
 				getMLText("librarydoc"),
 				$this->getDocumentChooserHtml("adddocform", M_READ, -1, null, 'librarydoc', $libraryfolder, 1)
 			);
-		}		
-		$options = array();
+		}	
 		foreach($worklocations as $worklocation) {
-			$options[] = array($worklocation->getID(), htmlspecialchars($worklocation->getName()), ($currUser && $worklocation->isMember($currUser)));
-		}
-		$this->formField(
-			getMLText("fisik_location"),
-			array(
-				'element'=>'select',
-				'name'=>'worklocations[]',
-				'class'=>'chzn-select',
-				'multiple'=>true,
-				'placeholder'=>'Click to select work location',
-				'options'=>$options
-			)
-		);
+				if ($user && $worklocation->isMember($user)){
+					$options = htmlspecialchars($worklocation->getName());
+				}
+		};
+		$this->contentContainerStart();
+		echo "<tr>";
+		echo "<td>".getMLText("fisik_location").":</td>\n";
+			echo "<td>".htmlspecialchars($options)."</td>\n";
+			echo "</tr>";
+			$this->contentContainerEnd();
 
+		// $this->formField(
+		// 	getMLText("fisik_location"),
+		// 	array(
+		// 		'element'=>'input',
+		// 		'type'=>'text',
+		// 		'id'=>'worklocations[]',
+		// 		'name'=>'worklocations[]',
+		// 		'value'=>$options,
+
+		// 	)
+		// );
+		// $options = array();
+		// foreach($worklocations as $worklocation) {
+		// 	$options[] = array($worklocation->getID(), htmlspecialchars($worklocation->getName()), ($user && $worklocation->isMember($user)));
+		// }
+		// $this->formField(
+		// 	getMLText("fisik_location"),
+		// 	array(
+		// 		'element'=>'select',
+		// 		'name'=>'worklocations[]',
+		// 		'class'=>'chzn-select',
+		// 		// 'multiple'=>true,
+		// 		'placeholder'=>'Click to select work location',
+		// 		'options'=>$options,
+		// 		'enabled'=>false
+		// 	)
+		// );
+		
 		if(!$nodocumentformfields || !in_array('version_comment', $nodocumentformfields)) {
 		$this->formField(
 			getMLText("comment_for_current_version"),
@@ -513,6 +537,7 @@ $(document).ready(function() {
 					if ($mandatory) $option[] = array(array('disabled', 'disabled'));
 					$options[] = $option;
 				}
+
 				$this->formField(
 					getMLText("individuals"),
 					array(

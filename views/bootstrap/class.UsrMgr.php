@@ -631,6 +631,7 @@ $(document).ready( function() {
 				'placeholder'=>getMLText('select_users'),
 			)
 		);
+
 ?>
 </form>
 <?php if($accessobject->check_view_access($this, array('action'=>'actionmenu'))) { ?>

@@ -676,7 +676,14 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		if ($accessobject->check_view_access('Indexer') && $this->params['enablefullsearch']) {
 			$menuitems['index_folder'] = array('link'=>"../out/out.Indexer.php?folderid=". $folderID."&showtree=".showtree(), 'label'=>'index_folder');
 		}
+			/******************************** */
+		if ($accessMode == M_ALL) {
+			if ($accessobject->check_view_access('RequestDocumentSoftCopy'))
+			$menuitems['request_document_soft_copy'] = array('link'=>"../out/out.RequestDocumentSoftCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_document_soft_copy');
 
+			if ($accessobject->check_view_access('RequestDocumentHardCopy'))
+			$menuitems['request_document_hard_copy'] = array('link'=>"../out/out.RequestDocumentHardCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_document_hard_copy');
+		}
 		/* Check if hook exists because otherwise callHook() will override $menuitems */
 		if($this->hasHook('folderNavigationBar'))
 			$menuitems = $this->callHook('folderNavigationBar', $folder, $menuitems);

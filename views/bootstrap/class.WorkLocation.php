@@ -158,7 +158,7 @@ $(document).ready( function() {
 
 		if($selgroup) {
 ?>
-<div class="btn-group">
+<!-- <div class="btn-group">
   <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 		<?php echo getMLText('action'); ?>
     <span class="caret"></span>
@@ -170,7 +170,7 @@ $(document).ready( function() {
 				echo '<li><a href="../op/op.UserListCsv.php?worklocationid='.$selgroup->getID().'"><i class="fa fa-download"></i> '.getMLText("export_user_list_csv").'</a><li>';
 ?>
 	</ul>
-</div>
+</div> -->
 <?php
 		}
 	} /* }}} */

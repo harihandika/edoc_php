@@ -870,6 +870,7 @@ URL: [url]',
 'my_documents' => 'My Documents',
 'my_transmittals' => 'My Transmittals',
 'name' => 'Name',
+'name_document' => 'Nama Document',
 'nb_NO' => 'Norwegian (Bokmål)',
 'needs_correction' => 'Needs correction',
 'needs_workflow_action' => 'This document requires your attention. Please check the workflow tab.',
@@ -1096,6 +1097,8 @@ URL: [url]',
 'remove_marked_files' => 'Remove marked files',
 'repaired' => 'repaired',
 'repairing_objects' => 'Repairing documents and folders.',
+'request_document_soft_copy' => 'Request Document Soft Copy',
+'request_document_hard_copy' => 'Request Document Hard Copy',
 'request_workflow_action_email_body' => 'The workflow has reached a state which requires your action.
 Document: [name]
 Version: [version]
