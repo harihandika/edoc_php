@@ -49,6 +49,11 @@ if ($folder->getAccessMode($user) < M_READWRITE) {
 	UI::exitError(getMLText("folder_title", array("foldername" => htmlspecialchars($folder->getName()))),getMLText("access_denied"));
 }
 
+$worklocations = $dms->getAllWorkLocations();
+if (is_bool($worklocations)) {
+	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
+}
+
 if($view) {
 	$view->setParam('folder', $folder);
 	$view->setParam('strictformcheck', $settings->_strictFormCheck);
@@ -58,6 +63,7 @@ if($view) {
 	$view->setParam('enableadminrevapp', $settings->_enableAdminRevApp);
 	$view->setParam('enableownerrevapp', $settings->_enableOwnerRevApp);
 	$view->setParam('enableselfrevapp', $settings->_enableSelfRevApp);
+	$view->setParam('allworklocations', $worklocations);
 	$view($_GET);
 	exit;
 }

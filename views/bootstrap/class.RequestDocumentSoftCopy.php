@@ -71,6 +71,7 @@ $(document).ready( function() {
 		$enableadminrevapp = $this->params['enableadminrevapp'];
 		$enableownerrevapp = $this->params['enableownerrevapp'];
 		$enableselfrevapp = $this->params['enableselfrevapp'];
+		$worklocations = $this->params['allworklocations'];
 
 		$this->htmlAddHeader('<script type="text/javascript" src="../views/'.$this->theme.'/vendors/jquery-validation/jquery.validate.js"></script>'."\n", 'js');
 
@@ -113,6 +114,16 @@ $docAccess = $folder->getReadAccessList($enableadminrevapp, $enableownerrevapp);
 				'required'=>$strictformcheck
 			)
 		);
+		$res=$user->getMandatoryReviewers();
+				$tmp = array();
+				if($res) {
+					foreach ($res as $r) {
+						if($r['reviewerUserID'] > 0) {
+							$u = $dms->getUser($r['reviewerUserID']);
+							$tmp[] =  htmlspecialchars($u->getFullName().' ('.$u->getLogin().')');
+						}
+					}
+				}
 		$options = array();
 				foreach ($docAccess["users"] as $usr) {
 					if (!$enableselfrevapp && $usr->getID()==$user->getID()) continue; 
@@ -125,17 +136,48 @@ $docAccess = $folder->getReadAccessList($enableadminrevapp, $enableownerrevapp);
 				}
 
 				$this->formField(
-					getMLText("individuals"),
+					getMLText("pilih_pic"),
 					array(
 						'element'=>'select',
 						'name'=>'indReviewers[]',
 						'class'=>'chzn-select',
-						'attributes'=>array(array('data-placeholder', getMLText('select_ind_reviewers'))),
+						'attributes'=>array(array('data-placeholder', getMLText('select_pic'))),
 						'multiple'=>true,
 						'options'=>$options
 					),
 					array('field_wrap'=>array('', ($tmp ? '<div class="mandatories"><span>'.getMLText('mandatory_reviewers').':</span> '.implode(', ', $tmp).'</div>' : '')))
 				);
+
+				$options = array();
+				foreach($worklocations as $worklocation) {
+					$options[] = array($worklocation->getID(), htmlspecialchars($worklocation->getName()), ($user && $worklocation->isMember($user)));
+				}
+
+				$this->formField(
+					"Location",	
+					array(
+						'element'=>'select',
+						'name'=>'worklocations[]',
+						'class'=>'chzn-select',
+						'multiple'=>true,
+						'placeholder'=>'Click to select work location',
+						'options'=>$options
+					)
+				);
+
+		$options = array();
+		$options[] = array('Keperluan Audit','Keperluan Audit');
+		$options[] = array('Keperluan Tender','Keperluan Tender');
+		$options[] = array('Keperluan Review','Keperluan Review');
+		$options[] = array('Lain-lain','Lain-lain');
+		$this->formField(
+			getMLText("keperluan"),
+			array(
+				'element'=>'select',
+				'name'=>'nomor',
+				'options'=>$options
+			)
+		);
 
 		$attrdefs = $dms->getAllAttributeDefinitions(array(SeedDMS_Core_AttributeDefinition::objtype_folder, SeedDMS_Core_AttributeDefinition::objtype_all));
 		if($attrdefs) {
