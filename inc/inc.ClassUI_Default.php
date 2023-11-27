@@ -203,7 +203,7 @@ class UI_Default {
 		return;
 	} /* }}} */
 
-	function __folderNavigationBar($folder) { /* {{{ */
+	function __folderNavigationBar($folder, $softcopy) { /* {{{ */
 
 		global $user, $settings, $theme;
 
@@ -214,6 +214,11 @@ class UI_Default {
 		}
 		$accessMode = $folder->getAccessMode($user);
 		$folderID = $folder->getID();
+		$softcopyID = $softcopy->getID();
+		echo "<pre>";
+var_dump($folderID);
+echo "<pre>";
+die();
 		echo "<ul class=\"localNav\">\n";
 		if ($accessMode == M_READ && !$user->isGuest()) {
 			echo "<li id=\"first\"><a href=\"../out/out.FolderNotify.php?folderid=". $folderID ."&showtree=".showtree()."\">".getMLText("edit_folder_notify")."</a></li>\n";
@@ -228,7 +233,7 @@ class UI_Default {
 			if ($folderID != $settings->_rootFolderID && $folder->getParent())
 			echo "<li><a href=\"../out/out.MoveFolder.php?folderid=". $folderID ."&showtree=".showtree()."\">".getMLText("move_folder")."</a></li>\n";
 		/**************************** request document   ******** */
-			echo "<li><a href=\"../out/out.RequestDocument.php?folderid=". $folderID ."&showtree=".showtree()."\">".getMLText("request_document")."</a></li>\n";
+			echo "<li><a href=\"../out/out.RequestDocumentSoftCopy.php?softcopyid=". $softcopyID."&showtree=".showtree()."\">".getMLText("request_document")."</a></li>\n";
 		}
 		if ($accessMode == M_ALL) {
 			if ($folderID != $settings->_rootFolderID && $folder->getParent())

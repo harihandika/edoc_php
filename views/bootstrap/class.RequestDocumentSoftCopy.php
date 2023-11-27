@@ -63,14 +63,13 @@ $(document).ready( function() {
 	} /* }}} */
 
 	function show() { /* {{{ */
+		
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
 		$folder = $this->params['folder'];
 		$strictformcheck = $this->params['strictformcheck'];
 		$orderby = $this->params['orderby'];
-		$enableadminrevapp = $this->params['enableadminrevapp'];
-		$enableownerrevapp = $this->params['enableownerrevapp'];
-		$enableselfrevapp = $this->params['enableselfrevapp'];
+		$sortusersinlist = $this->params['sortusersinlist'];
 		$worklocations = $this->params['allworklocations'];
 
 		$this->htmlAddHeader('<script type="text/javascript" src="../views/'.$this->theme.'/vendors/jquery-validation/jquery.validate.js"></script>'."\n", 'js');
@@ -81,7 +80,6 @@ $(document).ready( function() {
 //		$this->pageNavigation($this->getFolderPathHTML($folder, true), "view_folder", $folder);
 
 /******************************************** *************/
-$docAccess = $folder->getReadAccessList($enableadminrevapp, $enableownerrevapp);
 ?>
 	<div class="ajax" data-view="ViewFolder" data-action="navigation" data-no-spinner="true" <?php echo ($folder ? "data-query=\"folderid=".$folder->getID()."\"" : "") ?>></div>
 <?php
@@ -104,6 +102,7 @@ $docAccess = $folder->getReadAccessList($enableadminrevapp, $enableownerrevapp);
 				'required'=>true
 			)
 		);
+		
 		$this->formField(
 			getMLText("keterangan"),
 			array(
@@ -124,22 +123,17 @@ $docAccess = $folder->getReadAccessList($enableadminrevapp, $enableownerrevapp);
 						}
 					}
 				}
-		$options = array();
-				foreach ($docAccess["users"] as $usr) {
-					if (!$enableselfrevapp && $usr->getID()==$user->getID()) continue; 
-					$mandatory=false;
-					foreach ($res as $r) if ($r['reviewerUserID']==$usr->getID()) $mandatory=true;
-
-					$option = array($usr->getID(), htmlspecialchars($usr->getLogin()." - ".$usr->getFullName()), null);
-					if ($mandatory) $option[] = array(array('disabled', 'disabled'));
-					$options[] = $option;
-				}
-
+				$options = array();
+				$allUsers = $dms->getAllUsers($sortusersinlist);
+				foreach ($allUsers as $userObj) {
+					// if (!$userObj->isGuest() && $folder->getAccessMode($userObj))
+						$options[] = array($userObj->getID(), htmlspecialchars($userObj->getLogin() . " - " . $userObj->getFullName()));
+				}		
 				$this->formField(
 					getMLText("pilih_pic"),
 					array(
 						'element'=>'select',
-						'name'=>'indReviewers[]',
+						'name'=>'notification_users[]',
 						'class'=>'chzn-select',
 						'attributes'=>array(array('data-placeholder', getMLText('select_pic'))),
 						'multiple'=>true,
@@ -174,7 +168,7 @@ $docAccess = $folder->getReadAccessList($enableadminrevapp, $enableownerrevapp);
 			getMLText("keperluan"),
 			array(
 				'element'=>'select',
-				'name'=>'nomor',
+				'name'=>'keperluan',
 				'options'=>$options
 			)
 		);

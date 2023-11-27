@@ -1,6 +1,6 @@
 <?php
 /**
- * Implementation of AddSubFolder controller
+ * Implementation of RequestDocumentSoftCOpy controller
  *
  * @category   DMS
  * @package    SeedDMS
@@ -20,85 +20,88 @@
  * @copyright  Copyright (C) 2010-2013 Uwe Steinmann
  * @version    Release: @package_version@
  */
-class SeedDMS_Controller_AddSubFolder extends SeedDMS_Controller_Common {
+class SeedDMS_Controller_RequestDocumentSoftCopy extends SeedDMS_Controller_Common {
 
 	public function run() { /* {{{ */
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
 		$fulltextservice = $this->params['fulltextservice'];
 		$folder = $this->params['folder'];
+		// $softcopy = $this->params['softcopy'];
 
-		/* Call preAddSubFolder early, because it might need to modify some
+
+		/* Call preRequestDocumentSoftCopy early, because it might need to modify some
 		 * of the parameters.
 		 */
-		if(false === $this->callHook('preAddSubFolder')) {
+		if(false === $this->callHook('preRequestDocumentSoftCopy')) {
 			if(empty($this->errormsg))
-				$this->errormsg = 'hook_preAddSubFolder_failed';
+				$this->errormsg = 'hook_preRequestDocumentSoftCopy_failed';
 			return false;
 		}
 
 		$name = $this->getParam('name');
-		$comment = $this->getParam('comment');
+		$keterangan = $this->getParam('keterangan');
+		$keperluan = $this->getParam('keperluan');
 		$sequence = $this->getParam('sequence');
 		$attributes = $this->getParam('attributes');
-		foreach($attributes as $attrdefid=>$attribute) {
-			if($attrdef = $dms->getAttributeDefinition($attrdefid)) {
-				if(null === ($ret = $this->callHook('validateAttribute', $attrdef, $attribute))) {
-				if($attribute) {
-					if(!$attrdef->validate($attribute)) {
-						$this->errormsg = getAttributeValidationError($attrdef->getValidationError(), $attrdef->getName(), $attribute);
-						return false;
-					}
-				} elseif($attrdef->getMinValues() > 0) {
-					$this->errormsg = array("attr_min_values", array("attrname"=>$attrdef->getName()));
-					return false;
-				}
-				} else {
-					if($ret === false)
-						return false;
-				}
-			}
-		}
+		// foreach($attributes as $attrdefid=>$attribute) {
+		// 	if($attrdef = $dms->getAttributeDefinition($attrdefid)) {
+		// 		if(null === ($ret = $this->callHook('validateAttribute', $attrdef, $attribute))) {
+		// 		if($attribute) {
+		// 			if(!$attrdef->validate($attribute)) {
+		// 				$this->errormsg = getAttributeValidationError($attrdef->getValidationError(), $attrdef->getName(), $attribute);
+		// 				return false;
+		// 			}
+		// 		} elseif($attrdef->getMinValues() > 0) {
+		// 			$this->errormsg = array("attr_min_values", array("attrname"=>$attrdef->getName()));
+		// 			return false;
+		// 		}
+		// 		} else {
+		// 			if($ret === false)
+		// 				return false;
+		// 		}
+		// 	}
+		// }
 		$notificationgroups = $this->getParam('notificationgroups');
 		$notificationusers = $this->getParam('notificationusers');
 
-		$subFolder = $this->callHook('addSubFolder');
-		if($subFolder === null) {
-			$subFolder = $folder->addSubFolder($name, $comment, $user, $sequence, $attributes);
-			if (!is_object($subFolder)) {
-				$this->errormsg = "error_occured";
-				return false;
-			}
-			/* Check if additional notification shall be added */
-			foreach($notificationusers as $notuser) {
-				if($subFolder->getAccessMode($user) >= M_READ)
-					$res = $subFolder->addNotify($notuser->getID(), true);
-			}
-			foreach($notificationgroups as $notgroup) {
-				if($subFolder->getGroupAccessMode($notgroup) >= M_READ)
-					$res = $subFolder->addNotify($notgroup->getID(), false);
-			}
-		} elseif($subFolder === false) {
-			if(empty($this->errormsg))
-				$this->errormsg = 'hook_addFolder_failed';
-			return false;
-		}
+		$subSoftCopy = $this->callHook('requestDocumentSoftCopy');
+		// if($subSoftCopy === null) {
+		// 	$subSoftCopy = $softcopy->requestDocumentSoftCopy($name, $keterangan, $keperluan, $user, $sequence, $attributes);
+		// 	if (!is_object($subSoftCopy)) {
+		// 		$this->errormsg = "error_occured";
+		// 		return false;
+		// 	}
+		// 	/* Check if additional notification shall be added */
+		// 	foreach($notificationusers as $notuser) {
+		// 		if($subSoftCopy->getAccessMode($user) >= M_READ)
+		// 			$res = $subSoftCopy->addNotify($notuser->getID(), true);
+		// 	}
+		// 	foreach($notificationgroups as $notgroup) {
+		// 		if($subSoftCopy->getGroupAccessMode($notgroup) >= M_READ)
+		// 			$res = $subSoftCopy->addNotify($notgroup->getID(), false);
+		// 	}
+		// } elseif($subSoftCopy === false) {
+		// 	if(empty($this->errormsg))
+		// 		$this->errormsg = 'hook_addSoftCopy_failed';
+		// 	return false;
+		// }
 
-		if($fulltextservice && ($index = $fulltextservice->Indexer()) && $subFolder) {
-			$idoc = $fulltextservice->IndexedDocument($subFolder);
-			if(false !== $this->callHook('preIndexFolder', $subFolder, $idoc)) {
+		if($fulltextservice && ($index = $fulltextservice->Indexer()) && $subSoftCopy) {
+			$idoc = $fulltextservice->IndexedDocument($subSoftCopy);
+			if(false !== $this->callHook('preIndexSoftCopy', $subSoftCopy, $idoc)) {
 				$index->addDocument($idoc);
 				$index->commit();
 			}
 		}
 
-		if(false === $this->callHook('postAddSubFolder', $subFolder)) {
+		if(false === $this->callHook('postRequestDocumentSoftCOpy', $subSoftCopy)) {
 			if(empty($this->errormsg))
-				$this->errormsg = 'hook_postAddSubFoder_failed';
+				$this->errormsg = 'hook_postRequestDocumentSoftCopy_failed';
 			return false;
 		}
 
-		return $subFolder;
+		return $subSoftCopy;
 	} /* }}} */
 }
 

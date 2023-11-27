@@ -34,12 +34,18 @@ $tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
 $view = UI::factory($theme, $tmp[1], array('dms'=>$dms, 'user'=>$user));
 $accessop = new SeedDMS_AccessOperation($dms, $user, $settings);
 if (!$accessop->check_view_access($view, $_GET)) {
-	UI::exitError(getMLText("folder_title", array("foldername" => '')),getMLText("access_denied"));
+	UI::exitError(getMLText("softcopy_title", array("softcopyname" => '')),getMLText("access_denied"));
 }
 
+if(isset($_GET['softcopyid']) && $_GET['softcopyid']) {
+	$selgroup = $dms->getSoftCopy($_GET['softcopyid']);
+} else {
+	$selgroup = null;
+}
 if (!isset($_GET["folderid"]) || !is_numeric($_GET["folderid"]) || intval($_GET["folderid"])<1) {
 	UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
 }
+
 $folder = $dms->getFolder($_GET["folderid"]);
 if (!is_object($folder)) {
 	UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
@@ -56,14 +62,13 @@ if (is_bool($worklocations)) {
 
 if($view) {
 	$view->setParam('folder', $folder);
+	// $view->setParam('softcopy', $softcopy);
 	$view->setParam('strictformcheck', $settings->_strictFormCheck);
 	$view->setParam('defaultposition', $settings->_defaultDocPosition);
 	$view->setParam('orderby', $settings->_sortFoldersDefault);
 	$view->setParam('accessobject', $accessop);
-	$view->setParam('enableadminrevapp', $settings->_enableAdminRevApp);
-	$view->setParam('enableownerrevapp', $settings->_enableOwnerRevApp);
-	$view->setParam('enableselfrevapp', $settings->_enableSelfRevApp);
 	$view->setParam('allworklocations', $worklocations);
+	$view->setParam('sortusersinlist', $settings->_sortUsersInList);
 	$view($_GET);
 	exit;
 }

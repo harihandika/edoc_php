@@ -33,40 +33,38 @@ include("../inc/inc.Authentication.php");
 $tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
 $controller = Controller::factory($tmp[1], array('dms'=>$dms, 'user'=>$user));
 
-/* Check if the form data comes from a trusted request */
-if(!checkFormKey('addsubfolder')) {
-	UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_request_token"))),getMLText("invalid_request_token"));
+
+// if (!isset($_POST["softcopyid"]) || !is_numeric($_POST["softcopyid"]) || intval($_POST["softcopyid"])<1) {
+// 	UI::exitError(getMLText("admin_tools"),getMLText("invalid_groupsss_id"));
+// 	}
+if (isset($_GET["softcopyid"])) {
+	if (!is_numeric($_GET["softcopyid"])) {
+		UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("unknown_user"));
+		$name = $_POST["name"];
+$keterangan = $_POST["keterangan"];
+$keperluan = $_POST["keperluan"];
+	}
+	if (!strcasecmp($action, "addaccess") && $_GET["softcopyid"]==-1) {
+		$softcopyid = -1;
+	}
+	else {
+		if (!is_object($dms->getUser($_GET["softcopyid"]))) {
+			UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("unknown_user"));
+		}
+		$softcopyid = $_GET["softcopyid"];
+	}
 }
 
-if (!isset($_POST["folderid"]) || !is_numeric($_POST["folderid"]) || intval($_POST["folderid"])<1) {
-	UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
-}
-$folderid = $_POST["folderid"];
-$folder = $dms->getFolder($folderid);
-
-if (!is_object($folder)) {
-	UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
-}
-
-$folderPathHTML = getFolderPathHTML($folder, true);
-
-if ($folder->getAccessMode($user, 'addFolder') < M_READWRITE) {
-	UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("access_denied"));
-}
-
-$sequence = $_POST["sequence"];
-$sequence = str_replace(',', '.', $_POST["sequence"]);
-
-if (!is_numeric($sequence)) {
-	UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("invalid_sequence"));
-}
+// $softcopyid = $_POST["softcopyid"];
+// $softcopy = $dms->getSoftCopy($softcopyid);
 
 $name = $_POST["name"];
-$comment = $_POST["comment"];
-if(isset($_POST["attributes"]))
-	$attributes = $_POST["attributes"];
-else
-	$attributes = array();
+$keterangan = $_POST["keterangan"];
+$keperluan = $_POST["keperluan"];
+// if(isset($_POST["attributes"]))
+// 	$attributes = $_POST["attributes"];
+// else
+// 	$attributes = array();
 /*
 foreach($attributes as $attrdefid=>$attribute) {
 	$attrdef = $dms->getAttributeDefinition($attrdefid);
@@ -91,6 +89,7 @@ if(!empty($_POST['notification_users'])) {
 		}
 	}
 }
+
 $notgroups = array();
 if(!empty($_POST['notification_groups'])) {
 	foreach($_POST['notification_groups'] as $notgroupid) {
@@ -102,52 +101,54 @@ if(!empty($_POST['notification_groups'])) {
 }
 
 /* Check if name already exists in the folder */
-if(!$settings->_enableDuplicateSubFolderNames) {
-	if($folder->hasSubFolderByName($name)) {
-		UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("subfolder_duplicate_name"));
-	}
-}
+// if(!$settings->_enableDuplicateSubFolderNames) {
+// 	if($folder->hasSubFolderByName($name)) {
+// 		UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("subfolder_duplicate_name"));
+// 	}
+// }
 
 $controller->setParam('fulltextservice', $fulltextservice);
-$controller->setParam('folder', $folder);
+// $controller->setParam('folder', $folder);
+// $controller->setParam('softcopy', $softcopy);
 $controller->setParam('name', $name);
-$controller->setParam('comment', $comment);
-$controller->setParam('sequence', $sequence);
-$controller->setParam('attributes', $attributes);
+$controller->setParam('keterangan', $keterangan);
+$controller->setParam('keperluan', $keperluan);
+// $controller->setParam('attributes', $attributes);
 $controller->setParam('notificationgroups', $notgroups);
 $controller->setParam('notificationusers', $notusers);
-if(!$subFolder = $controller->run()) {
-	UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText($controller->getErrorMsg()));
-} else {
-	// Send notification to subscribers.
-	if($notifier) {
-		$fnl = $folder->getNotifyList();
-		$snl = $subFolder->getNotifyList();
-		$nl = array(
-			'users'=>array_unique(array_merge($snl['users'], $fnl['users']), SORT_REGULAR),
-			'groups'=>array_unique(array_merge($snl['groups'], $fnl['groups']), SORT_REGULAR)
-		);
+// if(!$subSoftCopy = $controller->run()) {
+// 	UI::exitError(getMLText("softcopy_title", array("softcopyname" => $softcopy->getName())),getMLText($controller->getErrorMsg()));
+// } else {
+// 	// Send notification to subscribers.
+// 	if($notifier) {
+// 		$fnl = $softcopy->getNotifyList();
+// 		$snl = $subSoftCopy->getNotifyList();
+// 		$nl = array(
+// 			'users'=>array_unique(array_merge($snl['users'], $fnl['users']), SORT_REGULAR),
+// 			'groups'=>array_unique(array_merge($snl['groups'], $fnl['groups']), SORT_REGULAR)
+// 		);
 
-		$subject = "new_subfolder_email_subject";
-		$message = "new_subfolder_email_body";
-		$params = array();
-		$params['name'] = $subFolder->getName();
-		$params['folder_name'] = $folder->getName();
-		$params['folder_path'] = $folder->getFolderPathPlain();
-		$params['username'] = $user->getFullName();
-		$params['comment'] = $comment;
-		$params['url'] = getBaseUrl().$settings->_httpRoot."out/out.ViewFolder.php?folderid=".$subFolder->getID();
-		$params['sitename'] = $settings->_siteName;
-		$params['http_root'] = $settings->_httpRoot;
-		$notifier->toList($user, $nl["users"], $subject, $message, $params, SeedDMS_NotificationService::RECV_NOTIFICATION);
-		foreach ($nl["groups"] as $grp) {
-			$notifier->toGroup($user, $grp, $subject, $message, $params, SeedDMS_NotificationService::RECV_NOTIFICATION);
-		}
-	}
-}
+// 		$subject = "new_subsoftcopy_email_subject";
+// 		$message = "new_subsoftcopy_email_body";
+// 		$params = array();
+// 		$params['name'] = $subSoftCopy->getName();
+// 		$params['softcopy_name'] = $softcopy->getName();
+// 		$params['folder_path'] = $folder->getFolderPathPlain();
+// 		$params['username'] = $user->getFullName();
+// 		$params['keterangan'] = $keterangan;
+// 		$params['keperluan'] = $keperluan;
+// 		$params['url'] = getBaseUrl().$settings->_httpRoot."out/out.ViewFolder.php?softcopyid=".$subSoftCopy->getID();
+// 		$params['sitename'] = $settings->_siteName;
+// 		$params['http_root'] = $settings->_httpRoot;
+// 		$notifier->toList($user, $nl["users"], $subject, $message, $params, SeedDMS_NotificationService::RECV_NOTIFICATION);
+// 		foreach ($nl["groups"] as $grp) {
+// 			$notifier->toGroup($user, $grp, $subject, $message, $params, SeedDMS_NotificationService::RECV_NOTIFICATION);
+// 		}
+// 	}
+// }
 
-add_log_line("?name=".$name."&folderid=".$folderid);
+add_log_line("?name=".$name."&softcopyid=".$softcopyid);
 
-header("Location:../out/out.ViewFolder.php?folderid=".$folderid."&showtree=".$_POST["showtree"]);
+header("Location:../out/out.ViewFolder.php?softcopyid=".$softcopyid."&showtree=".$_POST["showtree"]);
 
 ?>

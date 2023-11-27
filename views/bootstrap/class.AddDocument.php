@@ -820,7 +820,7 @@ $(document).ready(function() {
 		$options = array();
 		$allUsers = $dms->getAllUsers($sortusersinlist);
 		foreach ($allUsers as $userObj) {
-			if (!$userObj->isGuest() && $folder->getAccessMode($userObj) >= M_READ)
+			// if (!$userObj->isGuest() && $folder->getAccessMode($userObj))
 				$options[] = array($userObj->getID(), htmlspecialchars($userObj->getLogin() . " - " . $userObj->getFullName()));
 		}
 		$this->formField(

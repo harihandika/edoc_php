@@ -851,6 +851,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		 */
 		if (/*$workflowmode != 'traditional_only_approval' &&*/ is_array($reviewStatus) && count($reviewStatus)>0) {
 
+
 			$this->columnStart(6);
 //		$this->contentContainerStart();
 			print "<legend>".getMLText('reviewers')."</legend>";

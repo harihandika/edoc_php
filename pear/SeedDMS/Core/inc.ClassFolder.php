@@ -725,6 +725,61 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 		return $newFolder;
 	} /* }}} */
+	function requestDocumentSoftCopy($name, $keterangan, $keperluan, $owner, $attributes=array()) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		// Set the folderList of the folder
+		$pathPrefix="";
+		$path = $this->getPath();
+		foreach ($path as $f) {
+			$pathPrefix .= ":".$f->getID();
+		}
+		if (strlen($pathPrefix)>1) {
+			$pathPrefix .= ":";
+		}
+
+		$db->startTransaction();
+
+		//inheritAccess = true, defaultAccess = M_READ
+		$queryStr = "INSERT INTO `tblSoftCopys` (`name`, `keterangan`, `keperluan`, `date`, `owner`, `inheritAccess`, `defaultAccess`) ".
+					"VALUES (".$db->qstr($name).", ".$db->qstr($keterangan).",".$db->qstr($keperluan).", ".$db->getCurrentTimestamp().", ".$owner->getID().",1, ".M_READ.")";
+		if (!$db->getResult($queryStr)) {
+			$db->rollbackTransaction();
+			return false;
+		}
+		$requestDocumentSoft = $this->_dms->getSoftCopy($db->getInsertID('tblSoftCopys'));
+		unset($this->_subFolders);
+
+		if($attributes) {
+			foreach($attributes as $attrdefid=>$attribute) {
+				if($attribute)
+					if($attrdef = $this->_dms->getAttributeDefinition($attrdefid)) {
+						if(!$requestDocumentSoft->setAttributeValue($attrdef, $attribute)) {
+							$db->rollbackTransaction();
+							return false;
+						}
+					} else {
+						$db->rollbackTransaction();
+						return false;
+					}
+			}
+		}
+
+		$db->commitTransaction();
+
+		/* Check if 'onPostAddSubFolder' callback is set */
+		if(isset($this->_dms->callbacks['onPostRequestDocumentSoftCopy'])) {
+			foreach($this->_dms->callbacks['onPostRequestDocumentSoftCopy'] as $callback) {
+					/** @noinspection PhpStatementHasEmptyBodyInspection */
+					if(!call_user_func($callback[0], $callback[1], $requestDocumentSoft)) {
+				}
+			}
+		}
+
+		return $requestDocumentSoft;
+	} /* }}} */
+
+
 
 	/**
 	 * Returns an array of all parents, grand parent, etc. up to root folder.

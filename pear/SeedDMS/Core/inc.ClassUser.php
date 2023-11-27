@@ -367,23 +367,71 @@ class SeedDMS_Core_RackLocations { /* {{{ */
 
 	function getKode() { return $this->_kode; }
 
-	function getNomor() { return $this->_nomor; }
-
-	function getBaris() { return $this->_baris; }
-
-	function getFisik() { return $this->_fisik; }
-	
-	function getKeterangan() { return $this->_keterangan; }
-
-	function setName($newName) { /* {{{ */
+	function setKode($newKode) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblRackLocations` SET `name` =".$db->qstr($newName)." WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblRackLocations` SET `kode` =".$db->qstr($newKode)." WHERE `id` = " . $this->_id;
 		$res = $db->getResult($queryStr);
 		if (!$res)
 			return false;
 
-		$this->_kode = $newName;
+		$this->_kode = $newKode;
+		return true;
+	} /* }}} */
+
+	function getNomor() { return $this->_nomor; }
+
+	function setNomor($newNomor) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblRackLocations` SET `nomor` =".$db->qstr($newNomor)." WHERE `id` = " . $this->_id;
+		$res = $db->getResult($queryStr);
+		if (!$res)
+			return false;
+
+		$this->_nomor = $newNomor;
+		return true;
+	} /* }}} */
+
+	function getBaris() { return $this->_baris; }
+
+	function setBaris($newBaris) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblRackLocations` SET `baris` =".$db->qstr($newBaris)." WHERE `id` = " . $this->_id;
+		$res = $db->getResult($queryStr);
+		if (!$res)
+			return false;
+
+		$this->_baris = $newBaris;
+		return true;
+	} /* }}} */
+
+	function getFisik() { return $this->_fisik; }
+
+	function setFisik($newFisik) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblRackLocations` SET `fisik` =".$db->qstr($newFisik)." WHERE `id` = " . $this->_id;
+		$res = $db->getResult($queryStr);
+		if (!$res)
+			return false;
+
+		$this->_fisik = $newFisik;
+		return true;
+	} /* }}} */
+	
+	function getKeterangan() { return $this->_keterangan; }
+
+	function setKeterangan($newKeterangan) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblRackLocations` SET `keterangan` =".$db->qstr($newKeterangan)." WHERE `id` = " . $this->_id;
+		$res = $db->getResult($queryStr);
+		if (!$res)
+			return false;
+
+		$this->_keterangan = $newKeterangan;
 		return true;
 	} /* }}} */
 

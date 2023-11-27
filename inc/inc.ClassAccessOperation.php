@@ -486,7 +486,7 @@ class SeedDMS_AccessOperation {
 				'RemoveTransmittal',
 				'RemoveVersion',
 				'RemoveWorkflowFromDocument',
-				'RequestDocument', // tambahan
+				'RequestDocumentSoftCopy', // tambahan
 				'ReturnFromSubWorkflow',
 				'ReviewDocument',
 				'ReviewSummary',

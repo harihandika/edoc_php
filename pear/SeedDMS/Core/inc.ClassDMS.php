@@ -2656,6 +2656,11 @@ class SeedDMS_Core_DMS {
 		return $classname::getInstance($id, $this);
 	} /* }}} */
 
+	function getSoftCopy($id) { /* {{{ */
+		$classname = $this->classnames['softcopy'];
+		return $classname::getInstance($id, $this, '');
+	} /* }}} */
+
 	/**
 	 * Return a folder by its name
 	 *
