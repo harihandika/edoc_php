@@ -20,6 +20,7 @@ require_once("inc.ClassAccess.php");
 require_once("inc.ClassObject.php");
 require_once("inc.ClassFolder.php");
 require_once("inc.ClassDocument.php");
+require_once("inc.ClassRequestSoftCopy.php");
 require_once("inc.ClassGroup.php");
 require_once("inc.ClassWorkLocation.php");
 require_once("inc.ClassUser.php");
@@ -485,6 +486,7 @@ class SeedDMS_Core_DMS {
 		$this->user = null;
 		$this->classnames = array();
 		$this->classnames['folder'] = 'SeedDMS_Core_Folder';
+		$this->classnames['requestsoftcopy'] = 'SeedDMS_Core_RequestSoftCopy';
 		$this->classnames['document'] = 'SeedDMS_Core_Document';
 		$this->classnames['documentcontent'] = 'SeedDMS_Core_DocumentContent';
 		$this->classnames['user'] = 'SeedDMS_Core_User';
@@ -2653,11 +2655,13 @@ class SeedDMS_Core_DMS {
 	 */
 	function getFolder($id) { /* {{{ */
 		$classname = $this->classnames['folder'];
+		// var_dump($classname);exit();
 		return $classname::getInstance($id, $this);
 	} /* }}} */
 
-	function getSoftCopy($id) { /* {{{ */
-		$classname = $this->classnames['softcopy'];
+	function getRequestSoftCopy($id) { /* {{{ */
+		$classname = $this->classnames['requestsoftcopy'];
+		// var_dump($classname);die();
 		return $classname::getInstance($id, $this, '');
 	} /* }}} */
 

@@ -37,7 +37,7 @@ if (!$accessop->check_view_access($view, $_GET)) {
 	UI::exitError(getMLText("folder_title", array("foldername" => '')),getMLText("access_denied"));
 }
 
-if (!isset($_GET["folderid"]) || !is_numeric($_GET["folderid"]) || intval($_GET["folderid"])<1) {
+if (!isset($_GET["folderid"]) || !is_numeric($_GET["folderid"]) || intval($_GET["folderid"])<1) {  
 	UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
 }
 $folder = $dms->getFolder($_GET["folderid"]);

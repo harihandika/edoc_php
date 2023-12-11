@@ -97,6 +97,11 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	 * @var SeedDMS_Core_Document[]
 	 */
 	protected $_documents;
+	
+	/**
+	 * @var SeedDMS_Core_SoftCopy[]
+	 */
+	protected $_softcopyss;
 
 	/**
 	 * @var SeedDMS_Core_UserAccess[]|SeedDMS_Core_GroupAccess[]
@@ -681,6 +686,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		foreach ($path as $f) {
 			$pathPrefix .= ":".$f->getID();
 		}
+
 		if (strlen($pathPrefix)>1) {
 			$pathPrefix .= ":";
 		}
@@ -725,7 +731,10 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 		return $newFolder;
 	} /* }}} */
-	function requestDocumentSoftCopy($name, $keterangan, $keperluan, $owner, $attributes=array()) { /* {{{ */
+
+
+
+	function requestSoftCopy($name, $keterangan, $keperluan, $owner, $attributes=array(),$reviewers=array(), $approvers=array() ) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		// Set the folderList of the folder
@@ -734,49 +743,54 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		foreach ($path as $f) {
 			$pathPrefix .= ":".$f->getID();
 		}
+
 		if (strlen($pathPrefix)>1) {
 			$pathPrefix .= ":";
 		}
 
 		$db->startTransaction();
-
 		//inheritAccess = true, defaultAccess = M_READ
-		$queryStr = "INSERT INTO `tblSoftCopys` (`name`, `keterangan`, `keperluan`, `date`, `owner`, `inheritAccess`, `defaultAccess`) ".
+		$queryStr = "INSERT INTO `tblRequestSoftCopy` (`name`, `keterangan`, `keperluan`, `date`, `owner`, `inheritAccess`, `defaultAccess`) ".
 					"VALUES (".$db->qstr($name).", ".$db->qstr($keterangan).",".$db->qstr($keperluan).", ".$db->getCurrentTimestamp().", ".$owner->getID().",1, ".M_READ.")";
 		if (!$db->getResult($queryStr)) {
 			$db->rollbackTransaction();
 			return false;
 		}
-		$requestDocumentSoft = $this->_dms->getSoftCopy($db->getInsertID('tblSoftCopys'));
-		unset($this->_subFolders);
+		
+		$requestSoftCopy = $this->_dms->getRequestSoftCopy($db->getInsertID('tblRequestSoftCopy'));
+
 
 		if($attributes) {
 			foreach($attributes as $attrdefid=>$attribute) {
-				if($attribute)
+				/* $attribute can be a string or an array */
+				if($attribute) {
 					if($attrdef = $this->_dms->getAttributeDefinition($attrdefid)) {
-						if(!$requestDocumentSoft->setAttributeValue($attrdef, $attribute)) {
+						if(!$requestSoftCopy->setAttributeValue($attrdef, $attribute)) {
+							$requestSoftCopy->remove();
 							$db->rollbackTransaction();
 							return false;
 						}
 					} else {
+						$requestSoftCopy->remove();
 						$db->rollbackTransaction();
 						return false;
 					}
+				}
 			}
 		}
 
 		$db->commitTransaction();
 
 		/* Check if 'onPostAddSubFolder' callback is set */
-		if(isset($this->_dms->callbacks['onPostRequestDocumentSoftCopy'])) {
-			foreach($this->_dms->callbacks['onPostRequestDocumentSoftCopy'] as $callback) {
+		if(isset($this->_dms->callbacks['onPostRequestSoftCopy'])) {
+			foreach($this->_dms->callbacks['onPostRequestSoftCopy'] as $callback) {
 					/** @noinspection PhpStatementHasEmptyBodyInspection */
-					if(!call_user_func($callback[0], $callback[1], $requestDocumentSoft)) {
+					if(!call_user_func($callback[0], $callback[1], $requestSoftCopy)) {
 				}
 			}
 		}
 
-		return $requestDocumentSoft;
+		return $requestSoftCopy;
 	} /* }}} */
 
 
@@ -1102,7 +1116,6 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	 */
 	function addDocument($name, $comment, $expires, $owner, $keywords, $categories, $tmpFile, $orgFileName, $fileType, $mimeType, $sequence, $reviewers=array(), $approvers=array(),$reqversion=0,$version_comment="", $attributes=array(), $version_attributes=array(), $workflow=null, $initstate=S_RELEASED) { /* {{{ */
 		$db = $this->_dms->getDB();
-
 		$expires = (!$expires) ? 0 : $expires;
 
 		// Must also ensure that the document has a valid folderList.
@@ -1111,6 +1124,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		foreach ($path as $f) {
 			$pathPrefix .= ":".$f->getID();
 		}
+
 		if (strlen($pathPrefix)>1) {
 			$pathPrefix .= ":";
 		}
@@ -2122,6 +2136,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 		return $resArr[0];
 	} /* }}} */
+	
 
 }
 

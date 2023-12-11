@@ -37,15 +37,10 @@ if (!$accessop->check_view_access($view, $_GET)) {
 	UI::exitError(getMLText("softcopy_title", array("softcopyname" => '')),getMLText("access_denied"));
 }
 
-if(isset($_GET['softcopyid']) && $_GET['softcopyid']) {
-	$selgroup = $dms->getSoftCopy($_GET['softcopyid']);
-} else {
-	$selgroup = null;
-}
 if (!isset($_GET["folderid"]) || !is_numeric($_GET["folderid"]) || intval($_GET["folderid"])<1) {
 	UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
 }
-
+$folderid = $_GET["folderid"];
 $folder = $dms->getFolder($_GET["folderid"]);
 if (!is_object($folder)) {
 	UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
@@ -59,10 +54,23 @@ $worklocations = $dms->getAllWorkLocations();
 if (is_bool($worklocations)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
 }
+if($settings->_libraryFolder) {
+	$libfolder = $dms->getFolder($settings->_libraryFolder);
+	if (!is_object($libfolder)) {
+		UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
+	}
+
+	if ($libfolder->getAccessMode($user) < M_READ) {
+		$libfolder = null;
+//		UI::exitError(getMLText("folder_title", array("foldername" => htmlspecialchars($libfolder->getName()))), getMLText("access_denied"));
+	}
+} else {
+	$libfolder = null;
+}
 
 if($view) {
 	$view->setParam('folder', $folder);
-	// $view->setParam('softcopy', $softcopy);
+	// $view->setParam('requestsoftcopy', $requestsoftcopy);
 	$view->setParam('strictformcheck', $settings->_strictFormCheck);
 	$view->setParam('defaultposition', $settings->_defaultDocPosition);
 	$view->setParam('orderby', $settings->_sortFoldersDefault);

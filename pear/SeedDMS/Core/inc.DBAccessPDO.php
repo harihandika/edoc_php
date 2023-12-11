@@ -407,6 +407,10 @@ class SeedDMS_Core_DatabaseAccess {
 		if($this->_logfp) {
 			fwrite($this->_logfp, microtime()."	".$queryStr."\n");
 		}
+// 		echo "<pre>";
+// var_dump($this->_conn->exec($queryStr));
+// echo "<pre>";
+
 		$res = $this->_conn->exec($queryStr);
 		if($res === false) {
 			if($this->_debug) {

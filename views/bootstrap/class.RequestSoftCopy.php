@@ -29,7 +29,7 @@ require_once("class.Bootstrap.php");
  *             2010-2012 Uwe Steinmann
  * @version    Release: @package_version@
  */
-class SeedDMS_View_RequestDocumentSoftCopy extends SeedDMS_Bootstrap_Style {
+class SeedDMS_View_RequestSoftCopy extends SeedDMS_Bootstrap_Style {
 
 	function js() { /* {{{ */
 		$strictformcheck = $this->params['strictformcheck'];
@@ -67,10 +67,14 @@ $(document).ready( function() {
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
 		$folder = $this->params['folder'];
+		// $requestsoftcopy = $this->params['requestsoftcopy'];
 		$strictformcheck = $this->params['strictformcheck'];
 		$orderby = $this->params['orderby'];
 		$sortusersinlist = $this->params['sortusersinlist'];
 		$worklocations = $this->params['allworklocations'];
+		$accessop = $this->params['accessobject'];
+		$folderid = $folder->getId();
+		// $requestsoftcopyid = $requestsoftcopy->getId();
 
 		$this->htmlAddHeader('<script type="text/javascript" src="../views/'.$this->theme.'/vendors/jquery-validation/jquery.validate.js"></script>'."\n", 'js');
 
@@ -81,15 +85,15 @@ $(document).ready( function() {
 
 /******************************************** *************/
 ?>
-	<div class="ajax" data-view="ViewFolder" data-action="navigation" data-no-spinner="true" <?php echo ($folder ? "data-query=\"folderid=".$folder->getID()."\"" : "") ?>></div>
+	<div class="ajax" data-view="ViewFolder" data-action="navigation" data-no-spinner="true" <?php echo ($folder ? "data-query=\"requestsoftcopyid=".$folder->getID()."\"" : "") ?>></div>
 <?php
 		$this->contentHeading(getMLText("request_document_soft_copy"));
 		$this->contentContainerStart();
 ?>
 
-<form class="form-horizontal" action="../op/op.RequestDocumentSoftCopy.php" id="form1" name="form1" method="post">
-	<?php echo createHiddenFieldWithKey('requestdocumentsoftcopy'); ?>
-	<input type="hidden" name="folderid" value="<?php print $folder->getId();?>">
+<form class="form-horizontal" action="../op/op.RequestSoftCopy.php" id="form1" name="form1" method="post">
+	<?php echo createHiddenFieldWithKey('requestsoftcopy'); ?>
+	<input type="hidden" name="folderid" value="<?php print $folderid;?>">
 	<input type="hidden" name="showtree" value="<?php echo showtree();?>">
 <?php	
 		$this->formField(
@@ -103,6 +107,25 @@ $(document).ready( function() {
 			)
 		);
 		
+		if($accessop->check_controller_access('AddDocument', array('action'=>'setOwner'))) {
+			$options = array();
+			$allUsers = $dms->getAllUsers($sortusersinlist);
+			foreach ($allUsers as $currUser) {
+				if (!$currUser->isGuest())
+					$options[] = array($currUser->getID(), htmlspecialchars($currUser->getLogin().' - '.$currUser->getFullName()), ($currUser->getID()==$user->getID()), array(array('data-subtitle', htmlspecialchars($currUser->getEmail()))));
+			}
+			$this->formField(
+				getMLText("owner"),
+				array(
+					'element'=>'select',
+					'id'=>'ownerid',
+					'name'=>'ownerid',
+					'class'=>'chzn-select',
+					'options'=>$options
+				)
+			);
+			}
+
 		$this->formField(
 			getMLText("keterangan"),
 			array(
@@ -113,6 +136,7 @@ $(document).ready( function() {
 				'required'=>$strictformcheck
 			)
 		);
+
 		$res=$user->getMandatoryReviewers();
 				$tmp = array();
 				if($res) {
@@ -136,7 +160,6 @@ $(document).ready( function() {
 						'name'=>'notification_users[]',
 						'class'=>'chzn-select',
 						'attributes'=>array(array('data-placeholder', getMLText('select_pic'))),
-						'multiple'=>true,
 						'options'=>$options
 					),
 					array('field_wrap'=>array('', ($tmp ? '<div class="mandatories"><span>'.getMLText('mandatory_reviewers').':</span> '.implode(', ', $tmp).'</div>' : '')))
@@ -153,7 +176,6 @@ $(document).ready( function() {
 						'element'=>'select',
 						'name'=>'worklocations[]',
 						'class'=>'chzn-select',
-						'multiple'=>true,
 						'placeholder'=>'Click to select work location',
 						'options'=>$options
 					)
