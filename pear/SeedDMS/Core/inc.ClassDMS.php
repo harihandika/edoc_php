@@ -743,6 +743,11 @@ class SeedDMS_Core_DMS {
 		return $classname::getInstance($id, $this);
 	} /* }}} */
 
+	function getAllDocuments() { /* {{{ */
+		$classname = $this->classnames['document'];
+		return $classname::getAllInstances('name', $this);
+	} /* }}} */
+
 	/**
 	 * Returns all documents of a given user
 	 *

@@ -330,21 +330,11 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 			return null;
 		$resArr = $resArr[0];
 
-		// New Locking mechanism uses a separate table to track the lock.
-		/*
-		$queryStr = "SELECT * FROM `tblDocumentLocks` WHERE `document` = " . (int) $id;
-		$lockArr = $db->getResultArray($queryStr);
-		if ((is_bool($lockArr) && $lockArr==false) || (count($lockArr)==0)) {
-			// Could not find a lock on the selected document.
-			$resArr['lock'] = -1;
-		}
-		else {
-			// A lock has been identified for this document.
-			$resArr['lock'] = $lockArr[0]["userID"];
-		}
-*/
 		$resArr['lock'] = !$resArr['lock'] ? -1 : $resArr['lock'];
-//		print_r($resArr);exit;
+		echo "<pre>";
+		var_dump($resArr['lock']);
+		echo "<pre>";
+		exit();
 
 		return self::getInstanceByData($resArr, $dms);
 
@@ -354,6 +344,40 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		$document->setDMS($dms);
 		$document = $document->applyDecorators();
 		return $document;
+	} /* }}} */
+
+	public static function getAllInstances($orderby, $dms) { /* {{{ */
+		$db = $dms->getDB();
+
+
+			$queryStr = "SELECT `tblDocuments`.*, `tblDocumentLocks`.`userID` as `lock` FROM `tblDocuments` LEFT JOIN `tblDocumentLocks` ON `tblDocuments`.`id` = `tblDocumentLocks`.`document` ORDER BY `name`";
+			if($dms->checkWithinRootDir)
+				$queryStr .= " AND `folderList` LIKE '%:".$dms->rootFolderID.":%'";
+		$resArr = $db->getResultArray($queryStr);
+		// echo "<pre>";
+		// var_dump($resArr);
+		// echo "<pre>";
+		// exit();
+
+		if (is_bool($resArr) && $resArr == false)
+			return false;
+			// $resArr['lock'] = !$resArr['lock'] ? -1 : $resArr['lock'];
+			// echo "<pre>";
+			// var_dump($resArr['lock']);
+			// echo "<pre>";
+			// exit();
+			// return self::getInstanceByData($resArr, $dms);	
+
+		$documents = array();
+		$classname = $dms->getClassname('document');
+	/** @var SeedDMS_Core_Document $document */
+		for ($i = 0; $i < count($resArr); $i++) {
+		$document = new self($resArr[$i]["id"], $resArr[$i]["name"], $resArr[$i]["comment"], $resArr[$i]["date"], $resArr[$i]["expires"], $resArr[$i]["owner"], $resArr[$i]["folder"], $resArr[$i]["inheritAccess"], $resArr[$i]["defaultAccess"], $resArr[$i]['lock'], $resArr[$i]["keywords"], $resArr[$i]["sequence"]);
+			$document->setDMS($dms);
+			$documents[$i] = $document;
+		}
+
+		return $documents;
 	} /* }}} */
 
 	/**

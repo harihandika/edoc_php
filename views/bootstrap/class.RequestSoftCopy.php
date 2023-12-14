@@ -72,6 +72,7 @@ $(document).ready( function() {
 		$orderby = $this->params['orderby'];
 		$sortusersinlist = $this->params['sortusersinlist'];
 		$worklocations = $this->params['allworklocations'];
+		$documents = $this->params['documents'];
 		$accessop = $this->params['accessobject'];
 		$folderid = $folder->getId();
 		// $requestsoftcopyid = $requestsoftcopy->getId();
@@ -96,14 +97,22 @@ $(document).ready( function() {
 	<input type="hidden" name="folderid" value="<?php print $folderid;?>">
 	<input type="hidden" name="showtree" value="<?php echo showtree();?>">
 <?php	
+
+$options = array();
+foreach($documents as $document) {
+	$options[] = array(htmlspecialchars($document->getName()), htmlspecialchars($document->getName()));
+	// echo "<pre>";
+	// var_dump($options);
+	// echo "<pre>";
+}
 		$this->formField(
 			getMLText("name_document"),
 			array(
-				'element'=>'input',
-				'type'=>'text',
-				'id'=>'name',
+				'element'=>'select',
 				'name'=>'name',
-				'required'=>true
+				'required'=>true,
+				'class'=>'chzn-select',
+				'options'=>$options
 			)
 		);
 		

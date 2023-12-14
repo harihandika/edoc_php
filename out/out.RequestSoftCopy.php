@@ -54,6 +54,12 @@ $worklocations = $dms->getAllWorkLocations();
 if (is_bool($worklocations)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
 }
+
+$documents = $dms->getAllDocuments();
+if (is_bool($documents)) {
+	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
+}
+
 if($settings->_libraryFolder) {
 	$libfolder = $dms->getFolder($settings->_libraryFolder);
 	if (!is_object($libfolder)) {
@@ -76,6 +82,7 @@ if($view) {
 	$view->setParam('orderby', $settings->_sortFoldersDefault);
 	$view->setParam('accessobject', $accessop);
 	$view->setParam('allworklocations', $worklocations);
+	$view->setParam('documents', $documents);
 	$view->setParam('sortusersinlist', $settings->_sortUsersInList);
 	$view($_GET);
 	exit;
