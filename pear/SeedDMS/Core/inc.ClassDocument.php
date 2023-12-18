@@ -331,10 +331,6 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		$resArr = $resArr[0];
 
 		$resArr['lock'] = !$resArr['lock'] ? -1 : $resArr['lock'];
-		echo "<pre>";
-		var_dump($resArr['lock']);
-		echo "<pre>";
-		exit();
 
 		return self::getInstanceByData($resArr, $dms);
 

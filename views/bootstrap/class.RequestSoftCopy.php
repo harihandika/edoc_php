@@ -88,7 +88,7 @@ $(document).ready( function() {
 ?>
 	<div class="ajax" data-view="ViewFolder" data-action="navigation" data-no-spinner="true" <?php echo ($folder ? "data-query=\"requestsoftcopyid=".$folder->getID()."\"" : "") ?>></div>
 <?php
-		$this->contentHeading(getMLText("request_document_soft_copy"));
+		$this->contentHeading(getMLText("request_soft_copy"));
 		$this->contentContainerStart();
 ?>
 
@@ -236,7 +236,7 @@ foreach($documents as $document) {
 			echo $arrs;
 		}
 
-		$this->formSubmit("<i class=\"fa fa-save\"></i> ".getMLText('request_document_soft_copy'));
+		$this->formSubmit("<i class=\"fa fa-save\"></i> ".getMLText('request_soft_copy'));
 ?>
 </form>
 <?php

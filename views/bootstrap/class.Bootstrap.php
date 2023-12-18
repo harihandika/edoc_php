@@ -660,7 +660,6 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 			$menuitems['edit_folder_props'] = array('link'=>"../out/out.EditFolder.php?folderid=". $folderID ."&showtree=".showtree(), 'label'=>'edit_folder_props');
 			if ($folderID != $this->params['rootfolderid'] && $folder->getParent())
 				$menuitems['move_folder'] = array('link'=>"../out/out.MoveFolder.php?folderid=". $folderID ."&showtree=".showtree(), 'label'=>'move_folder');
-
 			if ($accessMode == M_ALL) {
 				if ($folderID != $this->params['rootfolderid'] && $folder->getParent())
 					if ($accessobject->check_view_access('RemoveFolder'))
@@ -672,17 +671,15 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 			}
 			if ($accessobject->check_view_access('FolderNotify'))
 			$menuitems['edit_existing_notify'] = array('link'=>"../out/out.FolderNotify.php?folderid=". $folderID ."&showtree=". showtree(), 'label'=>'edit_existing_notify');
+		// ***********************
+		// if ($accessobject->check_view_access('RequestSoftCopy'))	
+		$menuitems['request_soft_copy'] = array('link'=>"../out/out.RequestSoftCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_soft_copy');
+		if ($accessobject->check_view_access('RequestHardCopy'))
+		$menuitems['request_hard_copy'] = array('link'=>"../out/out.RequestHardCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_hard_copy');
+// ***********************
 		}
 		if ($accessobject->check_view_access('Indexer') && $this->params['enablefullsearch']) {
 			$menuitems['index_folder'] = array('link'=>"../out/out.Indexer.php?folderid=". $folderID."&showtree=".showtree(), 'label'=>'index_folder');
-		}
-			/******************************** */
-		if ($accessMode == M_ALL) {
-			if ($accessobject->check_view_access('RequestSoftCopy'))
-			$menuitems['request_document_soft_copy'] = array('link'=>"../out/out.RequestSoftCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_document_soft_copy');
-
-			if ($accessobject->check_view_access('RequestDocumentHardCopy'))
-			$menuitems['request_document_hard_copy'] = array('link'=>"../out/out.RequestDocumentHardCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_document_hard_copy');
 		}
 		/* Check if hook exists because otherwise callHook() will override $menuitems */
 		if($this->hasHook('folderNavigationBar'))
