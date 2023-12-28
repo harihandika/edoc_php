@@ -77,6 +77,7 @@ class SeedDMS_NotificationService {
 			 */
 			if(is_object($recipient) && $recipient->isType('user') && !$recipient->isDisabled() && $recipient->getEmail()!="") {
 				$to = $recipient->getEmail();
+
 			} elseif(is_string($recipient) && trim($recipient) != "") {
 				$to = $recipient;
 			} else {

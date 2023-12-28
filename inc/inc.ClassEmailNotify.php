@@ -104,6 +104,7 @@ class SeedDMS_EmailNotify extends SeedDMS_Notify
 		return $return;
 	}
 
+	//  recipient sudah benar
 	function toIndividual($sender, $recipient, $subject, $messagekey, $params = array(), $attachments = array())
 	{ /* {{{ */
 		if (is_object($recipient) && $recipient->isType('user') && !$recipient->isDisabled() && $recipient->getEmail() != "") {
@@ -236,6 +237,7 @@ class SeedDMS_EmailNotify extends SeedDMS_Notify
 							break;
 					}					
 				}else if(!isset($params['__header_html__']) && $params['assignnotif'] != ''){
+					// penerima bukan email, tapi subjek
 					$penerima = $params['assignnotif'];
 					switch($subject){
 						case 'new_document_email_subject':							

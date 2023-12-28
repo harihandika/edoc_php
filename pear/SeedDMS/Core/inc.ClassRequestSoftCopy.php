@@ -397,7 +397,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		if (empty($this->_notifyList)) {
 			$db = $this->_dms->getDB();
 
-			$queryStr ="SELECT * FROM `tblNotify` WHERE `targetType` = " . T_FOLDER . " AND `target` = " . $this->_id;
+			$queryStr ="SELECT * FROM `tblNotify` WHERE `targetType` = " . T_REQUESTSOFTCOPY . " AND `target` = " . $this->_id;
 			$resArr = $db->getResultArray($queryStr);
 			if (is_bool($resArr) && $resArr == false)
 				return false;
@@ -555,7 +555,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		// Check to see if user/group is already on the list.
 		//
 		$queryStr = "SELECT * FROM `tblNotify` WHERE `tblNotify`.`target` = '".$this->_id."' ".
-			"AND `tblNotify`.`targetType` = '".T_FOLDER."' ".
+			"AND `tblNotify`.`targetType` = '".T_REQUESTSOFTCOPY."' ".
 			"AND `tblNotify`.".$userOrGroup." = '". (int) $userOrGroupID."'";
 		$resArr = $db->getResultArray($queryStr);
 		if (is_bool($resArr)) {
@@ -565,11 +565,11 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 			return -3;
 		}
 
-		$queryStr = "INSERT INTO `tblNotify` (`target`, `targetType`, " . $userOrGroup . ") VALUES (" . $this->_id . ", " . T_FOLDER . ", " .  (int) $userOrGroupID . ")";
+		$queryStr = "INSERT INTO `tblNotify` (`target`, `targetType`, " . $userOrGroup . ") VALUES (" . $this->_id . ", " . T_REQUESTSOFTCOPY . ", " .  (int) $userOrGroupID . ")";
 		if (!$db->getResult($queryStr))
-			return -4;
-
-		unset($this->_notifyList);
+		return -4;
+	
+	unset($this->_notifyList);
 		return 0;
 	} /* }}} */
 
@@ -709,7 +709,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 			if ($mode!=M_ANY) {
 				$modeStr = " AND mode".$op.(int)$mode;
 			}
-			$queryStr = "SELECT * FROM `tblACLs` WHERE `targetType` = ".T_FOLDER.
+			$queryStr = "SELECT * FROM `tblACLs` WHERE `targetType` = ".T_REQUESTSOFTCOPY.
 				" AND `target` = " . $this->_id .	$modeStr . " ORDER BY `targetType`";
 			$resArr = $db->getResultArray($queryStr);
 			if (is_bool($resArr) && !$resArr)

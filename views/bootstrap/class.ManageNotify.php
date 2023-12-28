@@ -111,6 +111,7 @@ class SeedDMS_View_ManageNotify extends SeedDMS_Bootstrap_Style {
 			print "</tr></thead>\n<tbody>\n";
 			foreach ($notifications as $notification) {
 				$doc = $this->dms->getDocument($notification->getTarget());
+
 				if (is_object($doc)) {
 					$doc->verifyLastestContentExpriry();
 					echo $this->documentListRowStart($doc);

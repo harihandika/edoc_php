@@ -350,18 +350,11 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 			if($dms->checkWithinRootDir)
 				$queryStr .= " AND `folderList` LIKE '%:".$dms->rootFolderID.":%'";
 		$resArr = $db->getResultArray($queryStr);
-		// echo "<pre>";
-		// var_dump($resArr);
-		// echo "<pre>";
-		// exit();
+
 
 		if (is_bool($resArr) && $resArr == false)
 			return false;
 			// $resArr['lock'] = !$resArr['lock'] ? -1 : $resArr['lock'];
-			// echo "<pre>";
-			// var_dump($resArr['lock']);
-			// echo "<pre>";
-			// exit();
 			// return self::getInstanceByData($resArr, $dms);	
 
 		$documents = array();

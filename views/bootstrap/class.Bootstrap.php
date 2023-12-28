@@ -462,19 +462,15 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 			echo "    </li>\n";
 			echo "   </ul>\n";
 
-			if($this->params['enablemenutasks']) {
-				if($accessobject->check_view_access('Tasks', array('action'=>'menuTasks'))) {
-					echo "   <div id=\"menu-tasks\">";
-					echo "     <div class=\"ajax\" data-no-spinner=\"true\" data-view=\"Tasks\" data-action=\"menuTasks\"></div>";
-	//				echo "   <ul id=\"main-menu-tasks\" class=\"nav pull-right\">\n";
-	//				echo "    <li class=\"dropdown\">\n";
-	//				echo $this->menuTasks(array('review'=>array(), 'approval'=>array(), 'receipt'=>array(), 'revision'=>array()));
-	//				echo "    </li>\n";
-	//				echo "   </ul>\n";
-					echo "   </div>";
-					//$this->addFooterJS('checkTasks();');
-				}
-			}
+			
+	// 		if($this->params['enablemenutasks']) {
+	// 			if($accessobject->check_view_access('Tasks', array('action'=>'menuTasks'))) {
+	// 				echo "   <div id=\"menu-tasks\">";
+	// 				echo "     <div class=\"ajax\" data-no-spinner=\"true\" data-view=\"Tasks\" data-action=\"menuTasks\"></div>";
+
+	// echo "   </div>";
+	// 			}
+	// 		}
 
 			if($this->params['dropfolderdir'] && $this->params['enabledropfolderlist']) {
 				echo "   <div id=\"menu-dropfolder\">";
@@ -497,7 +493,14 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 
 			echo "   <ul class=\"nav\">\n";
 			$menuitems = array();
+
+// *********** Tasks 
+			if ($accessobject->check_view_access('Tasks')) $menuitems['tasks'] = array('link'=>'../out/out.Tasks.php', 'label'=>"tasks");
+
+//  ************* Calender
 			if ($this->params['enablecalendar'] && $accessobject->check_view_access('Calendar')) $menuitems['calendar'] = array('link'=>'../out/out.Calendar.php?mode='.$this->params['calendardefaultview'], 'label'=>"calendar");
+
+//  ******************** admin tools
 			if ($accessobject->check_view_access('AdminTools')) $menuitems['admintools'] = array('link'=>'../out/out.AdminTools.php', 'label'=>"admin_tools");
 			if($this->params['enablehelp']) {
 				$tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
@@ -595,6 +598,9 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 					break;
 				case "calendar";
 					$this->calendarNavigationBar($extra);
+					break;
+				case "tasks";
+					$this->tasksNavigationBar();
 					break;
 				default:
 					if($this->hasHook('pageNavigationBar')) {
@@ -984,6 +990,28 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		/* Check if hook exists because otherwise callHook() will override $menuitems */
 		if($this->hasHook('calendarNavigationBar'))
 			$menuitems = $this->callHook('calendarNavigationBar', $menuitems);
+
+		self::showNavigationBar($menuitems);
+
+		echo "</ul>\n";
+		echo "</div>\n";
+		return;
+	
+	} /* }}} */
+
+	private function tasksNavigationBar(){ /* {{{ */
+		$accessobject = $this->params['accessobject'];
+		echo "<id=\"first\"><a href=\"../out/out.Tasks.php\" class=\"brand\">".getMLText("tasks")."</a>\n";
+		echo "<div class=\"nav-collapse col2\">\n";
+		echo "<ul class=\"nav\">\n";
+
+		$menuitems = array();
+		$menuitems['inprocess'] = array('link'=>"../out/out.Tasks.php?inProcess=1", 'label'=>'documents_in_process');
+		$menuitems['all_documents'] = array('link'=>"../out/out.Tasks.php", 'label'=>'all_documents');
+
+		/* Check if hook exists because otherwise callHook() will override $menuitems */
+		if($this->hasHook('tasksNavigationBar'))
+			$menuitems = $this->callHook('tasksNavigationBar', $menuitems);
 
 		self::showNavigationBar($menuitems);
 
@@ -2922,6 +2950,7 @@ $('body').on('click', '[id^=\"table-row-folder\"] td:nth-child(2)', function(ev)
 				if($previewer->hasPreview($latestContent)) {
 					$content .= "<img draggable=\"false\" class=\"mimeicon\" width=\"".$previewwidth."\" src=\"../op/op.Preview.php?documentid=".$document->getID()."&version=".$latestContent->getVersion()."&width=".$previewwidth."\" title=\"".htmlspecialchars($latestContent->getMimeType())."\">";
 				} else {
+	// docnya buat download
 					$content .= "<img draggable=\"false\" class=\"mimeicon\" width=\"".$previewwidth."\" src=\"".$this->getMimeIcon($latestContent->getFileType())."\" ".($previewwidth ? "width=\"".$previewwidth."\"" : "")."\" title=\"".htmlspecialchars($latestContent->getMimeType())."\">";
 				}
 				if($accessop->check_controller_access('Download', array('action'=>'run')))
@@ -2932,8 +2961,10 @@ $('body').on('click', '[id^=\"table-row-folder\"] td:nth-child(2)', function(ev)
 
 			$content .= "<td".($onepage ? ' style="cursor: pointer;"' : '').">";
 			if($onepage)
+			// ********
 				$content .= "<b".($onepage ? ' title="Id:'.$document->getId().'"' : '').">".htmlspecialchars($document->getName()) . "</b>";
 			else
+// nama document 
 				$content .= "<a draggable=\"false\" href=\"../out/out.ViewDocument.php?documentid=".$docID."&showtree=".$showtree."\">" . htmlspecialchars($document->getName()) . "</a>";
 			if(isset($extracontent['below_title']))
 				$content .= $extracontent['below_title'];
@@ -2941,6 +2972,7 @@ $('body').on('click', '[id^=\"table-row-folder\"] td:nth-child(2)', function(ev)
 			if($belowtitle = $this->callHook('documentListRowBelowTitle', $document, $latestContent))
 				$content .= $belowtitle;
 			else
+// ***************************
 				$content .= "<span style=\"font-size: 85%; font-style: italic; color: #666; \">".getMLText('owner').": <b>".htmlspecialchars($owner->getFullName())."</b>, ".getMLText('creation_date').": <b>".getReadableDate($document->getDate())."</b>, ".getMLText('version')." <b>".$version."</b> - <b>".getReadableDate($latestContent->getDate())."</b>".($document->expires() ? ", ".getMLText('expires').": <b>".getReadableDate($document->getExpires())."</b>" : "")."</span>";
 			if($comment) {
 				$content .= "<br /><span style=\"font-size: 85%;\">".htmlspecialchars($comment)."</span>";

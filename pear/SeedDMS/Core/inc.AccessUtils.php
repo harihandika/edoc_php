@@ -52,6 +52,12 @@ define("T_FOLDER", 1);		//TargetType = Folder
  */
 define("T_DOCUMENT", 2);	//    "      = Document
 
+
+/**
+ * Document notification
+ */
+define("T_REQUESTSOFTCOPY", 3);	//    "      = RequestSoftCopy
+
 /**
  * Notify on all actions on the folder/document
  */
