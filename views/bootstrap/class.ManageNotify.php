@@ -54,7 +54,10 @@ class SeedDMS_View_ManageNotify extends SeedDMS_Bootstrap_Style {
 		} else {
 			$notifications = $this->user->getNotifications($folders ? T_FOLDER : T_DOCUMENT);
 		}
-
+		echo '<pre>';
+		var_dump($notifications);
+		echo '</pre>';
+		// exit();
 		return $notifications;
 	} /* }}} */
 
@@ -71,6 +74,7 @@ class SeedDMS_View_ManageNotify extends SeedDMS_Bootstrap_Style {
 			print "<th>".getMLText("owner")."</th>\n";
 			print "<th>".getMLText("actions")."</th>\n";
 			print "</tr></thead>\n<tbody>\n";
+			
 			foreach($notifications as $notification) {
 				$fld = $this->dms->getFolder($notification->getTarget());
 				if (is_object($fld)) {

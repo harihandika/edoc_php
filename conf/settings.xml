@@ -52,8 +52,10 @@
        - cacheDir: where the preview images are saved
        - backupDir: where the backups are saved
     -->
-    <server rootDir="C:\xampp\htdocs\seeddms/\" httpRoot="/seeddms/" contentDir="C:/xampp/htdocs/seeddms/data/\" stagingDir="C:/xampp/htdocs/seeddms/data/staging/\" luceneDir="C:/xampp/htdocs/seeddms/data/lucene/\" logFileEnable="true" logFileRotation="d" enableLargeFileUpload="true" partitionSize="1000000000" cacheDir="C:/xampp/htdocs/seeddms/data/cache/\" dropFolderDir="" backupDir="C:/xampp/htdocs/seeddms/data/backup/\" checkOutDir="" createCheckOutDir="false" repositoryUrl="" proxyUrl="" proxyUser="" proxyPassword="" maxUploadSize="1000000000" enableXsendfile="true">
-    </server>
+      <server rootDir="C:\xampp\htdocs\seeddms/\" httpRoot="/seeddms/" contentDir="C:/xampp/htdocs/seeddms/data/\" stagingDir="C:/xampp/htdocs/seeddms/data/staging/\" luceneDir="C:/xampp/htdocs/seeddms/data/lucene/\" logFileEnable="true" logFileRotation="d" enableLargeFileUpload="true" partitionSize="1000000000" cacheDir="C:/xampp/htdocs/seeddms/data/cache/\" dropFolderDir="" backupDir="C:/xampp/htdocs/seeddms/data/backup/\" checkOutDir="" createCheckOutDir="false" repositoryUrl="" proxyUrl="" proxyUser="" proxyPassword="" maxUploadSize="1000000000" enableXsendfile="true">
+      </server>
+    <!-- <server rootDir="C:\xampp7\htdocs\seeddms/\" httpRoot="/seeddms/" contentDir="C:/xampp7/htdocs/seeddms/data/\" stagingDir="C:/xampp7/htdocs/seeddms/data/staging/\" luceneDir="C:/xampp7/htdocs/seeddms/data/lucene/\" logFileEnable="true" logFileRotation="d" enableLargeFileUpload="true" partitionSize="1000000000" cacheDir="C:/xampp7/htdocs/seeddms/data/cache/\" dropFolderDir="" backupDir="C:/xampp/htdocs/seeddms/data/backup/\" checkOutDir="" createCheckOutDir="false" repositoryUrl="" proxyUrl="" proxyUser="" proxyPassword="" maxUploadSize="1000000000" enableXsendfile="true">
+    </server> -->
     
     <!-- enableGuestLogin: If you want anybody to login as guest, set the following line to true
        -                   note: guest login should be used only in a trusted environment
