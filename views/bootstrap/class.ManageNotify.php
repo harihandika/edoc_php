@@ -54,7 +54,6 @@ class SeedDMS_View_ManageNotify extends SeedDMS_Bootstrap_Style {
 		} else {
 			$notifications = $this->user->getNotifications($folders ? T_FOLDER : T_DOCUMENT);
 		}
-
 		return $notifications;
 	} /* }}} */
 
