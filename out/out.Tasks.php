@@ -56,6 +56,11 @@ if (!empty($_GET["orderdir"])) {
 	$orderdir=$_GET["orderdir"];
 }
 
+$allRequestsoftcopy = $dms->getAllRequestSoftCopy();
+if (is_bool($allRequestsoftcopy)) {
+	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
+}
+
 if($view) {
 	$view->setParam('showtree', showtree());
 	$view->setParam('orderby', $orderby);
@@ -70,6 +75,7 @@ if($view) {
 	$view->setParam('accessobject', $accessop);
 	$view->setParam('xsendfile', $settings->_enableXsendfile);
 	$view->setParam('onepage', $settings->_onePageMode); // do most navigation by reloading areas of pages with ajax
+	$view->setParam('allrequestsoftcopy', $allRequestsoftcopy);
 	$view($_GET);
 	exit;
 }

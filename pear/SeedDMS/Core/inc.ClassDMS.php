@@ -2666,8 +2666,12 @@ class SeedDMS_Core_DMS {
 
 	function getRequestSoftCopy($id) { /* {{{ */
 		$classname = $this->classnames['requestsoftcopy'];
-		// var_dump($classname);die();
 		return $classname::getInstance($id, $this, '');
+	} /* }}} */
+
+	function getAllRequestSoftCopy() { /* {{{ */
+		$classname = $this->classnames['requestsoftcopy'];
+		return $classname::getAllInstances('name', $this);
 	} /* }}} */
 
 	/**

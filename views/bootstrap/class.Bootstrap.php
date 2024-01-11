@@ -3000,6 +3000,8 @@ $('body').on('click', '[id^=\"table-row-folder\"] td:nth-child(2)', function(ev)
 				$workflowstate = $latestContent->getWorkflowState();
 				$content .= '<span title="'.getOverallStatusText($status["status"]).': '.($workflow ? htmlspecialchars($workflow->getName()) : '').'">'.($workflowstate ? htmlspecialchars($workflowstate->getName()) : '').'</span>';
 			} else {
+
+// *****************************************
 				$content .= getOverallStatusText($status["status"]);
 			}
 			if($accessop->check_view_access($this, array('action'=>'receptionBar')) /*$owner->getID() == $user->getID()*/ && $receiptStatus = $latestContent->getReceiptStatus()) {

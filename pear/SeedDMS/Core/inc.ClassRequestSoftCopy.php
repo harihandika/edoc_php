@@ -35,6 +35,11 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 * @var string
 	 */
 	protected $_name;
+
+		/**
+	 * @var SeedDMS_Core_User[]
+	 */
+	protected $_users;
 	/**
 	 * The comment of the user group
 	 *
@@ -132,7 +137,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 */
 	public static function getInstanceByData($resArr, $dms) { /* {{{ */
 		$classname = $dms->getClassname('softcopy');
-		/** @var SeedDMS_Core_SoftCOpy $softcopy */
+		/** @var SeedDMS_Core_SoftCopy $softcopy */
 		$softcopy = new self($resArr["id"], $resArr["name"], $resArr["keterangan"], $resArr["keperluan"], $resArr["date"], $resArr["owner"], $resArr["inheritAccess"], $resArr["defaultAccess"]);
 		$softcopy->setDMS($dms);
 		$softcopy = $softcopy->applyDecorators();
@@ -149,7 +154,6 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 */
 	public static function getInstance($id, $dms) { /* {{{ */
 		$db = $dms->getDB();
-
 		$queryStr = "SELECT * FROM `tblRequestSoftCopy` WHERE `id` = " . (int) $id;
 		$resArr = $db->getResultArray($queryStr);
 		if (is_bool($resArr) && $resArr == false)
@@ -158,6 +162,26 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 			return null;
 
 		return self::getInstanceByData($resArr[0], $dms);
+	} /* }}} */
+
+
+	public static function getAllInstances($orderby, $dms) { /* {{{ */
+		$db = $dms->getDB();
+
+		$queryStr = "SELECT * FROM `tblRequestSoftCopy` ORDER BY `id`";
+		$resArr = $db->getResultArray($queryStr);
+		if (is_bool($resArr) && $resArr == false){
+			return false;
+		}
+
+			$requestsoftcopys = array();
+			for ($i = 0; $i < count($resArr); $i++) {
+				$requestsoftcopy = new self($resArr[$i]["id"], $resArr[$i]["name"], $resArr[$i]["keterangan"],$resArr[$i]["keperluan"],$resArr[$i]["date"],$resArr[$i]["owner"],$resArr[$i]["inheritAccess"],$resArr[$i]["defaultAccess"]);
+				$requestsoftcopy->setDMS($dms);
+				$requestsoftcopys[$i] = $requestsoftcopy;
+			}
+	
+			return $requestsoftcopys;
 	} /* }}} */
 
 		/**
@@ -977,5 +1001,19 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		$db->commitTransaction();
 		return true;
 	} /* }}} */
+
+	function removeNotify() { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		/* Verify that user / group exists. */
+		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
+
+		$queryStr = "DELETE FROM `tblRequestSoftCopy` WHERE `id` = " . $this->_id;
+
+		if (!$db->getResult($queryStr))
+			return false;
+		return true;
+	} /* }}} */
+
 }
 	

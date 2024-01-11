@@ -85,36 +85,11 @@ if(isset($_POST["attributes"]))
 	$attributes = $_POST["attributes"];
 else
 	$attributes = array();
-/* Has been moved to controller
-foreach($attributes as $attrdefid=>$attribute) {
-	if($attrdef = $dms->getAttributeDefinition($attrdefid)) {
-		if($attribute) {
-			if(!$attrdef->validate($attribute)) {
-				$errmsg = getAttributeValidationText($attrdef->getValidationError(), $attrdef->getName(), $attribute);
-				UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())), $errmsg);
-			}
-		} elseif($attrdef->getMinValues() > 0) {
-			UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("attr_min_values", array("attrname"=>$attrdef->getName())));
-		}
-	}
-}
- */
 
 if(isset($_POST["attributes_version"]))
 	$attributes_version = $_POST["attributes_version"];
 else
 	$attributes_version = array();
-/* Has been moved to controller
-foreach($attributes_version as $attrdefid=>$attribute) {
-	$attrdef = $dms->getAttributeDefinition($attrdefid);
-	if($attribute) {
-		if(!$attrdef->validate($attribute)) {
-			$errmsg = getAttributeValidationText($attrdef->getValidationError(), $attrdef->getName(), $attribute);
-			UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),$errmsg);
-		}
-	}
-}
- */
 
 $reqversion = !empty($_POST['reqversion']) ? (int)$_POST["reqversion"] : 0;
 if ($reqversion<1) $reqversion=1;
@@ -156,6 +131,25 @@ if($settings->_workflowMode == 'traditional' || $settings->_workflowMode == 'tra
 			}
 		}
 	}
+	
+	$notusers = array();
+if(!empty($_POST['notification_users'])) {
+	foreach($_POST['notification_users'] as $notuserid) {
+		$notuser = $dms->getUser($notuserid);
+		if($notuser) {
+			$notusers[] = $notuser;
+		}
+	}
+}
+$notgroups = array();
+if(!empty($_POST['notification_groups'])) {
+	foreach($_POST['notification_groups'] as $notgroupid) {
+		$notgroup = $dms->getGroup($notgroupid);
+		if($notgroup) {
+			$notgroups[] = $notgroup;
+		}
+	}
+}
 
 	// Retrieve the list of individual approvers from the form.
 	if (isset($_POST["indApprovers"])) {
@@ -244,109 +238,6 @@ if (isset($_POST["grpIndRecipients"])) {
 
 $docsource = 'upload';
 
-// if($settings->_dropFolderDir) {
-// 	if(isset($_POST["dropfolderfileadddocform"]) && $_POST["dropfolderfileadddocform"]) {
-// 		$fullfile = $settings->_dropFolderDir.'/'.$user->getLogin().'/'.$_POST["dropfolderfileadddocform"];
-// 		if(file_exists($fullfile)) {
-// 			$docsource = 'dropfolder';
-// 			/* Check if a local file is uploaded as well */
-// 			if(isset($_FILES["userfile"]['error'][0])) {
-// 				if($_FILES["userfile"]['error'][0] != 0)
-// 					$_FILES["userfile"] = array();
-// 			}
-// 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-// 			$mimetype = finfo_file($finfo, $fullfile);
-// 			$_FILES["userfile"]['tmp_name'][] = $fullfile;
-// 			$_FILES["userfile"]['type'][] = $mimetype;
-// 			$_FILES["userfile"]['name'][] = $_POST["dropfolderfileadddocform"];
-// 			$_FILES["userfile"]['size'][] = filesize($fullfile);
-// 			$_FILES["userfile"]['error'][] = 0;
-// 		}
-// 	}
-// }
-
-// $prefix = 'userfile';
-// if(isset($_POST[$prefix.'-fine-uploader-uuids']) && $_POST[$prefix.'-fine-uploader-uuids']) {
-// 	$uuids = explode(';', $_POST[$prefix.'-fine-uploader-uuids']);
-// 	$names = explode(';', $_POST[$prefix.'-fine-uploader-names']);
-// 	foreach($uuids as $i=>$uuid) {
-// 		$fullfile = $settings->_stagingDir.'/'.utf8_basename($uuid);
-// 		if(file_exists($fullfile)) {
-// 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-// 			$mimetype = finfo_file($finfo, $fullfile);
-// 			$_FILES["userfile"]['tmp_name'][] = $fullfile;
-// 			$_FILES["userfile"]['type'][] = $mimetype;
-// 			$_FILES["userfile"]['name'][] = isset($names[$i]) ? $names[$i] : $uuid;
-// 			$_FILES["userfile"]['size'][] = filesize($fullfile);
-// 			$_FILES["userfile"]['error'][] = 0;
-// 		}
-// 	}
-// }
-
-// if($settings->_libraryFolder) {
-// 	if(isset($_POST["librarydoc"]) && $_POST["librarydoc"]) {
-// 		if($clonedoc = $dms->getDocument($_POST["librarydoc"])) {
-// 			if($content = $clonedoc->getLatestContent()) {
-// 				$docsource = 'library';
-// 				$fullfile = tempnam('/tmp', '');
-// 				if(SeedDMS_Core_File::copyFile($dms->contentDir . $content->getPath(), $fullfile)) {
-// 					/* Check if a local file is uploaded as well */
-// 					if(isset($_FILES["userfile"]['error'][0])) {
-// 						if($_FILES["userfile"]['error'][0] != 0)
-// 							$_FILES["userfile"] = array();
-// 					}
-// 					$_FILES["userfile"]['tmp_name'][] = $fullfile;
-// 					$_FILES["userfile"]['type'][] = $content->getMimeType();
-// 					$_FILES["userfile"]['name'][] = $content->getOriginalFileName();
-// 					$_FILES["userfile"]['size'][] = $content->getFileSize();
-// 					$_FILES["userfile"]['error'][] = 0;
-// 				}
-// 			}
-// 		}
-// 	}
-// }
-
-/* Check if additional notification shall be added */
-$notusers = array();
-if(!empty($_POST['notification_users'])) {
-	foreach($_POST['notification_users'] as $notuserid) {
-		$notuser = $dms->getUser($notuserid);
-		if($notuser) {
-			$notusers[] = $notuser;
-		}
-	}
-}
-$notgroups = array();
-if(!empty($_POST['notification_groups'])) {
-	foreach($_POST['notification_groups'] as $notgroupid) {
-		$notgroup = $dms->getGroup($notgroupid);
-		if($notgroup) {
-			$notgroups[] = $notgroup;
-		}
-	}
-}
-
-/* Check files for Errors first */
-// $maxuploadsize = SeedDMS_Core_File::parse_filesize($settings->_maxUploadSize);
-// for ($file_num=0;$file_num<count($_FILES["userfile"]["tmp_name"]);$file_num++){
-// 	if ($_FILES["userfile"]["size"][$file_num]==0) {
-// 		UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("uploading_zerosize"));
-// 	}
-// 	if ($maxuploadsize && $_FILES["userfile"]["size"][$file_num] > $maxuploadsize) {
-// 		UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("uploading_maxsize"));
-// 	}
-// 	if (/* is_uploaded_file($_FILES["userfile"]["tmp_name"][$file_num]) && */$_FILES['userfile']['error'][$file_num]!=0){
-// 		UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),getMLText("uploading_failed"));
-// 	}
-// }
-
-// for ($file_num=0;$file_num<count($_FILES["userfile"]["tmp_name"]);$file_num++){
-// 	$userfiletmp = $_FILES["userfile"]["tmp_name"][$file_num];
-// 	$userfiletype = $_FILES["userfile"]["type"][$file_num];
-// 	$userfilename = $_FILES["userfile"]["name"][$file_num];
-	
-// 	$fileType = ".".pathinfo($userfilename, PATHINFO_EXTENSION);
-
 	if($settings->_overrideMimeType) {
 		$finfo = finfo_open(FILEINFO_MIME_TYPE);
 		$tmpfiletype = finfo_file($finfo, $userfiletmp);
@@ -354,11 +245,6 @@ if(!empty($_POST['notification_groups'])) {
 			$userfiletype = $tmpfiletype;
 	}
 
-	// if ((count($_FILES["userfile"]["tmp_name"])==1)&&($_POST["name"]!=""))
-	// 	$name = trim($_POST["name"]);
-	// else $name = utf8_basename($userfilename);
-
-	/* Check if name already exists in the folder */
 	if(!$settings->_enableDuplicateDocNames) {
 		if($requestsoftcopy->hasDocumentByName($name)) {
 			UI::exitError(getMLText("folder_title", array("foldername" => $requestsoftcopy->getName())),getMLText("document_duplicate_name"));
@@ -373,11 +259,6 @@ if(!empty($_POST['notification_groups'])) {
 	$controller->setParam('keperluan', $keperluan);
 	$controller->setParam('categories', $cats);
 	$controller->setParam('owner', $owner);
-	// $controller->setParam('userfiletmp', $userfiletmp);
-	// $controller->setParam('userfilename', $userfilename);
-	// $controller->setParam('filetype', $fileType);
-	// $controller->setParam('userfiletype', $userfiletype);
-	// $controller->setParam('sequence', $sequence);
 	$controller->setParam('reviewers', $reviewers);
 	$controller->setParam('approvers', $approvers);
 	$controller->setParam('recipients', $recipients);
@@ -402,26 +283,6 @@ if(!empty($_POST['notification_groups'])) {
 				'users'=>array_unique(array_merge($snl['users'], $fnl['users']), SORT_REGULAR),
 				'groups'=>array_unique(array_merge($snl['groups'], $fnl['groups']), SORT_REGULAR)
 			);
-	// if(!$requestsoftcopy = $controller->run()) {
-	// 	$err = $controller->getErrorMsg();
-	// 	if(is_string($err))
-	// 		$errmsg = getMLText($err);
-	// 	elseif(is_array($err)) {
-	// 		$errmsg = getMLText($err[0], $err[1]);
-	// 	} else {
-	// 		$errmsg = $err;
-	// 	}
-	// 	UI::exitError(getMLText("folder_title", array("foldername" => $folder->getName())),$errmsg);
-	// } else {
-	// 	// Send notification to subscribers of folder.
-	// 	if($notifier) {
-	// 		$fnl = $folder->getNotifyList();
-	// 		$dnl = $requestsoftcopy->getNotifyList();
-	// 		$nl = array(
-	// 			'users'=>array_unique(array_merge($dnl['users'], $fnl['users']), SORT_REGULAR),
-	// 			'groups'=>array_unique(array_merge($dnl['groups'], $fnl['groups']), SORT_REGULAR)
-	// 		);
-
 			$subject = "new_document_email_subject";
 			$message = "new_document_email_body";
 			$params = array();
@@ -476,10 +337,7 @@ if(!empty($_POST['notification_groups'])) {
 			}
 
 			if($settings->_enableNotificationAppRev) {
-				/* Reviewers and approvers will be informed about the new document */
-				/* Get reviewers and approvers from controller in case it was
-				 * modified in a hook
-				 */
+
 				$reviewers = $controller->getParam('reviewers');
         		$approvers = $controller->getParam('approvers');
 				if($reviewers['i'] || $reviewers['g']) {

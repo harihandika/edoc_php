@@ -37,215 +37,116 @@ require_once("SeedDMS/Preview.php");
 class SeedDMS_View_Tasks extends SeedDMS_Bootstrap_Style {
 
 	function js() { /* {{{ */
-		$dms = $this->params['dms'];
-		$user = $this->params['user'];
-
 		header('Content-Type: application/javascript; charset=UTF-8');
-		parent::jsTranslations(array('cancel', 'splash_move_document', 'confirm_move_document', 'move_document', 'confirm_transfer_link_document', 'transfer_content', 'link_document', 'splash_move_folder', 'confirm_move_folder', 'move_folder'));
-		$this->printClickDocumentJs();
 ?>
-$(document).ready( function() {
-	$('body').on('click', 'ul.bs-docs-sidenav li a', function(ev){
-		ev.preventDefault();
-		$('#kkkk.ajax').data('action', $(this).data('action'));
-		$('#kkkk.ajax').trigger('update', {orderby: $(this).data('orderby')});
-	});
-	$('body').on('click', 'table th a', function(ev){
-		ev.preventDefault();
-		$('#kkkk.ajax').data('action', $(this).data('action'));
-		$('#kkkk.ajax').trigger('update', {orderby: $(this).data('orderby'), orderdir: $(this).data('orderdir')});
-	});
-});
+		$(document).ready(function(){
+			$("#myInput").on("keyup", function() {
+				var value = $(this).val().toLowerCase();
+				$("#myTable tbody tr").filter(function() {
+					$(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+				});
+			});
+		});
 <?php
 	} /* }}} */
 
-	protected function printListHeader($resArr, $previewer, $action=false) { /* {{{ */
-		$orderby = $this->params['orderby'];
-		$orderdir = $this->params['orderdir'];
+		function requestSoftCopy($notifications,$deleteaction=true) { /* {{{ */
 
-		print "<table class=\"table table-condensed\">";
-		print "<thead>\n<tr>\n";
-		print "<th></th>\n";
-		if($action) {
-			print "<th>";
-			print "<a data-action=\"".$action."\" data-orderby=\"n\" data-orderdir=\"".($orderdir == 'desc' ? '' : 'desc')."\">".getMLText("name")."</a> ".($orderby == 'n' || $orderby == '' ? ($orderdir == 'desc' ? '<i class="fa fa-arrow-up"></i>' :  '<i class="fa fa-arrow-down"></i>') : '')." &middot; ";
-			print "<a data-action=\"".$action."\" data-orderby=\"u\" data-orderdir=\"".($orderdir == 'desc' ? '' : 'desc')."\">".getMLText("last_update")."</a> ".($orderby == 'u' ? ($orderdir == 'desc' ? '<i class="fa fa-arrow-up"></i>' :  '<i class="fa fa-arrow-down"></i>') : '')." &middot; ";
-			print "<a data-action=\"".$action."\" data-orderby=\"e\" data-orderdir=\"".($orderdir == 'desc' ? '' : 'desc')."\">".getMLText("expires")."</a> ".($orderby == 'e' ? ($orderdir == 'desc' ? '<i class="fa fa-arrow-up"></i>' :  '<i class="fa fa-arrow-down"></i>') : '');
-			print "</th>\n";
-		} else
+		if (count($notifications)==0) {
+			printMLText("empty_notify_list");
+		}
+		else {
+			$previewer = new SeedDMS_Preview_Previewer($this->cachedir, $this->previewwidth, $this->timeout, $this->xsendfile);
+			$previewer->setConverters($this->previewconverters);
+
+			print "<table class=\"table table-condensed\">";
+			print "<thead>\n<tr>\n";
+			print "<th></th>\n";
 			print "<th>".getMLText("name")."</th>\n";
-		if($action)
-			print "<th><a data-action=\"".$action."\" data-orderby=\"s\" data-orderdir=\"".($orderdir == 'desc' ? '' : 'desc')."\">".getMLText("status")."</a>".($orderby == 's' ? " ".($orderdir == 'desc' ? '<i class="fa fa-arrow-up"></i>' :  '<i class="fa fa-arrow-down"></i>') : '')."</th>\n";
-		else
 			print "<th>".getMLText("status")."</th>\n";
-		print "<th>".getMLText("action")."</th>\n";
-		print "</tr>\n</thead>\n<tbody>\n";
-	} /* }}} */
+			print "<th>".getMLText("action")."</th>\n";
+			print "<th></th>\n";
+			print "</tr></thead>\n<tbody>\n";
+			foreach ($notifications as $notification) {
+				$doc = $this->dms->getDocument($notification->getTarget());
 
-	protected function printListFooter() { /* {{{ */
-		echo "</tbody>\n</table>";
-	} /* }}} */
+				if (is_object($doc)) {
+					$doc->verifyLastestContentExpriry();
+					echo $this->documentListRowStart($doc);
+					$txt = $this->callHook('documentListItem', $doc, $previewer, true, 'managenotify');
+					if(is_string($txt))
+						echo $txt;
+					else {
+						echo $this->documentListRow($doc, $previewer, true);
+					}
+					print "<td>";
+					if ($deleteaction) print "<a href='../op/op.ManageNotify.php?id=".$doc->getID()."&type=document&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> ".getMLText("delete")."</a>";
+					else print "<a href='../out/out.DocumentNotify.php?documentid=".$doc->getID()."' class=\"btn btn-mini\">".getMLText("edit")."</a>";
+					print "</td>\n";
+					echo $this->documentListRowEnd($doc);
 
-	protected function printList($resArr, $previewer, $action=false) { /* {{{ */
-		$dms = $this->params['dms'];
-		$user = $this->params['user'];
-
-		$this->printListHeader($resArr, $previewer, $action);
-		$noaccess = 0;
-		$docs = [];
-		foreach ($resArr as $res) {
-			if($document = $dms->getDocument($res["id"])) {
-				$document->verifyLastestContentExpriry();
-
-				if($document->getAccessMode($user) >= M_READ && $document->getLatestContent()) {
-					$docs[] = $document;
-				} else {
-					$noaccess++;
 				}
 			}
-		}
-		if($this->hasHook('filterList'))
-			$docs = $this->callHook('filterList', $docs, $action);
-		foreach($docs as $document) {
-			$txt = $this->callHook('documentListItem', $document, $previewer, false);
-			if(is_string($txt))
-				echo $txt;
-			else
-				echo $this->documentListRow($document, $previewer, false);
-		}
-		$this->printListFooter();
-
-		if($noaccess) {
-			$this->warningMsg(getMLText('list_contains_no_access_docs', array('count'=>$noaccess)));
+			print "</tbody></table>";
 		}
 	} /* }}} */
-
-	function listDocsToLookAt1() { /* {{{ */
-		$dms = $this->params['dms'];
-		$user = $this->params['user'];
-		$orderby = $this->params['orderby'];
-		$orderdir = $this->params['orderdir'];
-		$workflowmode = $this->params['workflowmode'];
-		$cachedir = $this->params['cachedir'];
-		$previewwidth = $this->params['previewWidthList'];
-		$previewconverters = $this->params['previewConverters'];
-		$timeout = $this->params['timeout'];
-		$xsendfile = $this->params['xsendfile'];
-
-		$previewer = new SeedDMS_Preview_Previewer($cachedir, $previewwidth, $timeout, $xsendfile);
-		$previewer->setConverters($previewconverters);
-
-		if($workflowmode != 'advanced') {
-			/* Get list of documents owned by current user that are
-			 * pending review or pending approval.
-			 */
-			$resArr = $dms->getDocumentList('AppRevOwner', $user, false, $orderby, $orderdir);
-			if (is_bool($resArr) && !$resArr) {
-				$this->contentHeading(getMLText("warning"));
-				$this->contentContainer(getMLText("internal_error_exit"));
-				$this->htmlEndPage();
-				exit;
-			}
-
-			$this->contentHeading(getMLText("documents_user_requiring_attention"));
-			if ($resArr) {
-				$this->printList($resArr, $previewer, 'listDocsToLookAt1');
-			} else {
-				printMLText("no_docs_to_look_at");
-			}
-		} else {
-			$resArr = $dms->getDocumentList('WorkflowOwner', $user, false, $orderby, $orderdir);
-			if (is_bool($resArr) && !$resArr) {
-				$this->contentHeading(getMLText("warning"));
-				$this->contentContainer("Internal error. Unable to complete request. Exiting.");
-				$this->htmlEndPage();
-				exit;
-			}
-
-			$this->contentHeading(getMLText("documents_user_requiring_attention"));
-			if($resArr) {
-				$this->printList($resArr, $previewer);
-			}
-			else printMLText("no_docs_to_look_at");
-		}
-	} /* }}} */
-
-	// function printDocumentNotificationList($notifications,$deleteaction=true) { /* {{{ */
-
-	// 	if (count($notifications)==0) {
-	// 		printMLText("empty_notify_list");
-	// 	}
-	// 	else {
-	// 		$previewer = new SeedDMS_Preview_Previewer($this->cachedir, $this->previewwidth, $this->timeout, $this->xsendfile);
-	// 		$previewer->setConverters($this->previewconverters);
-
-	// 		print "<table class=\"table table-condensed\">";
-	// 		print "<thead>\n<tr>\n";
-	// 		print "<th></th>\n";
-	// 		print "<th>".getMLText("name")."</th>\n";
-	// 		print "<th>".getMLText("status")."</th>\n";
-	// 		print "<th>".getMLText("action")."</th>\n";
-	// 		print "<th></th>\n";
-	// 		print "</tr></thead>\n<tbody>\n";
-	// 		foreach ($notifications as $notification) {
-	// 			$doc = $this->dms->getDocument($notification->getTarget());
-
-	// 			if (is_object($doc)) {
-	// 				$doc->verifyLastestContentExpriry();
-	// 				echo $this->documentListRowStart($doc);
-	// 				$txt = $this->callHook('documentListItem', $doc, $previewer, true, 'managenotify');
-	// 				if(is_string($txt))
-	// 					echo $txt;
-	// 				else {
-	// 					echo $this->documentListRow($doc, $previewer, true);
-	// 				}
-	// 				print "<td>";
-	// 				if ($deleteaction) print "<a href='../op/op.ManageNotify.php?id=".$doc->getID()."&type=document&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> ".getMLText("delete")."</a>";
-	// 				else print "<a href='../out/out.DocumentNotify.php?documentid=".$doc->getID()."' class=\"btn btn-mini\">".getMLText("edit")."</a>";
-	// 				print "</td>\n";
-	// 				echo $this->documentListRowEnd($doc);
-	// 			}
-	// 		}
-	// 		print "</tbody></table>";
-	// 	}
-	// } /* }}} */
-
 
 	function show() { /* {{{ */
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
-		$orderby = $this->params['orderby'];
-		$orderdir = $this->params['orderdir'];
-		$listtype = $this->params['listtype'];
-		$cachedir = $this->params['cachedir'];
-		$workflowmode = $this->params['workflowmode'];
-		$previewwidth = $this->params['previewWidthList'];
-		$previewconverters = $this->params['previewConverters'];
-		$timeout = $this->params['timeout'];
-		$xsendfile = $this->params['xsendfile'];
+		$allRequestsoftcopy = $this->params['allrequestsoftcopy'];
 
-		$db = $dms->getDB();
-		$previewer = new SeedDMS_Preview_Previewer($cachedir, $previewwidth, $timeout, $xsendfile);
-		$previewer->setConverters($previewconverters);
-
-		$this->htmlAddHeader('<script type="text/javascript" src="../styles/'.$this->theme.'/bootbox/bootbox.min.js"></script>'."\n", 'js');
-
-		$this->htmlStartPage(getMLText("my_documents"));
+		$this->htmlStartPage(getMLText("request_soft_copy"));
 		$this->globalNavigation();
 		$this->contentStart();
+		$this->pageNavigation(getMLText("admin_tools"), "admin_tools");
 
-		echo '<div class="row-fluid">';
-		echo '<div class="span3">';
-		echo '<ul class="nav nav-list bs-docs-sidenav _affix">';
+		$this->rowStart();
+		$this->columnStart(6);
+		$this->contentHeading(getMLText("request_soft_copy"));
+	$this->columnEnd();
+	$this->columnStart(6);
+	$this->contentHeading(getMLText("status"));
+	$this->columnEnd();
+	$this->rowEnd();
 
-		echo '</ul>';
-		echo '</div>';
-		echo '<div class="span9">';
-
-		echo '<div id="kkkk" class="ajax" data-view="Tasks" data-action="'.'listDocsToLookAt1'.'"></div>';
-
-		echo '</div>';
-		echo '</div>';
+	$this->rowStart();
+	$this->columnStart(6);
+	?>
+	<table id="myTable" class="table table-condensed">
+		<thead>
+		<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('keperluan');?></th><th><?php printMLText('owner'); ?></th><th><?php printMLText('action'); ?></th><th></th></tr>
+		</thead>
+		<tbody>
+<?php
+		foreach ($allRequestsoftcopy as $requestsoftcopy) {
+			// if ($user->getID() == $requestsoftcopy->getOwner()->getID()){
+			foreach ($user->getNotifications(T_REQUESTSOFTCOPY) as $request){
+if ($request->getTarget() == $requestsoftcopy->getID()){
+			// echo "<tr".($currUser->isDisabled() ? " class=\"error\"" : "").">";
+			echo "<td>";
+			echo htmlspecialchars($requestsoftcopy->getName())."<br />";
+			echo "<small>".htmlspecialchars($requestsoftcopy->getKeterangan())."</small>";
+			echo "</td>";
+			echo "<td>";
+			echo "<small>".htmlspecialchars($requestsoftcopy->getKeperluan())."</small>";
+			echo "</td>";
+			echo "<td>";
+			echo htmlspecialchars($requestsoftcopy->getOwner()->getFullName());
+			echo "</td>";
+			echo "<td>";
+			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Approve"."</a>";
+			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Reject"."</a>";
+			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Delete"."</a>";
+			echo "</td>";
+			echo "</tr>";
+		}
+	}  
+	}
+	$this->columnEnd();
+	
+	echo "</tbody>";
+	echo "</table>";
 
 		$this->contentEnd();
 		$this->htmlEndPage();

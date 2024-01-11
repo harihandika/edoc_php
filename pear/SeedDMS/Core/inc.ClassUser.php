@@ -656,6 +656,13 @@ class SeedDMS_Core_User { /* {{{ */
 	 */
 	var $_dms;
 
+		/**
+	 * @var integer id of target (document or folder)
+	 *
+	 * @access protected
+	 */
+	protected $_target;
+
 	/**
 	 * @var int
 	 */
@@ -688,6 +695,7 @@ class SeedDMS_Core_User { /* {{{ */
 	 * @param int $quota
 	 * @param null $homeFolder
 	 * @param string $secret
+	 * @param integer $target
 	 */
 	function __construct($id, $login, $pwd, $fullName, $email, $language, $theme, $comment, $role, $isHidden=0, $isDisabled=0, $pwdExpiration='', $loginFailures=0, $quota=0, $homeFolder=null, $secret='') {
 		$this->_id = $id;
@@ -2796,7 +2804,6 @@ class SeedDMS_Core_User { /* {{{ */
 		$resArr = $db->getResultArray($queryStr);
 		if (is_bool($resArr) && !$resArr)
 			return false;
-
 		$notifications = array();
 		foreach ($resArr as $row) {
 			$not = new SeedDMS_Core_Notification($row["target"], $row["targetType"], $row["userID"], $row["groupID"]);
@@ -2806,6 +2813,8 @@ class SeedDMS_Core_User { /* {{{ */
 
 		return $notifications;
 	} /* }}} */
+
+	function getTarget() { return $this->_target; }
 
 	/**
 	 * Return list of personal keyword categories

@@ -125,6 +125,7 @@ class SeedDMS_View_ManageNotify extends SeedDMS_Bootstrap_Style {
 					else print "<a href='../out/out.DocumentNotify.php?documentid=".$doc->getID()."' class=\"btn btn-mini\">".getMLText("edit")."</a>";
 					print "</td>\n";
 					echo $this->documentListRowEnd($doc);
+
 				}
 			}
 			print "</tbody></table>";
@@ -155,6 +156,7 @@ class SeedDMS_View_ManageNotify extends SeedDMS_Bootstrap_Style {
 		$this->contentStart();
 		$this->pageNavigation(getMLText("my_account"), "my_account");
 
+// *********************
 		$this->rowStart();
 		$this->columnStart(6);
 		$this->contentHeading(getMLText("edit_folder_notify"));

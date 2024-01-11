@@ -345,7 +345,6 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 	public static function getAllInstances($orderby, $dms) { /* {{{ */
 		$db = $dms->getDB();
 
-
 			$queryStr = "SELECT `tblDocuments`.*, `tblDocumentLocks`.`userID` as `lock` FROM `tblDocuments` LEFT JOIN `tblDocumentLocks` ON `tblDocuments`.`id` = `tblDocumentLocks`.`document` ORDER BY `name`";
 			if($dms->checkWithinRootDir)
 				$queryStr .= " AND `folderList` LIKE '%:".$dms->rootFolderID.":%'";
