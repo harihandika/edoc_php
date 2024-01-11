@@ -541,6 +541,7 @@ class SeedDMS_AccessOperation {
 	 * no specific access right is set, otherwise false
 	 */
 	function check_view_access($view, $get=array()) { /* {{{ */
+		
 		if(!$this->settings->_advancedAcl) {
 			return $this->check_view_legacy_access($view, $get);
 		}
@@ -549,10 +550,12 @@ class SeedDMS_AccessOperation {
 		} elseif(is_array($view)) {
 			$scripts = $view;
 		} elseif(is_subclass_of($view, 'SeedDMS_View_Common')) {
-			$scripts = array($view->getParam('class'));
+			$scripts = array($view->getParam('class')); 
 		} else {
 			return false;
 		}
+		
+		
 		$scope = 'Views';
 		$action = (isset($get['action']) && $get['action']) ? $get['action'] : 'show';
 		$acl = new SeedDMS_Acl($this->dms);
@@ -561,8 +564,8 @@ class SeedDMS_AccessOperation {
 		foreach($scripts as $script) {
 			$aco = SeedDMS_Aco::getInstance($scope.'/'.$script.'/'.$action, $this->dms);
 			$ll = $acl->check($this->_aro, $aco);
-			if($ll === 1 && !$this->user->isAdmin() || $ll !== -1 && $this->user->isAdmin())
-				return true;
+			if($ll === 1 && !$this->user->isAdmin() || $ll !== -1 && $this->user->isAdmin()) 
+			return true;
 		}
 		return false;
 	} /* }}} */

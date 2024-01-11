@@ -101,9 +101,6 @@ $(document).ready( function() {
 $options = array();
 foreach($documents as $document) {
 	$options[] = array(htmlspecialchars($document->getName()), htmlspecialchars($document->getName()));
-	// echo "<pre>";
-	// var_dump($options);
-	// echo "<pre>";
 }
 		$this->formField(
 			getMLText("name_document"),

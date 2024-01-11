@@ -673,12 +673,12 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 			}
 			if ($accessMode == M_ALL) {
 				if ($accessobject->check_view_access('FolderAccess'))
-				$menuitems['edit_folder_access'] = array('link'=>"../out/out.FolderAccess.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'edit_folder_access');
+				$menuitems['edit_folder_accesssss'] = array('link'=>"../out/out.FolderAccess.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'edit_folder_access');
 			}
 			if ($accessobject->check_view_access('FolderNotify'))
 			$menuitems['edit_existing_notify'] = array('link'=>"../out/out.FolderNotify.php?folderid=". $folderID ."&showtree=". showtree(), 'label'=>'edit_existing_notify');
 		// ***********************
-		// if ($accessobject->check_view_access('RequestSoftCopy'))	
+		// if ($accessobject->check_view_access('RequestSoftCopy'))
 		$menuitems['request_soft_copy'] = array('link'=>"../out/out.RequestSoftCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_soft_copy');
 		if ($accessobject->check_view_access('RequestHardCopy'))
 		$menuitems['request_hard_copy'] = array('link'=>"../out/out.RequestHardCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_hard_copy');
