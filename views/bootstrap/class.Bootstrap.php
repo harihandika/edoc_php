@@ -663,7 +663,7 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 				$menuitems['add_document'] = array('link'=>"../out/out.AddDocument.php?folderid=". $folderID ."&showtree=".showtree(), 'label'=>'add_document');
 			if(0 && $this->params['enablelargefileupload'])
 				$menuitems['add_multiple_documents'] = array('link'=>"../out/out.AddMultiDocument.php?folderid=". $folderID ."&showtree=".showtree(), 'label'=>'add_multiple_documents');
-			$menuitems['edit_folder_props'] = array('link'=>"../out/out.EditFolder.php?folderid=". $folderID ."&showtree=".showtree(), 'label'=>'edit_folder_props');
+			if ($accessobject->check_view_access('EditFolder')) $menuitems['edit_folder_props'] = array('link'=>"../out/out.EditFolder.php?folderid=". $folderID ."&showtree=".showtree(), 'label'=>'edit_folder_props');
 			if ($folderID != $this->params['rootfolderid'] && $folder->getParent())
 				$menuitems['move_folder'] = array('link'=>"../out/out.MoveFolder.php?folderid=". $folderID ."&showtree=".showtree(), 'label'=>'move_folder');
 			if ($accessMode == M_ALL) {
@@ -678,7 +678,7 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 			if ($accessobject->check_view_access('FolderNotify'))
 			$menuitems['edit_existing_notify'] = array('link'=>"../out/out.FolderNotify.php?folderid=". $folderID ."&showtree=". showtree(), 'label'=>'edit_existing_notify');
 		// ***********************
-		// if ($accessobject->check_view_access('RequestSoftCopy'))
+		if ($accessobject->check_view_access('RequestSoftCopy'))
 		$menuitems['request_soft_copy'] = array('link'=>"../out/out.RequestSoftCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_soft_copy');
 		if ($accessobject->check_view_access('RequestHardCopy'))
 		$menuitems['request_hard_copy'] = array('link'=>"../out/out.RequestHardCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_hard_copy');

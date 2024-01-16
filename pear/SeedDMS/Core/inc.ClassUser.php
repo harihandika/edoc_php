@@ -663,6 +663,13 @@ class SeedDMS_Core_User { /* {{{ */
 	 */
 	protected $_target;
 
+			/**
+	 * @var integer id of target (document or folder)
+	 *
+	 * @access protected
+	 */
+	protected $_userid;
+
 	/**
 	 * @var int
 	 */
@@ -696,6 +703,7 @@ class SeedDMS_Core_User { /* {{{ */
 	 * @param null $homeFolder
 	 * @param string $secret
 	 * @param integer $target
+	 * @param integer $userid
 	 */
 	function __construct($id, $login, $pwd, $fullName, $email, $language, $theme, $comment, $role, $isHidden=0, $isDisabled=0, $pwdExpiration='', $loginFailures=0, $quota=0, $homeFolder=null, $secret='') {
 		$this->_id = $id;
@@ -846,6 +854,22 @@ class SeedDMS_Core_User { /* {{{ */
 	 * @return string
 	 */
 	function getFullName() { return $this->_fullName; }
+
+	function getPICName($id){
+		$db = $this->_dms->getDB();
+
+		$queryStr = "SELECT * FROM `tblUsers` WHERE `id` =" . $id;
+		$resArr = $db->getResultArray($queryStr);
+
+		if (is_bool($resArr) && $resArr == false) return false;
+		if (count($resArr) != 1) return null;
+
+		$resArr = $resArr[0];
+
+		$user = new self((int) $resArr["id"], $resArr["login"], $resArr["pwd"], $resArr["fullName"], $resArr["email"], $resArr["language"], $resArr["theme"], $resArr["comment"], $resArr["hidden"], $resArr["disabled"], $resArr["pwdExpiration"], $resArr["loginfailures"], $resArr["quota"], $resArr["homefolder"], $resArr["secret"]);
+
+		return $user;
+	}
 
 	/**
 	 * @param $newFullName
@@ -2814,7 +2838,47 @@ class SeedDMS_Core_User { /* {{{ */
 		return $notifications;
 	} /* }}} */
 
+	function getPICNotifications($type=0) { /* {{{ */
+		$db = $this->_dms->getDB();
+		$queryStr = "SELECT `tblNotify`.* FROM `tblNotify` JOIN `tblRequestSoftCopy` ON `tblNotify`.`target` = `tblRequestSoftCopy`.`id`";
+		if($type) {
+			$queryStr .= " AND `tblNotify`.`targetType` = ". (int) $type;
+		}
+		$resArr = $db->getResultArray($queryStr);
+		if (is_bool($resArr) && !$resArr)
+			return false;
+		$notifications = array();
+		foreach ($resArr as $row) {
+			$not = new SeedDMS_Core_Notification($row["target"], $row["targetType"], $row["userID"], $row["groupID"]);
+			$not->setDMS($this);
+			array_push($notifications, $not);
+		}
+
+		return $notifications;
+	} /* }}} */
+
+	function getPICFullName($type=0) { /* {{{ */
+		$db = $this->_dms->getDB();
+		$queryStr = "SELECT `tblNotify`.*`tblUsers`.`userID` FROM `tblNotify` LEFT JOIN `tblUsers` ON `tblNotify`.`userID` = `tblUsers`.`id`";
+		if($type) {
+			$queryStr .= " AND `tblNotify`.`targetType` = ". (int) $type;
+		}
+
+		$resArr = $db->getResultArray($queryStr);
+		if (is_bool($resArr) && !$resArr)
+			return false;
+		$notifications = array();
+		foreach ($resArr as $row) {
+			$not = new SeedDMS_Core_Notification($row["target"], $row["targetType"], $row["userID"], $row["groupID"]);
+			$not->setDMS($this);
+			array_push($notifications, $not);
+		}
+
+		return $notifications;
+	} /* }}} */
+
 	function getTarget() { return $this->_target; }
+	function getUserID() { return $this->_userid; }
 
 	/**
 	 * Return list of personal keyword categories

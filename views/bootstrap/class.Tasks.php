@@ -50,70 +50,13 @@ class SeedDMS_View_Tasks extends SeedDMS_Bootstrap_Style {
 <?php
 	} /* }}} */
 
-		function requestSoftCopy($notifications,$deleteaction=true) { /* {{{ */
+function requestSoftCopy() { /* {{{ */
 
-		if (count($notifications)==0) {
-			printMLText("empty_notify_list");
-		}
-		else {
-			$previewer = new SeedDMS_Preview_Previewer($this->cachedir, $this->previewwidth, $this->timeout, $this->xsendfile);
-			$previewer->setConverters($this->previewconverters);
-
-			print "<table class=\"table table-condensed\">";
-			print "<thead>\n<tr>\n";
-			print "<th></th>\n";
-			print "<th>".getMLText("name")."</th>\n";
-			print "<th>".getMLText("status")."</th>\n";
-			print "<th>".getMLText("action")."</th>\n";
-			print "<th></th>\n";
-			print "</tr></thead>\n<tbody>\n";
-			foreach ($notifications as $notification) {
-				$doc = $this->dms->getDocument($notification->getTarget());
-
-				if (is_object($doc)) {
-					$doc->verifyLastestContentExpriry();
-					echo $this->documentListRowStart($doc);
-					$txt = $this->callHook('documentListItem', $doc, $previewer, true, 'managenotify');
-					if(is_string($txt))
-						echo $txt;
-					else {
-						echo $this->documentListRow($doc, $previewer, true);
-					}
-					print "<td>";
-					if ($deleteaction) print "<a href='../op/op.ManageNotify.php?id=".$doc->getID()."&type=document&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> ".getMLText("delete")."</a>";
-					else print "<a href='../out/out.DocumentNotify.php?documentid=".$doc->getID()."' class=\"btn btn-mini\">".getMLText("edit")."</a>";
-					print "</td>\n";
-					echo $this->documentListRowEnd($doc);
-
-				}
-			}
-			print "</tbody></table>";
-		}
-	} /* }}} */
-
-	function show() { /* {{{ */
-		$dms = $this->params['dms'];
-		$user = $this->params['user'];
-		$allRequestsoftcopy = $this->params['allrequestsoftcopy'];
-
-		$this->htmlStartPage(getMLText("request_soft_copy"));
-		$this->globalNavigation();
-		$this->contentStart();
-		$this->pageNavigation(getMLText("admin_tools"), "admin_tools");
-
-		$this->rowStart();
-		$this->columnStart(6);
-		$this->contentHeading(getMLText("request_soft_copy"));
-	$this->columnEnd();
-	$this->columnStart(6);
-	$this->contentHeading(getMLText("status"));
-	$this->columnEnd();
-	$this->rowEnd();
-
-	$this->rowStart();
-	$this->columnStart(6);
+	$dms = $this->params['dms'];
+	$user = $this->params['user'];
+	$allRequestsoftcopy = $this->params['allrequestsoftcopy'];
 	?>
-	<table id="myTable" class="table table-condensed">
+	<table id="myTable" class="table">
 		<thead>
 		<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('keperluan');?></th><th><?php printMLText('owner'); ?></th><th><?php printMLText('action'); ?></th><th></th></tr>
 		</thead>
@@ -143,10 +86,76 @@ if ($request->getTarget() == $requestsoftcopy->getID()){
 		}
 	}  
 	}
+	?></table><?php
+	} /* }}} */
+function statusRequestSoftCopy() { /* {{{ */
+
+	$dms = $this->params['dms'];
+	$user = $this->params['user'];
+	$allRequestsoftcopy = $this->params['allrequestsoftcopy'];
+	?>
+	<table id="myTable" class="table">
+		<thead>
+		<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('keperluan');?></th><th><?php printMLText('owner'); ?></th><th><?php printMLText('action'); ?></th><th></th></tr>
+		</thead>
+		<tbody>
+<?php
+		foreach ($allRequestsoftcopy as $requestsoftcopy) {
+			foreach ($requestsoftcopy->getOwner()->getPICNotifications(T_REQUESTSOFTCOPY) as $request){
+				if ($request->getTarget() == $requestsoftcopy->getID() && $user->getID() == $requestsoftcopy->getOwner()->getID()){
+			
+			echo "<td>";
+			echo htmlspecialchars($requestsoftcopy->getName())."<br />";
+			echo "<small>".htmlspecialchars($requestsoftcopy->getKeterangan())."</small>";
+			echo "</td>";
+			echo "<td>";
+			echo "<small>".htmlspecialchars($requestsoftcopy->getKeperluan())."</small>";
+			echo "</td>";
+			echo "<td>";
+			echo htmlspecialchars($user->getPICName($request->getUserID())->getFullName());
+			echo "</td>";
+			echo "<td>";
+
+			echo ($user->getPICName($request->getUserID())->getFullName());
+
+			echo "</td>";
+			echo "</tr>";
+		}
+	}  
+	}
+	?></table><?php
+	} /* }}} */
+
+	function show() { /* {{{ */
+		$dms = $this->params['dms'];
+		$user = $this->params['user'];
+		$allRequestsoftcopy = $this->params['allrequestsoftcopy'];
+
+		$this->htmlStartPage(getMLText("request_soft_copy"));
+		$this->globalNavigation();
+		$this->contentStart();
+		$this->pageNavigation(getMLText("admin_tools"), "admin_tools");
+
+		$this->rowStart();
+		$this->columnStart(6);
+		$this->contentHeading(getMLText("request_soft_copy"));
 	$this->columnEnd();
+	$this->columnStart(6);
+	$this->contentHeading(getMLText("status"));
+	$this->columnEnd();
+	$this->rowEnd();
+
+	$this->rowStart();
+	$this->columnStart(6);
+	$this->requestSoftCopy();
+	$this->columnEnd();
+	$this->columnStart(6);
+	$this->statusRequestSoftCopy();
+	$this->columnEnd();
+	$this->rowEnd();
 	
-	echo "</tbody>";
-	echo "</table>";
+	// echo "</tbody>";
+	// echo "</table>";
 
 		$this->contentEnd();
 		$this->htmlEndPage();

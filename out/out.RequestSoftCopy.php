@@ -33,9 +33,9 @@ require_once("inc/inc.Authentication.php");
 $tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
 $view = UI::factory($theme, $tmp[1], array('dms'=>$dms, 'user'=>$user));
 $accessop = new SeedDMS_AccessOperation($dms, $user, $settings);
-// if (!$accessop->check_view_access($view, $_GET)) {
-// 	UI::exitError(getMLText("softcopy_title", array("softcopyname" => '')),getMLText("access_denied"));
-// }
+if (!$accessop->check_view_access($view, $_GET)) {
+	UI::exitError(getMLText("softcopy_title", array("softcopyname" => '')),getMLText("access_denied"));
+}
 
 if (!isset($_GET["folderid"]) || !is_numeric($_GET["folderid"]) || intval($_GET["folderid"])<1) {
 	UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));

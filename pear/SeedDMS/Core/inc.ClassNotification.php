@@ -103,7 +103,7 @@ class SeedDMS_Core_Notification { /* {{{ */
 	 * @return integer id of user or -1 if this notification does not belong
 	 * to a user
 	 */
-	function getUser() { return $this->_dms->getUser($this->_userid); }
+	function getUserID() { return $this->_userid; }
 
 	/**
 	 * Get group for this notification

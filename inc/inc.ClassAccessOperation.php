@@ -564,11 +564,13 @@ class SeedDMS_AccessOperation {
 		foreach($scripts as $script) {
 			$aco = SeedDMS_Aco::getInstance($scope.'/'.$script.'/'.$action, $this->dms);
 			$ll = $acl->check($this->_aro, $aco);
+
 			if($ll === 1 && !$this->user->isAdmin() || $ll !== -1 && $this->user->isAdmin()) 
 			return true;
 		}
 		return false;
 	} /* }}} */
+
 
 	/**
 	 * Check for access permission on controller
