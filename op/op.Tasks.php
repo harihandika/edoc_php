@@ -35,10 +35,19 @@ if ($_GET["type"]=="requestsoftcopy"){
 	if ($_GET["action"]=="add"){
 		if (!isset($_POST["requestsoftcopyid"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
 		$requestsoftcopyid = $_POST["requestsoftcopyid"];
+
 	}else if ($_GET["action"]=="del"){
 		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
 		$requestsoftcopyid = $_GET["id"];
-	
+
+	}else if($_GET["action"]=="app"){
+		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
+		$requestsoftcopyid = $_GET["id"];
+
+	}else if($_GET["action"]=="rej"){
+		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
+		$requestsoftcopyid = $_GET["id"];
+
 	}else UI::exitError(getMLText("my_account"),getMLText("error_occured"));
 
 	if(!$requestsoftcopyid || !($requestsoftcopy = $dms->getRequestSoftCopy($requestsoftcopyid))) {
@@ -50,7 +59,9 @@ if ($_GET["type"]=="requestsoftcopy"){
 
 	if ($_GET["action"]=="add") $requestsoftcopy->addNotify($userid, true);
 	else if ($_GET["action"]=="del") $requestsoftcopy->removeNotify($userid, true);
-	
+	else if ($_GET["action"]=="app") $requestsoftcopy->approveNotify($userid, true);
+	else if ($_GET["action"]=="rej") $requestsoftcopy->rejectNotify($userid, true);
+
 }
 
 header("Location:../out/out.Tasks.php");

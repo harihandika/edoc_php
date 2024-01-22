@@ -78,6 +78,7 @@ if ($accessop->check_controller_access($controller, array('action'=>'setOwner'))
 $name = $_POST["name"];
 $keterangan = $_POST["keterangan"];
 $keperluan = $_POST["keperluan"];
+$status = $_POST["status"];
 
 $cats = array();
 
@@ -257,6 +258,7 @@ $docsource = 'upload';
 	$controller->setParam('name', $name);
 	$controller->setParam('keterangan', $keterangan);
 	$controller->setParam('keperluan', $keperluan);
+	$controller->setParam('status', $status);
 	$controller->setParam('categories', $cats);
 	$controller->setParam('owner', $owner);
 	$controller->setParam('reviewers', $reviewers);
@@ -352,6 +354,7 @@ $docsource = 'upload';
 					$params['version'] = $reqversion;
 					$params['keterangan'] = $keterangan;
 					$params['keperluan'] = $keperluan;
+					$params['status'] = $status;
 					$params['username'] = $user->getFullName();
 					$params['review'] = $dms->getUser($reviewers)!=NULL?$dms->getUser($reviewers["i"][0])->getFullName():'';
 					$params['approve'] = $dms->getUser($approvers)!=NULL?$dms->getUser($approvers["i"][0])->getFullName():'';
@@ -381,6 +384,7 @@ $docsource = 'upload';
 					$params['version'] = $reqversion;
 					$params['keterangan'] = $keterangan;
 					$params['keperluan'] = $keperluan;
+					$params['status'] = $status;
 					$params['username'] = $user->getFullName();
 					$params['review'] = $dms->getUser($reviewers)!=NULL?$dms->getUser($reviewers["i"][0])->getFullName():'';
 					$params['approve'] = $dms->getUser($approvers)!=NULL?$dms->getUser($approvers["i"][0])->getFullName():'';

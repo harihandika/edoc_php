@@ -78,16 +78,26 @@ if ($request->getTarget() == $requestsoftcopy->getID()){
 			echo htmlspecialchars($requestsoftcopy->getOwner()->getFullName());
 			echo "</td>";
 			echo "<td>";
-			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Approve"."</a>";
-			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Reject"."</a>";
+			$status = $requestsoftcopy->getStatus();
+			if ($status == 1){
+			echo "approve";
+			} else if ($status == -1){
+				echo "decline";
+			} else {
+			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=app' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Approve"."</a>";
+			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=rej' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Reject"."</a>";
+		}
+			echo "<td>";
 			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Delete"."</a>";
 			echo "</td>";
+
+			echo "</td>";
 			echo "</tr>";
+}  
 		}
-	}  
 	}
 	?></table><?php
-	} /* }}} */
+} /* }}} */
 function statusRequestSoftCopy() { /* {{{ */
 
 	$dms = $this->params['dms'];
@@ -96,7 +106,7 @@ function statusRequestSoftCopy() { /* {{{ */
 	?>
 	<table id="myTable" class="table">
 		<thead>
-		<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('keperluan');?></th><th><?php printMLText('owner'); ?></th><th><?php printMLText('action'); ?></th><th></th></tr>
+		<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('keperluan');?></th><th><?php print('PIC'); ?></th><th><?php printMLText('status'); ?></th><th></th></tr>
 		</thead>
 		<tbody>
 <?php
@@ -115,9 +125,14 @@ function statusRequestSoftCopy() { /* {{{ */
 			echo htmlspecialchars($user->getPICName($request->getUserID())->getFullName());
 			echo "</td>";
 			echo "<td>";
-
-			echo ($user->getPICName($request->getUserID())->getFullName());
-
+			$status = $requestsoftcopy->getStatus();
+			if($status == 0 ){
+				echo "pending";
+			} else if ($status == 1){
+				echo "approve";
+			} else if ($status == -1){
+				echo "decline";
+			}
 			echo "</td>";
 			echo "</tr>";
 		}

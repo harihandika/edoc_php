@@ -52,6 +52,13 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 * @var string
 	 */
 	protected $_keperluan;
+
+		/**
+	 * The comment of the user group
+	 *
+	 * @var string
+	 */
+	protected $_status;
 	/**
 	 * @var string
 	 */
@@ -115,9 +122,10 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 * @param $ownerID
 	 * @param $inheritAccess
 	 * @param $defaultAccess
+	 * @param $status
 	 */
 
-	function __construct($id, $name, $keterangan, $keperluan, $date, $ownerID, $inheritAccess, $defaultAccess) { /* {{{ */
+	function __construct($id, $name, $keterangan, $keperluan, $date, $ownerID, $inheritAccess, $defaultAccess, $status) { /* {{{ */
 		$this->_id = $id;
 		$this->_name = $name;
 		$this->_keterangan = $keterangan;
@@ -126,6 +134,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		$this->_ownerID = $ownerID;
 		$this->_inheritAccess = $inheritAccess;
 		$this->_defaultAccess = $defaultAccess;
+		$this->_status = $status;
 	} /* }}} */
 
 	/**
@@ -133,12 +142,12 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 *
 	 * @param array $resArr array of folder data as returned by database
 	 * @param SeedDMS_Core_DMS $dms
-	 * @return SeedDMS_Core_SoftCOpy|bool instance of SeedDMS_Core_SoftCOpy if document exists
+	 * @return SeedDMS_Core_RequestSoftCopy|bool instance of SeedDMS_Core_SoftCOpy if document exists
 	 */
 	public static function getInstanceByData($resArr, $dms) { /* {{{ */
 		$classname = $dms->getClassname('softcopy');
 		/** @var SeedDMS_Core_SoftCopy $softcopy */
-		$softcopy = new self($resArr["id"], $resArr["name"], $resArr["keterangan"], $resArr["keperluan"], $resArr["date"], $resArr["owner"], $resArr["inheritAccess"], $resArr["defaultAccess"]);
+		$softcopy = new self($resArr["id"], $resArr["name"], $resArr["keterangan"], $resArr["keperluan"], $resArr["date"], $resArr["owner"], $resArr["inheritAccess"], $resArr["defaultAccess"], $resArr["status"]);
 		$softcopy->setDMS($dms);
 		$softcopy = $softcopy->applyDecorators();
 		return $softcopy;
@@ -176,7 +185,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 
 			$requestsoftcopys = array();
 			for ($i = 0; $i < count($resArr); $i++) {
-				$requestsoftcopy = new self($resArr[$i]["id"], $resArr[$i]["name"], $resArr[$i]["keterangan"],$resArr[$i]["keperluan"],$resArr[$i]["date"],$resArr[$i]["owner"],$resArr[$i]["inheritAccess"],$resArr[$i]["defaultAccess"]);
+				$requestsoftcopy = new self($resArr[$i]["id"], $resArr[$i]["name"], $resArr[$i]["keterangan"],$resArr[$i]["keperluan"],$resArr[$i]["date"],$resArr[$i]["owner"],$resArr[$i]["inheritAccess"],$resArr[$i]["defaultAccess"],$resArr[$i]["status"]);
 				$requestsoftcopy->setDMS($dms);
 				$requestsoftcopys[$i] = $requestsoftcopy;
 			}
@@ -265,6 +274,28 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		$this->_keperluan = $newKeperluan;
 		return true;
 	} /* }}} */
+
+	/**
+	 * @return string
+	 */
+	public function getStatus() { return $this->_status; }
+
+	/**
+	 * @param $newStatus
+	 * @return bool
+	 */
+	public function setStatus($newStatus) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblRequestSoftCopy` SET `status` = " . $db->qstr($newStatus) . " WHERE `id` = ". $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+
+		$this->_status = $newStatus;
+		return true;
+	} /* }}} */
+	
+
 
 	/**
 	 * Return creation date of folder
@@ -820,7 +851,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 
 		$db->startTransaction();
 
-		$status = $version->getStatus();
+		$status = $version->  tus();
 		$stID = $status["statusID"];
 
 		$queryStr = "DELETE FROM `tblDocumentContent` WHERE `document` = " . $this->getID() .	" AND `version` = " . $version->getVersion();
@@ -999,6 +1030,31 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 			}
 
 		$db->commitTransaction();
+		return true;
+	} /* }}} */
+	// rejectNotify
+	// approveNotify
+	function approveNotify() { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		/* Verify that user / group exists. */
+		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
+
+		$queryStr = "UPDATE `tblRequestSoftCopy` SET `status` = ". 1 ." WHERE `id` = " . $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+		return true;
+	} /* }}} */
+
+	function rejectNotify() { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		/* Verify that user / group exists. */
+		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
+
+		$queryStr = "UPDATE `tblRequestSoftCopy` SET `status` = ". -1 ." WHERE `id` = " . $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
 		return true;
 	} /* }}} */
 

@@ -734,7 +734,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 
 
-	function requestSoftCopy($name, $keterangan, $keperluan, $owner, $attributes=array(),$reviewers=array(), $approvers=array() ) { /* {{{ */
+	function requestSoftCopy($name, $keterangan, $keperluan, $owner, $attributes=array(),$reviewers=array(), $approvers=array(), $status=0 ) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		// Set the folderList of the folder
@@ -750,8 +750,8 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 
 		$db->startTransaction();
 		//inheritAccess = true, defaultAccess = M_READ
-		$queryStr = "INSERT INTO `tblRequestSoftCopy` (`name`, `keterangan`, `keperluan`, `date`, `owner`, `inheritAccess`, `defaultAccess`) ".
-					"VALUES (".$db->qstr($name).", ".$db->qstr($keterangan).",".$db->qstr($keperluan).", ".$db->getCurrentTimestamp().", ".$owner->getID().",1, ".M_READ.")";
+		$queryStr = "INSERT INTO `tblRequestSoftCopy` (`name`, `keterangan`, `keperluan`, `date`, `owner`, `inheritAccess`, `defaultAccess`,`status`) ".
+					"VALUES (".$db->qstr($name).", ".$db->qstr($keterangan).",".$db->qstr($keperluan).", ".$db->getCurrentTimestamp().", ".$owner->getID().",1, ".M_READ.",0)";
 		if (!$db->getResult($queryStr)) {
 			$db->rollbackTransaction();
 			return false;
@@ -1583,7 +1583,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 				}
 			}
 		}
-
+		
 		/* Administrators have unrestricted access */
 		if ($user->isAdmin()) return M_ALL;
 
@@ -1595,7 +1595,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		if (!$accessList) return false;
 
 		/** @var SeedDMS_Core_UserAccess $userAccess */
-		foreach ($accessList["users"] as $userAccess) {
+		foreach ($accessList["users"] as $userAccess) { 
 			if ($userAccess->getUserID() == $user->getID()) {
 				$mode = $userAccess->getMode();
 				if ($user->isGuest()) {
