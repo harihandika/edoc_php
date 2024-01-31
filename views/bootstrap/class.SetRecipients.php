@@ -39,6 +39,7 @@ class SeedDMS_View_SetRecipients extends SeedDMS_Bootstrap_Style {
 		$content = $this->params['version'];
 		$enableownerreceipt = $this->params['enableownerreceipt'];
 		$enableadminreceipt = $this->params['enableadminreceipt'];
+		$enableselfrevapp = $this->params['enableselfrevapp'];
 
 		$overallStatus = $content->getStatus();
 
@@ -128,7 +129,44 @@ class SeedDMS_View_SetRecipients extends SeedDMS_Bootstrap_Style {
 		}
 ?>
   </select>
+<?php
+		$res=$user->getMandatoryApprovers();
+		$tmp = array();
+		if($res) {
+			foreach ($res as $r) {
+				if($r['approverUserID'] > 0) {
+					$u = $dms->getUser($r['approverUserID']);
+					$tmp[] =  htmlspecialchars($u->getFullName().' ('.$u->getLogin().')');
+				}
+			}
+		}
 
+	
+	$options = array();
+		foreach ($docAccess["users"] as $usr) {
+			if (!$enableselfrevapp && $usr->getID()==$user->getID()) continue; 
+
+			$mandatory=false;
+			foreach ($res as $r) if ($r['approverUserID']==$usr->getID()) $mandatory=true;
+			
+			$option = array($usr->getID(), htmlspecialchars($usr->getLogin()." - ".$usr->getFullName()), null);
+			if ($mandatory) $option[] = array(array('disabled', 'disabled'));
+			$options[] = $option;
+		}
+
+		$this->formField(
+			"Approval",
+			array(
+				'element'=>'select',
+				'name'=>'indApprovers[]',
+				'class'=>'chzn-select',
+				'attributes'=>array(array('data-placeholder', getMLText('select_ind_approvers'))),
+				'multiple'=>true,
+				'options'=>$options
+			),
+			array('field_wrap'=>array('', ($tmp ? '<div class="mandatories"><span>'.getMLText('mandatory_approvers').':</span> '.implode(', ', $tmp).'</div>' : '')))
+		);
+?>
 <p>
 <input type='hidden' name='documentid' value='<?php echo $document->getID() ?>'/>
 <input type='hidden' name='version' value='<?php echo $content->getVersion() ?>'/>

@@ -61,6 +61,9 @@ if($view) {
 	$view->setParam('document', $document);
 	$view->setParam('allusers', $users);
 	$view->setParam('accessobject', $accessop);
+	$view->setParam('enableadminrevapp', $settings->_enableAdminRevApp);
+	$view->setParam('enableownerrevapp', $settings->_enableOwnerRevApp);
+	$view->setParam('enableselfrevapp', $settings->_enableSelfRevApp);
 	$view($_GET);
 	exit;
 }

@@ -75,10 +75,10 @@ if ($accessop->check_controller_access($controller, array('action'=>'setOwner'))
 } else {
 	$owner = $user;
 }
-$name = $_POST["name"];
+$documentid = $_POST["documentid"];
 $keterangan = $_POST["keterangan"];
 $keperluan = $_POST["keperluan"];
-$status = $_POST["status"];
+// $status = $_POST["status"];
 
 $cats = array();
 
@@ -255,10 +255,10 @@ $docsource = 'upload';
 	$controller->setParam('documentsource', $docsource);
 	$controller->setParam('folder', $folder);
 	$controller->setParam('fulltextservice', $fulltextservice);
-	$controller->setParam('name', $name);
+	$controller->setParam('documentid', $documentid);
 	$controller->setParam('keterangan', $keterangan);
 	$controller->setParam('keperluan', $keperluan);
-	$controller->setParam('status', $status);
+	// $controller->setParam('status', $status);
 	$controller->setParam('categories', $cats);
 	$controller->setParam('owner', $owner);
 	$controller->setParam('reviewers', $reviewers);
@@ -338,72 +338,72 @@ $docsource = 'upload';
 				}
 			}
 
-			if($settings->_enableNotificationAppRev) {
+			// if($settings->_enableNotificationAppRev) {
 
-				$reviewers = $controller->getParam('reviewers');
-        		$approvers = $controller->getParam('approvers');
-				if($reviewers['i'] || $reviewers['g']) {
-					$subject = "review_request_email_subject";
-					$message = "review_request_email_body";
-					$params = array();
-					$params['name'] = $requestsoftcopy->getName();
-					$params['folder_path'] = $folder->getFolderPathPlain();
-					$params['projectname'] = $folder->getCodeProject($folder->getID());
-					$params['category'] = $folder->getName();
-					$params['status'] = $settings->_initialDocumentStatus;
-					$params['version'] = $reqversion;
-					$params['keterangan'] = $keterangan;
-					$params['keperluan'] = $keperluan;
-					$params['status'] = $status;
-					$params['username'] = $user->getFullName();
-					$params['review'] = $dms->getUser($reviewers)!=NULL?$dms->getUser($reviewers["i"][0])->getFullName():'';
-					$params['approve'] = $dms->getUser($approvers)!=NULL?$dms->getUser($approvers["i"][0])->getFullName():'';
-					$params['recipient'] = $dms->getUser($recipients)!=NULL?$dms->getUser($recipients)->getFullName():'';
-					$params['assignnotif'] = $notusers!=NULL?$notusers[0]->getFullName():'';
-					$params['url'] = getBaseUrl().$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
-					$params['sitename'] = $settings->_siteName;
-					$params['http_root'] = $settings->_httpRoot;
+			// 	$reviewers = $controller->getParam('reviewers');
+        	// 	$approvers = $controller->getParam('approvers');
+			// 	if($reviewers['i'] || $reviewers['g']) {
+			// 		$subject = "review_request_email_subject";
+			// 		$message = "review_request_email_body";
+			// 		$params = array();
+			// 		$params['name'] = $requestsoftcopy->getName();
+			// 		$params['folder_path'] = $folder->getFolderPathPlain();
+			// 		$params['projectname'] = $folder->getCodeProject($folder->getID());
+			// 		$params['category'] = $folder->getName();
+			// 		$params['status'] = $settings->_initialDocumentStatus;
+			// 		$params['version'] = $reqversion;
+			// 		$params['keterangan'] = $keterangan;
+			// 		$params['keperluan'] = $keperluan;
+			// 		// $params['status'] = $status;
+			// 		$params['username'] = $user->getFullName();
+			// 		$params['review'] = $dms->getUser($reviewers)!=NULL?$dms->getUser($reviewers["i"][0])->getFullName():'';
+			// 		$params['approve'] = $dms->getUser($approvers)!=NULL?$dms->getUser($approvers["i"][0])->getFullName():'';
+			// 		$params['recipient'] = $dms->getUser($recipients)!=NULL?$dms->getUser($recipients)->getFullName():'';
+			// 		$params['assignnotif'] = $notusers!=NULL?$notusers[0]->getFullName():'';
+			// 		$params['url'] = getBaseUrl().$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
+			// 		$params['sitename'] = $settings->_siteName;
+			// 		$params['http_root'] = $settings->_httpRoot;
 
-					foreach($reviewers['i'] as $reviewerid) {
-						$notifier->toIndividual($user, $dms->getUser($reviewerid), $subject, $message, $params, SeedDMS_NotificationService::RECV_REVIEWER);
-					}
-					foreach($reviewers['g'] as $reviewergrpid) {
-						$notifier->toGroup($user, $dms->getGroup($reviewergrpid), $subject, $message, $params, SeedDMS_NotificationService::RECV_REVIEWER);
-					}
-				}
+			// 		foreach($reviewers['i'] as $reviewerid) {
+			// 			$notifier->toIndividual($user, $dms->getUser($reviewerid), $subject, $message, $params, SeedDMS_NotificationService::RECV_REVIEWER);
+			// 		}
+			// 		foreach($reviewers['g'] as $reviewergrpid) {
+			// 			$notifier->toGroup($user, $dms->getGroup($reviewergrpid), $subject, $message, $params, SeedDMS_NotificationService::RECV_REVIEWER);
+			// 		}
+			// 	}
 
-				elseif($approvers['i'] || $approvers['g']) {
-					$subject = "approval_request_email_subject";
-					$message = "approval_request_email_body";
-					$params = array();
-					$params['name'] = $requestsoftcopy->getName();
-					$params['folder_path'] = $folder->getFolderPathPlain();
-					$params['projectname'] = $folder->getCodeProject($folder->getID());
-					$params['category'] = $folder->getName();
-					$params['status'] = $settings->_initialDocumentStatus;
-					$params['version'] = $reqversion;
-					$params['keterangan'] = $keterangan;
-					$params['keperluan'] = $keperluan;
-					$params['status'] = $status;
-					$params['username'] = $user->getFullName();
-					$params['review'] = $dms->getUser($reviewers)!=NULL?$dms->getUser($reviewers["i"][0])->getFullName():'';
-					$params['approve'] = $dms->getUser($approvers)!=NULL?$dms->getUser($approvers["i"][0])->getFullName():'';
-					var_dump($params['approve']);
-					die();
-					$params['recipient'] = $dms->getUser($recipients)!=NULL?$dms->getUser($recipients)->getFullName():'';
-					$params['assignnotif'] = $notusers!=NULL?$notusers[0]->getFullName():'';
-					$params['url'] = getBaseUrl().$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
-					$params['sitename'] = $settings->_siteName;
-					$params['http_root'] = $settings->_httpRoot;
+			// 	elseif($approvers['i'] || $approvers['g']) {
+			// 		$subject = "approval_request_email_subject";
+			// 		$message = "approval_request_email_body";
+			// 		$params = array();
+			// 		$params['name'] = $requestsoftcopy->getName();
+			// 		$params['folder_path'] = $folder->getFolderPathPlain();
+			// 		$params['projectname'] = $folder->getCodeProject($folder->getID());
+			// 		$params['category'] = $folder->getName();
+			// 		$params['status'] = $settings->_initialDocumentStatus;
+			// 		$params['version'] = $reqversion;
+			// 		$params['keterangan'] = $keterangan;
+			// 		$params['keperluan'] = $keperluan;
+			// 		// $params['status'] = $status;
+			// 		$params['username'] = $user->getFullName();
+			// 		$params['review'] = $dms->getUser($reviewers)!=NULL?'':'';
+			// 		$params['approve'] = $dms->getUser($approvers)!=NULL?$dms->getUser($approvers["i"][0])->getFullName():'';
+			// 		var_dump($params['approve']);
+			// 		die();
+			// 		$params['recipient'] = $dms->getUser($recipients)!=NULL?$dms->getUser($recipients)->getFullName():'';
+			// 		$params['assignnotif'] = $notusers!=NULL?$notusers[0]->getFullName():'';
+			// 		$params['url'] = getBaseUrl().$settings->_httpRoot."out/out.ViewDocument.php?documentid=".$document->getID();
+			// 		$params['sitename'] = $settings->_siteName;
+			// 		$params['http_root'] = $settings->_httpRoot;
 
-					foreach($approvers['i'] as $approverid) {
-						$notifier->toIndividual($user, $dms->getUser($approverid), $subject, $message, $params, SeedDMS_NotificationService::RECV_APPROVER);
-					}
-					foreach($approvers['g'] as $approvergrpid) {
-						$notifier->toGroup($user, $dms->getGroup($approvergrpid), $subject, $message, $params, SeedDMS_NotificationService::RECV_APPROVER);
-					}
-				}
-			}
+			// 		foreach($approvers['i'] as $approverid) {
+			// 			$notifier->toIndividual($user, $dms->getUser($approverid), $subject, $message, $params, SeedDMS_NotificationService::RECV_APPROVER);
+			// 		}
+			// 		foreach($approvers['g'] as $approvergrpid) {
+			// 			$notifier->toGroup($user, $dms->getGroup($approvergrpid), $subject, $message, $params, SeedDMS_NotificationService::RECV_APPROVER);
+			// 		}
+			// 	}
+			// }
 		}
 		if($settings->_removeFromDropFolder) {
 			if(file_exists($userfiletmp)) {

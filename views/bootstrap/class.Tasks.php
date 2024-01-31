@@ -55,6 +55,8 @@ function requestSoftCopy() { /* {{{ */
 	$dms = $this->params['dms'];
 	$user = $this->params['user'];
 	$allRequestsoftcopy = $this->params['allrequestsoftcopy'];
+	$showtree = $this->params['showtree'];
+	$previewwidth = $this->params['previewWidthList'];
 	?>
 	<table id="myTable" class="table">
 		<thead>
@@ -62,38 +64,117 @@ function requestSoftCopy() { /* {{{ */
 		</thead>
 		<tbody>
 <?php
+
+$res=$user->getMandatoryApproverUser();
+$approver = array();
+$userapprover = array();
+if($res) {
+	foreach ($res as $r) {
+			$s = $dms->getUser($r['userID']);
+			$userapprover[] = htmlspecialchars($s->getID());
+			$u = $dms->getUser($r['approverUserID']);
+			$approver =  htmlspecialchars($u->getID());
+	}
+}
+
+
+$documents = $dms->getAllDocuments();
+if($user->getMandatoryApproverUser()){
+	foreach ($allRequestsoftcopy as $requestsoftcopy) {
+		// if ($user->getID() == $requestsoftcopy->getOwner()->getID()){
+		foreach ($s->getNotifications(T_REQUESTSOFTCOPY) as $request){
+			foreach ($documents as $document) {
+				if($document->getID() == $requestsoftcopy->getDocumentID()){
+					if ($request->getTarget() == $requestsoftcopy->getID()){
+						$status = $requestsoftcopy->getStatus();
+						if($status != 0 ||  $status != -1 ){
+							echo "<td>";
+			
+							$docID = $document->getID();
+							$latestContent = $document->getLatestContent();
+				
+							echo "<img draggable=\"false\" class=\"mimeicon\" width=\"".$previewwidth."\" src=\"".$this->getMimeIcon($latestContent->getFileType())."\" ".($previewwidth ? "width=\"".$previewwidth."\"" : "")."\" title=\"".htmlspecialchars($latestContent->getMimeType())."\">". "      ".
+							"<a draggable=\"false\" href=\"../out/out.ViewDocumentReq.php?documentid=".$docID."&showtree=".$showtree."\">" . htmlspecialchars($document->getName()) . "</a>"."<br />";
+				
+							echo "<small>".htmlspecialchars($requestsoftcopy->getKeterangan())."</small>";
+							echo "</td>";
+							echo "<td>";
+							echo "<small>".htmlspecialchars($requestsoftcopy->getKeperluan())."</small>";
+							echo "</td>";
+							echo "<td>";
+							echo htmlspecialchars($requestsoftcopy->getOwner()->getFullName());
+							echo "</td>";
+							echo "<td>";;
+							if ($status == 1){
+								print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=app' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Approve"."</a>";
+								print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=rej' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Reject"."</a>";
+							// }
+								echo "<td>";
+								print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Delete"."</a>";
+								echo "</td>";
+					
+								echo "</td>";
+								echo "</tr>";
+							} else if ($status == 2){
+								echo "Approve";
+							} else if ($status == -2){
+								echo "Reject";
+							} 
+						}
+							}  
+								}
+			}
+		}
+	}
+}else{
+
 		foreach ($allRequestsoftcopy as $requestsoftcopy) {
 			// if ($user->getID() == $requestsoftcopy->getOwner()->getID()){
 			foreach ($user->getNotifications(T_REQUESTSOFTCOPY) as $request){
-if ($request->getTarget() == $requestsoftcopy->getID()){
-			// echo "<tr".($currUser->isDisabled() ? " class=\"error\"" : "").">";
-			echo "<td>";
-			echo htmlspecialchars($requestsoftcopy->getName())."<br />";
-			echo "<small>".htmlspecialchars($requestsoftcopy->getKeterangan())."</small>";
-			echo "</td>";
-			echo "<td>";
-			echo "<small>".htmlspecialchars($requestsoftcopy->getKeperluan())."</small>";
-			echo "</td>";
-			echo "<td>";
-			echo htmlspecialchars($requestsoftcopy->getOwner()->getFullName());
-			echo "</td>";
-			echo "<td>";
-			$status = $requestsoftcopy->getStatus();
-			if ($status == 1){
-			echo "approve";
-			} else if ($status == -1){
-				echo "decline";
-			} else {
-			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=app' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Approve"."</a>";
-			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=rej' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Reject"."</a>";
-		}
-			echo "<td>";
-			print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Delete"."</a>";
-			echo "</td>";
-
-			echo "</td>";
-			echo "</tr>";
-}  
+				foreach ($documents as $document) {
+					if($document->getID() == $requestsoftcopy->getDocumentID()){
+						if ($request->getTarget() == $requestsoftcopy->getID()){
+											// echo "<tr".($currUser->isDisabled() ? " class=\"error\"" : "").">";
+											echo "<td>";
+				
+											$docID = $document->getID();
+											$latestContent = $document->getLatestContent();
+								
+											echo "<img draggable=\"false\" class=\"mimeicon\" width=\"".$previewwidth."\" src=\"".$this->getMimeIcon($latestContent->getFileType())."\" ".($previewwidth ? "width=\"".$previewwidth."\"" : "")."\" title=\"".htmlspecialchars($latestContent->getMimeType())."\">". "      ".
+											"<a draggable=\"false\" href=\"../out/out.ViewDocumentReq.php?documentid=".$docID."&showtree=".$showtree."\">" . htmlspecialchars($document->getName()) . "</a>"."<br />";
+								
+											echo "<small>".htmlspecialchars($requestsoftcopy->getKeterangan())."</small>";
+											echo "</td>";
+											echo "<td>";
+											echo "<small>".htmlspecialchars($requestsoftcopy->getKeperluan())."</small>";
+											echo "</td>";
+											echo "<td>";
+											echo htmlspecialchars($requestsoftcopy->getOwner()->getFullName());
+											echo "</td>";
+											echo "<td>";
+											$status = $requestsoftcopy->getStatus();
+											if ($status == 1){
+											echo "Receive";
+											} else if ($status == -1){
+												echo "Decline by user";
+											} else if ($status == 2){
+												echo "Approve";
+											} else if ($status == -2){
+												echo "Reject";
+											} else {
+											print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=rec' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Receive"."</a>";
+											print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=dec' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Reject by User"."</a>";
+										}
+											echo "<td>";
+											print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Delete"."</a>";
+											echo "</td>";
+								
+											echo "</td>";
+											echo "</tr>";
+						}  
+									}
+				}
+			}
 		}
 	}
 	?></table><?php
@@ -103,6 +184,8 @@ function statusRequestSoftCopy() { /* {{{ */
 	$dms = $this->params['dms'];
 	$user = $this->params['user'];
 	$allRequestsoftcopy = $this->params['allrequestsoftcopy'];
+	$showtree = $this->params['showtree'];
+	$previewwidth = $this->params['previewWidthList'];
 	?>
 	<table id="myTable" class="table">
 		<thead>
@@ -110,12 +193,29 @@ function statusRequestSoftCopy() { /* {{{ */
 		</thead>
 		<tbody>
 <?php
+
+$documents = $dms->getAllDocuments();
+
 		foreach ($allRequestsoftcopy as $requestsoftcopy) {
 			foreach ($requestsoftcopy->getOwner()->getPICNotifications(T_REQUESTSOFTCOPY) as $request){
+				foreach ($documents as $document) {
+					if($document->getID() == $requestsoftcopy->getDocumentID()){
 				if ($request->getTarget() == $requestsoftcopy->getID() && $user->getID() == $requestsoftcopy->getOwner()->getID()){
 			
 			echo "<td>";
-			echo htmlspecialchars($requestsoftcopy->getName())."<br />";
+
+			$docID = $document->getID();
+			$latestContent = $document->getLatestContent();
+			$status = $requestsoftcopy->getStatus();
+
+			// echo htmlspecialchars($document->getName())."<br />";
+		if($status == 2){
+			echo "<img draggable=\"false\" class=\"mimeicon\" width=\"".$previewwidth."\" src=\"".$this->getMimeIcon($latestContent->getFileType())."\" ".($previewwidth ? "width=\"".$previewwidth."\"" : "")."\" title=\"".htmlspecialchars($latestContent->getMimeType())."\">". "      ".
+			"<a draggable=\"false\" href=\"../out/out.ViewDocumentReq.php?documentid=".$docID."&showtree=".$showtree."\">" . htmlspecialchars($document->getName()) . "</a>"."<br />";
+		}else{
+		echo htmlspecialchars($document->getName()) ."<br />";
+		}
+
 			echo "<small>".htmlspecialchars($requestsoftcopy->getKeterangan())."</small>";
 			echo "</td>";
 			echo "<td>";
@@ -125,17 +225,23 @@ function statusRequestSoftCopy() { /* {{{ */
 			echo htmlspecialchars($user->getPICName($request->getUserID())->getFullName());
 			echo "</td>";
 			echo "<td>";
-			$status = $requestsoftcopy->getStatus();
+
 			if($status == 0 ){
-				echo "pending";
+				echo "Waiting";
 			} else if ($status == 1){
-				echo "approve";
+				echo "Receive";
 			} else if ($status == -1){
-				echo "decline";
+				echo "Decline by user";
+			} else if ($status == 2){
+				echo "Approve";
+			} else if ($status == -2){
+				echo "Reject";
 			}
 			echo "</td>";
 			echo "</tr>";
 		}
+		}
+	}
 	}  
 	}
 	?></table><?php

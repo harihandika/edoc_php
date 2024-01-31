@@ -98,50 +98,72 @@ $(document).ready( function() {
 	<input type="hidden" name="showtree" value="<?php echo showtree();?>">
 <?php	
 
+
+
 $options = array();
 foreach($documents as $document) {
-	$options[] = array(htmlspecialchars($document->getName()), htmlspecialchars($document->getName()));
+	$options[] = array(htmlspecialchars($document->getID()), htmlspecialchars($document->getName()) . '   --    ' . htmlspecialchars($document->getOwner()->getFullName()));
 }
 		$this->formField(
 			getMLText("name_document"),
 			array(
 				'element'=>'select',
-				'name'=>'name',
+				'name'=>'documentid',
 				'required'=>true,
 				'class'=>'chzn-select',
 				'options'=>$options
 			)
 		);
 		
-		if($accessop->check_controller_access('AddDocument', array('action'=>'setOwner'))) {
-			$options = array();
-			$allUsers = $dms->getAllUsers($sortusersinlist);
-			foreach ($allUsers as $currUser) {
-				if (!$currUser->isGuest())
-					$options[] = array($currUser->getID(), htmlspecialchars($currUser->getLogin().' - '.$currUser->getFullName()), ($currUser->getID()==$user->getID()), array(array('data-subtitle', htmlspecialchars($currUser->getEmail()))));
-			}
+		// if($accessop->check_controller_access('AddDocument', array('action'=>'setOwner'))) {
+		// 	$options = array();
+		// 	$allUsers = $dms->getAllUsers($sortusersinlist);
+		// 	foreach ($allUsers as $currUser) {
+		// 		if (!$currUser->isGuest())
+		// 			$options[] = array($currUser->getID(), htmlspecialchars($currUser->getLogin().' - '.$currUser->getFullName()), ($currUser->getID()==$user->getID()), array(array('data-subtitle', htmlspecialchars($currUser->getEmail()))));
+		// 	}
+		// 	$this->formField(
+		// 		getMLText("owner"),
+		// 		array(
+		// 			'element'=>'select',
+		// 			'id'=>'ownerid',
+		// 			'name'=>'ownerid',
+		// 			'class'=>'chzn-select',
+		// 			'options'=>$options,
+		// 		)
+		// 	);
+		// 	}
+
+			$users = $user->getFullName();
+			
 			$this->formField(
-				getMLText("owner"),
+				getMLText("user_request"),
 				array(
-					'element'=>'select',
+					'element'=>'text',
 					'id'=>'ownerid',
 					'name'=>'ownerid',
-					'class'=>'chzn-select',
-					'options'=>$options
+					'value'=>$users,
+					'placeholder'=>'please input requestor',
+					'required'=>true,
+					'disabled'=>'true'
 				)
 			);
-			}
 
-		$this->formField(
-			getMLText("keterangan"),
-			array(
-				'element'=>'textarea',
-				'name'=>'keterangan',
-				'rows'=>4,
-				'cols'=>80,
-				'required'=>$strictformcheck
-			)
-		);
+			foreach($worklocations as $worklocation) {
+				if ($user && $worklocation->isMember($user)){
+					$options = htmlspecialchars($worklocation->getName());
+				}
+			}
+			$this->formField(
+				"Location",	
+				array(
+					'element'=>'text',
+					'name'=>'worklocations[]',
+					'placeholder'=>'Input work location',
+					'value'=>$options,
+					'required'=>true
+				)
+			);
 
 		$res=$user->getMandatoryReviewers();
 				$tmp = array();
@@ -171,22 +193,6 @@ foreach($documents as $document) {
 					array('field_wrap'=>array('', ($tmp ? '<div class="mandatories"><span>'.getMLText('mandatory_reviewers').':</span> '.implode(', ', $tmp).'</div>' : '')))
 				);
 
-				$options = array();
-				foreach($worklocations as $worklocation) {
-					$options[] = array($worklocation->getID(), htmlspecialchars($worklocation->getName()), ($user && $worklocation->isMember($user)));
-				}
-
-				$this->formField(
-					"Location",	
-					array(
-						'element'=>'select',
-						'name'=>'worklocations[]',
-						'class'=>'chzn-select',
-						'placeholder'=>'Click to select work location',
-						'options'=>$options
-					)
-				);
-
 		$options = array();
 		$options[] = array('Keperluan Audit','Keperluan Audit');
 		$options[] = array('Keperluan Tender','Keperluan Tender');
@@ -198,6 +204,17 @@ foreach($documents as $document) {
 				'element'=>'select',
 				'name'=>'keperluan',
 				'options'=>$options
+			)
+		);
+
+		$this->formField(
+			getMLText("keterangan"),
+			array(
+				'element'=>'textarea',
+				'name'=>'keterangan',
+				'rows'=>4,
+				'cols'=>80,
+				'required'=>$strictformcheck
 			)
 		);
 

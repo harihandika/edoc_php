@@ -655,6 +655,9 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		if ($accessMode == M_READ) {
 			if ($accessobject->check_view_access('FolderNotify'))
 			$menuitems['edit_folder_notify'] = array('link'=>"../out/out.FolderNotify.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'edit_folder_notify');
+
+			if ($accessobject->check_view_access('RequestSoftCopy'))
+		$menuitems['request_soft_copy'] = array('link'=>"../out/out.RequestSoftCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_soft_copy');
 		}
 		else if ($accessMode >= M_READWRITE) {
 			if ($accessobject->check_view_access('AddSubFolder'))

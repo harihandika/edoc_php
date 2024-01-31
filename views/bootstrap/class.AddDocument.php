@@ -386,12 +386,16 @@ $(document).ready(function() {
 					$options = htmlspecialchars($worklocation->getName());
 				}
 		};
-		$this->contentContainerStart();
-		echo "<tr>";
-		echo "<td>".getMLText("fisik_location").":</td>\n";
-			echo "<td>".htmlspecialchars($options)."</td>\n";
-			echo "</tr>";
-			$this->contentContainerEnd();
+		$this->formField(
+			"Location",	
+			array(
+				'element'=>'text',
+				'name'=>'worklocations[]',
+				'placeholder'=>'Input work location',
+				'value'=>$options,
+				'required'=>true
+			)
+		);
 
 		// $this->formField(
 		// 	getMLText("fisik_location"),
@@ -667,7 +671,7 @@ $(document).ready(function() {
 					'multiple'=>true,
 					'options'=>$options
 				),
-				array('field_wrap'=>array('', ($tmp ? '<div class="mandatories"><span>'.getMLText('mandatory_approvers').':</span> '.implode(', ', $tmp).'</div>' : '')))
+				array('element'=>'text','field_wrap'=>array('', ($tmp ? '<div class="mandatories"><span>'.getMLText('mandatory_approvers').':</span> '.implode(', ', $tmp).'</div>' : '')))
 			);
 
 			/* Check for mandatory approvers without access */
