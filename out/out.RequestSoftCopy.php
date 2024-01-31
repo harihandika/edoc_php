@@ -60,19 +60,19 @@ if (is_bool($documents)) {
 	UI::exitError(getMLText("admin_tools"),getMLText("internal_error"), false, $isajax);
 }
 
-if($settings->_libraryFolder) {
-	$libfolder = $dms->getFolder($settings->_libraryFolder);
-	if (!is_object($libfolder)) {
-		UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
-	}
+// if($settings->_libraryFolder) {
+// 	$libfolder = $dms->getFolder($settings->_libraryFolder);
+// 	if (!is_object($libfolder)) {
+// 		UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
+// 	}
 
-	if ($libfolder->getAccessMode($user) < M_READ) {
-		$libfolder = null;
-//		UI::exitError(getMLText("folder_title", array("foldername" => htmlspecialchars($libfolder->getName()))), getMLText("access_denied"));
-	}
-} else {
-	$libfolder = null;
-}
+// 	if ($libfolder->getAccessMode($user) < M_READ) {
+// 		$libfolder = null;
+// //		UI::exitError(getMLText("folder_title", array("foldername" => htmlspecialchars($libfolder->getName()))), getMLText("access_denied"));
+// 	}
+// } else {
+// 	$libfolder = null;
+// }
 
 if($view) {
 	$view->setParam('folder', $folder);
