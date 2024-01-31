@@ -112,14 +112,13 @@ if($user->getMandatoryApproverUser()){
 								echo "<td>";
 								print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Delete"."</a>";
 								echo "</td>";
-					
-								echo "</td>";
-								echo "</tr>";
 							} else if ($status == 2){
 								echo "Approve";
 							} else if ($status == -2){
 								echo "Reject";
 							} 
+							echo "</td>";
+							echo "</tr>";
 						}
 							}  
 								}

@@ -78,7 +78,8 @@ if ($accessop->check_controller_access($controller, array('action'=>'setOwner'))
 $documentid = $_POST["documentid"];
 $keterangan = $_POST["keterangan"];
 $keperluan = $_POST["keperluan"];
-// $status = $_POST["status"];
+$document = $dms->getDocument($documentid);
+$name = $document->getName();
 
 $cats = array();
 
