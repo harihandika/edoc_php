@@ -743,6 +743,11 @@ class SeedDMS_Core_DMS {
 		return $classname::getInstance($id, $this);
 	} /* }}} */
 
+	function getDocumentReq($id) { /* {{{ */
+		$classname = $this->classnames['document'];
+		return $classname::getInstanceReq($id, $this);
+	} /* }}} */
+
 	function getAllDocuments() { /* {{{ */
 		$classname = $this->classnames['document'];
 		return $classname::getAllInstances('name', $this);

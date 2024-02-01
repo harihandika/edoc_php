@@ -318,11 +318,35 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 	 */
 	public static function getInstance($id, $dms) { /* {{{ */
 		$db = $dms->getDB();
-
 //		$queryStr = "SELECT * FROM `tblDocuments` WHERE `id` = " . (int) $id;
 		$queryStr = "SELECT `tblDocuments`.*, `tblDocumentLocks`.`userID` as `lock` FROM `tblDocuments` LEFT JOIN `tblDocumentLocks` ON `tblDocuments`.`id` = `tblDocumentLocks`.`document` WHERE `id` = " . (int) $id;
 		if($dms->checkWithinRootDir)
 			$queryStr .= " AND `folderList` LIKE '%:".$dms->rootFolderID.":%'";
+		$resArr = $db->getResultArray($queryStr);
+		if (is_bool($resArr) && $resArr == false)
+			return false;
+		if (count($resArr) != 1)
+			return null;
+		$resArr = $resArr[0];
+
+		$resArr['lock'] = !$resArr['lock'] ? -1 : $resArr['lock'];
+
+		return self::getInstanceByData($resArr, $dms);
+
+		$classname = $dms->getClassname('document');
+		/** @var SeedDMS_Core_Document $document */
+		$document = new $classname($resArr["id"], $resArr["name"], $resArr["comment"], $resArr["date"], $resArr["expires"], $resArr["owner"], $resArr["folder"], $resArr["inheritAccess"], $resArr["defaultAccess"], $resArr['lock'], $resArr["keywords"], $resArr["sequence"]);
+		$document->setDMS($dms);
+		$document = $document->applyDecorators();
+		return $document;
+	} /* }}} */
+
+	public static function getInstanceReq($id, $dms) { /* {{{ */
+		$db = $dms->getDB();
+//		$queryStr = "SELECT * FROM `tblDocuments` WHERE `id` = " . (int) $id;
+		$queryStr = "SELECT `tblDocuments`.*, `tblDocumentLocks`.`userID` as `lock` FROM `tblDocuments` LEFT JOIN `tblDocumentLocks` ON `tblDocuments`.`id` = `tblDocumentLocks`.`document` WHERE `id` = " . (int) $id;
+		if($dms->checkWithinRootDir)
+			// $queryStr .= " AND `folderList` LIKE '%:".$dms->rootFolderID.":%'";
 		$resArr = $db->getResultArray($queryStr);
 		if (is_bool($resArr) && $resArr == false)
 			return false;

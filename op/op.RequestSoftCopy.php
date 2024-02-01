@@ -79,7 +79,11 @@ $documentid = $_POST["documentid"];
 $keterangan = $_POST["keterangan"];
 $keperluan = $_POST["keperluan"];
 $document = $dms->getDocument($documentid);
-$name = $document->getName();
+if($document){
+	$name = $document->getName();
+}else{
+	$name = $documentid;
+};
 
 $cats = array();
 

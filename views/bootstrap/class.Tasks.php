@@ -75,7 +75,7 @@ if($res) {
 			$u = $dms->getUser($r['approverUserID']);
 			$approver =  htmlspecialchars($u->getID());
 	}
-}
+};
 
 
 $documents = $dms->getAllDocuments();
@@ -153,7 +153,7 @@ if($user->getMandatoryApproverUser()){
 											echo "<td>";
 											$status = $requestsoftcopy->getStatus();
 											if ($status == 1){
-											echo "Receive";
+												echo "Waiting Approval By";
 											} else if ($status == -1){
 												echo "Decline by user";
 											} else if ($status == 2){
@@ -195,6 +195,18 @@ function statusRequestSoftCopy() { /* {{{ */
 
 $documents = $dms->getAllDocuments();
 
+$res=$user->getMandatoryApproverUser();
+$approver = array();
+$userapprover = array();
+if($res) {
+	foreach ($res as $r) {
+			$s = $dms->getUser($r['userID']);
+			$userapprover[] = htmlspecialchars($s->getID());
+			$u = $dms->getUser($r['approverUserID']);
+			$approver =  htmlspecialchars($u->getID());
+	}
+}
+
 		foreach ($allRequestsoftcopy as $requestsoftcopy) {
 			foreach ($requestsoftcopy->getOwner()->getPICNotifications(T_REQUESTSOFTCOPY) as $request){
 				foreach ($documents as $document) {
@@ -228,7 +240,7 @@ $documents = $dms->getAllDocuments();
 			if($status == 0 ){
 				echo "Waiting";
 			} else if ($status == 1){
-				echo "Receive";
+				echo "Waiting Approval By";
 			} else if ($status == -1){
 				echo "Decline by user";
 			} else if ($status == 2){

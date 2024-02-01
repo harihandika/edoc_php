@@ -31,7 +31,7 @@ include("../inc/inc.Authentication.php");
 $tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
 $controller = Controller::factory($tmp[1], array('dms'=>$dms, 'user'=>$user));
 $accessop = new SeedDMS_AccessOperation($dms, $user, $settings);
-if (!$accessop->check_controller_access($controller, $_POST)) {
+if ($accessop->check_controller_access($controller, $_POST)) {
 	UI::exitError(getMLText("document_title", array("documentname" => "")),getMLText("access_denied"));
 }
 
@@ -40,7 +40,7 @@ if (!isset($documentid) || !is_numeric($documentid) || intval($documentid)<1) {
 	UI::exitError(getMLText("document_title", array("documentname" => getMLText("invalid_doc_id"))),getMLText("invalid_doc_id"));
 }
 
-$document = $dms->getDocument($documentid);
+$document = $dms->getDocumentReq($documentid);
 
 if (!is_object($document)) {
 	UI::exitError(getMLText("document_title", array("documentname" => getMLText("invalid_doc_id"))),getMLText("invalid_doc_id"));

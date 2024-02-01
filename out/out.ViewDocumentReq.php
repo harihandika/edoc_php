@@ -39,7 +39,7 @@ if (!isset($_GET["documentid"]) || !is_numeric($_GET["documentid"]) || intval($_
 	UI::exitError(getMLText("document_title", array("documentname" => getMLText("invalid_doc_id"))),getMLText("invalid_doc_id"));
 }
 
-$document = $dms->getDocument($_GET["documentid"]);
+$document = $dms->getDocumentReq($_GET["documentid"]);
 if (!is_object($document)) {
 	UI::exitError(getMLText("document_title", array("documentname" => getMLText("invalid_doc_id"))),getMLText("invalid_doc_id"));
 }
