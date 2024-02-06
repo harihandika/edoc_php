@@ -301,10 +301,6 @@ $docsource = 'upload';
 				'users'=>array_unique(array_merge($snl['users'], $fnl['users']), SORT_REGULAR),
 				'groups'=>array_unique(array_merge($snl['groups'], $fnl['groups']), SORT_REGULAR)
 			);
-			echo "<pre>";
-			var_dump($fnl["users"]);
-			echo "<pre>";
-			exit();
 			$subject = "new_document_email_subject";
 			$message = "new_document_email_body";
 			$params = array();

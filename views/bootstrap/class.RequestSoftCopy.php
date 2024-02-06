@@ -190,7 +190,7 @@ foreach($documents as $document) {
 
 
 		$this->formField(
-			getMLText("expires"),
+			getMLText("periode_pinjam"),
 			// $this->getDateChooser((''), "expdate", $this->params['session']->getLanguage())
 			$this->getDateChooser('', "expdate", $this->params['session']->getLanguage())
 		);
