@@ -495,8 +495,15 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 			$menuitems = array();
 
 // *********** Tasks 
-			if ($accessobject->check_view_access('Tasks')) $menuitems['tasks'] = array('link'=>'../out/out.Tasks.php', 'label'=>"tasks");
-
+			if ($accessobject->check_view_access('Tasks')) {
+				// $menuitems['tasks'] = array('link'=>'../out/out.Tasks.php', 'label'=>"tasks");
+			$menuitems['user_group_management'] = array('link'=>"#", 'label'=>'tasks');
+			if ($accessobject->check_view_access('Tasks'))
+			$menuitems['user_group_management']['children']['request_tasks'] = array('link'=>"../out/out.Tasks.php", 'label'=>'request_tasks');
+			if ($accessobject->check_view_access('Tasks'))
+			$menuitems['user_group_management']['children']['status_tasks'] = array('link'=>"../out/out.StatusTasks.php", 'label'=>'status_tasks');
+			}
+			echo "   <ul class=\"nav\">\n";
 //  ************* Calender
 			if ($this->params['enablecalendar'] && $accessobject->check_view_access('Calendar')) $menuitems['calendar'] = array('link'=>'../out/out.Calendar.php?mode='.$this->params['calendardefaultview'], 'label'=>"calendar");
 

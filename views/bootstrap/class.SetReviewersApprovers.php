@@ -221,16 +221,16 @@ class SeedDMS_View_SetReviewersApprovers extends SeedDMS_Bootstrap_Style {
 				$res = array();
 		} else
 			$res=$user->getMandatoryApprovers();
+
 		foreach ($docAccess["users"] as $usr) {
 
 			$mandatory=false;
 			foreach ($res as $r) if ($r['approverUserID']==$usr->getID()) $mandatory=true;
 
 			if ($mandatory){
-			
 				print "<option value='". $usr->getID() ."' disabled='disabled'>". htmlspecialchars($usr->getLogin() . " - ". $usr->getFullName())." &lt;".$usr->getEmail()."&gt;</option>";
-//				print "<input id='appInd".$usr->getID()."' type='hidden' name='indApprovers[]' value='". $usr->getID() ."'>";
-
+				//				print "<input id='appInd".$usr->getID()."' type='hidden' name='indApprovers[]' value='". $usr->getID() ."'>";
+				
 			} elseif (isset($approvalIndex["i"][$usr->getID()])) {
 			
 				switch ($approvalIndex["i"][$usr->getID()]["status"]) {

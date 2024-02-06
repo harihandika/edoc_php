@@ -78,12 +78,22 @@ if ($accessop->check_controller_access($controller, array('action'=>'setOwner'))
 $documentid = $_POST["documentid"];
 $keterangan = $_POST["keterangan"];
 $keperluan = $_POST["keperluan"];
-$document = $dms->getDocument($documentid);
-if($document){
-	$name = $document->getName();
-}else{
-	$name = $documentid;
-};
+
+$documents = $dms->getAllDocuments();
+foreach($documents as $document) {
+	if($document->getID() == $documentid)
+	$names = array(htmlspecialchars($document->getName()));
+}
+$name = $names[0];
+
+// $document = $dms->getDocument($documentid);
+// if($document){
+// 	$name = $document->getName();
+// }else{
+// 	$name = $documentid;
+// };
+
+$expires = makeTsFromDate($_POST["expdate"]);
 
 $cats = array();
 
@@ -263,6 +273,7 @@ $docsource = 'upload';
 	$controller->setParam('documentid', $documentid);
 	$controller->setParam('keterangan', $keterangan);
 	$controller->setParam('keperluan', $keperluan);
+	$controller->setParam('expires', $expires);
 	// $controller->setParam('status', $status);
 	$controller->setParam('categories', $cats);
 	$controller->setParam('owner', $owner);
@@ -290,6 +301,10 @@ $docsource = 'upload';
 				'users'=>array_unique(array_merge($snl['users'], $fnl['users']), SORT_REGULAR),
 				'groups'=>array_unique(array_merge($snl['groups'], $fnl['groups']), SORT_REGULAR)
 			);
+			echo "<pre>";
+			var_dump($fnl["users"]);
+			echo "<pre>";
+			exit();
 			$subject = "new_document_email_subject";
 			$message = "new_document_email_body";
 			$params = array();

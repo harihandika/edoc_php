@@ -114,25 +114,6 @@ foreach($documents as $document) {
 				'options'=>$options
 			)
 		);
-		
-		// if($accessop->check_controller_access('AddDocument', array('action'=>'setOwner'))) {
-		// 	$options = array();
-		// 	$allUsers = $dms->getAllUsers($sortusersinlist);
-		// 	foreach ($allUsers as $currUser) {
-		// 		if (!$currUser->isGuest())
-		// 			$options[] = array($currUser->getID(), htmlspecialchars($currUser->getLogin().' - '.$currUser->getFullName()), ($currUser->getID()==$user->getID()), array(array('data-subtitle', htmlspecialchars($currUser->getEmail()))));
-		// 	}
-		// 	$this->formField(
-		// 		getMLText("owner"),
-		// 		array(
-		// 			'element'=>'select',
-		// 			'id'=>'ownerid',
-		// 			'name'=>'ownerid',
-		// 			'class'=>'chzn-select',
-		// 			'options'=>$options,
-		// 		)
-		// 	);
-		// 	}
 
 			$users = $user->getFullName();
 			
@@ -206,6 +187,14 @@ foreach($documents as $document) {
 				'options'=>$options
 			)
 		);
+
+
+		$this->formField(
+			getMLText("expires"),
+			// $this->getDateChooser((''), "expdate", $this->params['session']->getLanguage())
+			$this->getDateChooser('', "expdate", $this->params['session']->getLanguage())
+		);
+
 
 		$this->formField(
 			getMLText("keterangan"),

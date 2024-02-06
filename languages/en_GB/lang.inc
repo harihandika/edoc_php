@@ -1077,6 +1077,7 @@ URL: [url]',
 'refresh' => 'Refresh',
 'rejected' => 'Rejected',
 'released' => 'Released',
+'request_tasks' => 'Request Tasks',
 'removed_approver' => 'has been removed from the list of approvers.',
 'removed_file_email' => 'Removed attachment',
 'removed_file_email_body' => 'Removed attachment
@@ -1846,6 +1847,7 @@ ACSET Electronic Document System Team
 'status_revision_sleeping' => 'pending',
 'status_revisor_removed' => 'Revisor removed from list',
 'status_unknown' => 'Unknown',
+'status_tasks' => 'Status Tasks',
 'storage_size' => 'Storage size',
 'subfolder_duplicate_name' => 'Duplicate subfolder name',
 'submit_2_fact_auth' => 'Save secret',
@@ -2076,5 +2078,7 @@ URL: [url]',
 'yes' => 'Yes',
 'zh_CN' => 'Chinese (CN)',
 'zh_TW' => 'Chinese (TW)',
+'from_date' => 'From',
+'to_date' => 'To',
 );
 ?>

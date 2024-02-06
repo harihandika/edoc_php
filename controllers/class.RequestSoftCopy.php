@@ -40,6 +40,7 @@ class SeedDMS_Controller_RequestSoftCopy extends SeedDMS_Controller_Common {
 		$documentid = $this->getParam('documentid');
 		$keterangan = $this->getParam('keterangan');
 		$keperluan = $this->getParam('keperluan');
+		$expires = $this->getParam('expires');
 		$owner = $this->getParam('owner');
 		$attributes = $this->getParam('attributes');
 		$version_comment = $this->getParam('versioncomment');
@@ -78,7 +79,7 @@ class SeedDMS_Controller_RequestSoftCopy extends SeedDMS_Controller_Common {
 
 		$requestSoftCopy = $this->callHook('requestSoftCopy');
 		if($requestSoftCopy === null) {
-			$requestSoftCopy = $folder->requestSoftCopy($documentid, $keterangan, $keperluan, $owner,  $attributes, $reviewers, $approvers, $status);
+			$requestSoftCopy = $folder->requestSoftCopy($documentid, $keterangan, $keperluan, $owner,  $attributes, $reviewers, $approvers, $status, $expires);
 			if (!is_object($requestSoftCopy)) {
 				$this->errormsg = "error_occured";
 				return false;

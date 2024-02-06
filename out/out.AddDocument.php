@@ -62,14 +62,14 @@ if (is_bool($worklocations)) {
 
 if($settings->_libraryFolder) {
 	$libfolder = $dms->getFolder($settings->_libraryFolder);
-	if (!is_object($libfolder)) {
-		UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
-	}
+	// if (!is_object($libfolder)) {
+	// 	UI::exitError(getMLText("folder_title", array("foldername" => getMLText("invalid_folder_id"))),getMLText("invalid_folder_id"));
+	// }
 
-	if ($libfolder->getAccessMode($user) < M_READ) {
-		$libfolder = null;
+	// if ($libfolder->getAccessMode($user) < M_READ) {
+	// 	$libfolder = null;
 //		UI::exitError(getMLText("folder_title", array("foldername" => htmlspecialchars($libfolder->getName()))), getMLText("access_denied"));
-	}
+	// }
 } else {
 	$libfolder = null;
 }

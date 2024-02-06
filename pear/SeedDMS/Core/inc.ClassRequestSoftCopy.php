@@ -113,6 +113,11 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	protected $_parentID;
 
 		/**
+	 * @var string
+	 */
+	protected $_expires;
+
+		/**
 	 * SeedDMS_Core_Folder constructor.
 	 * @param $id
 	 * @param $documentID
@@ -123,9 +128,10 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 * @param $inheritAccess
 	 * @param $defaultAccess
 	 * @param $status
+	 * @param $expires
 	 */
 
-	function __construct($id, $documentID, $keterangan, $keperluan, $date, $ownerID, $inheritAccess, $defaultAccess, $status) { /* {{{ */
+	function __construct($id, $documentID, $keterangan, $keperluan, $date, $ownerID, $inheritAccess, $defaultAccess, $status, $expires) { /* {{{ */
 		$this->_id = $id;
 		$this->_documentID = (int) $documentID;
 		$this->_keterangan = $keterangan;
@@ -135,6 +141,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		$this->_inheritAccess = $inheritAccess;
 		$this->_defaultAccess = $defaultAccess;
 		$this->_status = $status;
+		$this->_expires = $expires;
 	} /* }}} */
 
 	/**
@@ -147,7 +154,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	public static function getInstanceByData($resArr, $dms) { /* {{{ */
 		$classname = $dms->getClassname('softcopy');
 		/** @var SeedDMS_Core_SoftCopy $softcopy */
-		$softcopy = new self($resArr["id"], $resArr["documentID"], $resArr["keterangan"], $resArr["keperluan"], $resArr["date"], $resArr["owner"], $resArr["inheritAccess"], $resArr["defaultAccess"], $resArr["status"]);
+		$softcopy = new self($resArr["id"], $resArr["documentID"], $resArr["keterangan"], $resArr["keperluan"], $resArr["date"],$resArr["owner"], $resArr["inheritAccess"], $resArr["defaultAccess"], $resArr["status"],$resArr["expires"]);
 		$softcopy->setDMS($dms);
 		$softcopy = $softcopy->applyDecorators();
 		return $softcopy;
@@ -185,7 +192,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 
 			$requestsoftcopys = array();
 			for ($i = 0; $i < count($resArr); $i++) {
-				$requestsoftcopy = new self($resArr[$i]["id"], $resArr[$i]["documentID"], $resArr[$i]["keterangan"],$resArr[$i]["keperluan"],$resArr[$i]["date"],$resArr[$i]["owner"],$resArr[$i]["inheritAccess"],$resArr[$i]["defaultAccess"],$resArr[$i]["status"]);
+				$requestsoftcopy = new self($resArr[$i]["id"], $resArr[$i]["documentID"], $resArr[$i]["keterangan"],$resArr[$i]["keperluan"],$resArr[$i]["date"],$resArr[$i]["owner"],$resArr[$i]["inheritAccess"],$resArr[$i]["defaultAccess"],$resArr[$i]["status"],$resArr[$i]["expires"]);
 				$requestsoftcopy->setDMS($dms);
 				$requestsoftcopys[$i] = $requestsoftcopy;
 			}
@@ -307,6 +314,15 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	} /* }}} */
 
 	/**
+	 * Return creation date of folder
+	 *
+	 * @return integer unix timestamp of creation date
+	 */
+	public function getExpires() { /* {{{ */
+		return $this->_expires;
+	} /* }}} */
+
+	/**
 	 * Set creation date of the document
 	 *
 	 * @param integer $date timestamp of creation date. If false then set it
@@ -337,7 +353,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 */
 	public function getOwner() { /* {{{ */
 		if (!isset($this->_owner))
-			$this->_owner = $this->_dms->getUser($this->_ownerID);
+			$this->_owner = $this->_dms->getUser($this->_ownerID);		
 		return $this->_owner;
 	} /* }}} */
 

@@ -301,6 +301,7 @@ $(document).ready(function() {
 				'options'=>$options
 			)
 		);
+
 		$this->formField(
 			getMLText("expires"),
 			$this->getDateChooser(($expts ? getReadableDate($expts) : ''), "expdate", $this->params['session']->getLanguage())
