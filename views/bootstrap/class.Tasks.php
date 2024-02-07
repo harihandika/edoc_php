@@ -90,7 +90,7 @@ if($res){
 			
 							$docID = $document->getID();
 							$latestContent = $document->getLatestContent();
-				
+			
 							echo "<img draggable=\"false\" class=\"mimeicon\" width=\"".$previewwidth."\" src=\"".$this->getMimeIcon($latestContent->getFileType())."\" ".($previewwidth ? "width=\"".$previewwidth."\"" : "")."\" title=\"".htmlspecialchars($latestContent->getMimeType())."\">". "      ".
 							"<a draggable=\"false\" href=\"../out/out.ViewDocumentReq.php?documentid=".$docID."&showtree=".$showtree."\">" . htmlspecialchars($document->getName()) . "</a>"."<br />";
 				
@@ -143,6 +143,15 @@ if($res){
 				
 											$docID = $document->getID();
 											$latestContent = $document->getLatestContent();
+											$res = $user->getMandatoryApprovers();
+			foreach ($res as $r) {
+				if($r['approverUserID'] > 0) {
+					$u = $dms->getUser($r['approverUserID']);
+					$tmp[] =  htmlspecialchars($u->getFullName().' ('.$u->getLogin().')');
+				}
+			};
+			foreach($tmp as $t){
+			}
 								
 											echo "<img draggable=\"false\" class=\"mimeicon\" width=\"".$previewwidth."\" src=\"".$this->getMimeIcon($latestContent->getFileType())."\" ".($previewwidth ? "width=\"".$previewwidth."\"" : "")."\" title=\"".htmlspecialchars($latestContent->getMimeType())."\">". "      ".
 											"<a draggable=\"false\" href=\"../out/out.ViewDocumentReq.php?documentid=".$docID."&showtree=".$showtree."\">" . htmlspecialchars($document->getName()) . "</a>"."<br />";
@@ -164,7 +173,7 @@ if($res){
 											echo "<td>";
 											$status = $requestsoftcopy->getStatus();
 											if ($status == 1){
-												echo "Waiting Approval By";
+												echo "Waiting Approval By $t";
 											} else if ($status == -1){
 												echo "Decline by user";
 											} else if ($status == 2){

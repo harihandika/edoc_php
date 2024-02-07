@@ -2406,6 +2406,15 @@ class SeedDMS_Core_User { /* {{{ */
 		return $resArr;
 	} /* }}} */
 
+	function getMandatoryApproverTasks($id) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "SELECT * FROM `tblMandatoryApprovers` WHERE `userID` = ". $id ;
+		$resArr = $db->getResultArray($queryStr);
+
+		return $resArr;
+	} /* }}} */
+
 	/**
 	 * Get a list of users this user is a mandatory reviewer of
 	 *
