@@ -56,6 +56,10 @@ if ($_GET["type"]=="requestsoftcopy"){
 		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
 		$requestsoftcopyid = $_GET["id"];
 
+	}else if ($_GET["action"]=="ex"){
+		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
+		$requestsoftcopyid = $_GET["id"];
+
 	}else UI::exitError(getMLText("my_account"),getMLText("error_occured"));
 
 	if(!$requestsoftcopyid || !($requestsoftcopy = $dms->getRequestSoftCopy($requestsoftcopyid))) {
@@ -68,9 +72,10 @@ if ($_GET["type"]=="requestsoftcopy"){
 	if ($_GET["action"]=="add") $requestsoftcopy->addNotify($userid, true);
 	else if ($_GET["action"]=="del") $requestsoftcopy->removeNotify($userid, true);
 	else if ($_GET["action"]=="app") $requestsoftcopy->approveNotify($userid, true);
-	else if ($_GET["action"]=="rej") $requestsoftcopy->rejectNotify($userid, true);
+	else if ($_GET["action"]=="rej")$requestsoftcopy->rejectNotify($userid, true);
 	else if ($_GET["action"]=="rec") $requestsoftcopy->receiveNotify($userid, true);
 	else if ($_GET["action"]=="dec") $requestsoftcopy->declineNotify($userid, true);
+	else if ($_GET["action"]=="ex") $requestsoftcopy->expiredNotify($userid, true);
 
 }
 

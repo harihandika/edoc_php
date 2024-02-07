@@ -180,6 +180,8 @@ if($res){
 												echo "Approve";
 											} else if ($status == -2){
 												echo "Reject";
+											} else if ($status == 3){
+												echo "Expires";
 											} else {
 											print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=rec' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Receive"."</a>";
 											print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=dec' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Reject by User"."</a>";
@@ -188,6 +190,13 @@ if($res){
 											// print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=del' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Delete"."</a>";
 											// echo "</td>";
 								
+											echo "</td>";
+											echo "<td>";
+											if($status == 3 ){
+											echo "Expires";
+											}else{
+											print "<a href='../op/op.Tasks.php?id=".$requestsoftcopy->getID()."&type=requestsoftcopy&action=ex' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Expires"."</a>";
+											}
 											echo "</td>";
 											echo "</tr>";
 						}  

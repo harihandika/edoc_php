@@ -1099,6 +1099,18 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		return true;
 	} /* }}} */
 
+	function expiredNotify() { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		/* Verify that user / group exists. */
+		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
+
+		$queryStr = "UPDATE `tblRequestSoftCopy` SET `status` = ". 3 ." WHERE `id` = " . $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+		return true;
+	} /* }}} */
+
 	function removeNotify() { /* {{{ */
 		$db = $this->_dms->getDB();
 

@@ -137,6 +137,8 @@ if($res) {
 				echo "Approve";
 			} else if ($status == -2){
 				echo "Reject";
+			} else if ($status == 3){
+				echo "Expired";
 			}
 			echo "</td>";
 			echo "</tr>";
