@@ -5,3 +5,4 @@ views/bootstrap/images/*
 data/cache/*
 data/log/*
 simpen
+data/1048576/*
