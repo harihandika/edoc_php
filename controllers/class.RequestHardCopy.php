@@ -1,6 +1,5 @@
 <?php
 /**
- * Implementation of RequestDocumentSoftCOpy controller
  *
  * @category   DMS
  * @package    SeedDMS
@@ -20,7 +19,7 @@
  * @copyright  Copyright (C) 2010-2013 Uwe Steinmann
  * @version    Release: @package_version@
  */
-class SeedDMS_Controller_RequestSoftCopy extends SeedDMS_Controller_Common {
+class SeedDMS_Controller_RequestHardCopy extends SeedDMS_Controller_Common {
 
 	public function run() { /* {{{ */
 		$dms = $this->params['dms'];
@@ -28,18 +27,17 @@ class SeedDMS_Controller_RequestSoftCopy extends SeedDMS_Controller_Common {
 		$fulltextservice = $this->params['fulltextservice'];
 		$folder = $this->params['folder'];
 
-		/* Call preRequestDocumentSoftCopy early, because it might need to modify some
-		 * of the parameters.
-		 */
-		if(false === $this->callHook('preRequestSoftCopy')) {
+		if(false === $this->callHook('preRequestHardCopy')) {
 			if(empty($this->errormsg))
-				$this->errormsg = 'hook_preRequestSoftCopy_failed';
+				$this->errormsg = 'hook_preRequestHardCopy_failed';
 			return false;
 		}
 		
 		$documentid = $this->getParam('documentid');
 		$keterangan = $this->getParam('keterangan');
 		$keperluan = $this->getParam('keperluan');
+		$origin = $this->getParam('origin');
+		$destiny = $this->getParam('destiny');
 		$expires = $this->getParam('expires');
 		$owner = $this->getParam('owner');
 		$attributes = $this->getParam('attributes');
@@ -77,44 +75,44 @@ class SeedDMS_Controller_RequestSoftCopy extends SeedDMS_Controller_Common {
 		$notificationgroups = $this->getParam('notificationgroups');
 		$notificationusers = $this->getParam('notificationusers');
 
-		$requestSoftCopy = $this->callHook('requestSoftCopy');
-		if($requestSoftCopy === null) {
-			$requestSoftCopy = $folder->requestSoftCopy($documentid, $keterangan, $keperluan, $owner,  $attributes, $reviewers, $approvers, $status, $expires);
-			if (!is_object($requestSoftCopy)) {
+		$requestHardCopy = $this->callHook('requestHardCopy');
+		if($requestHardCopy === null) {
+			$requestHardCopy = $folder->requestHardCopy($documentid, $keterangan, $keperluan, $owner,  $attributes, $reviewers, $approvers, $status, $expires, $origin, $destiny);
+			if (!is_object($requestHardCopy)) {
 				$this->errormsg = "error_occured";
 				return false;
 			}
 			/* Check if additional notification shall be added */
 			foreach($notificationusers as $notuser) {
-				if($requestSoftCopy->getAccessMode($user) >= M_READ)
-					$res = $requestSoftCopy->addNotify($notuser->getID(), true);
+				if($requestHardCopy->getAccessMode($user) >= M_READ)
+					$res = $requestHardCopy->addNotify($notuser->getID(), true);
 			}
 
 			foreach($notificationgroups as $notgroup) {
-				if($requestSoftCopy->getGroupAccessMode($notgroup) >= M_READ)
-					$res = $requestSoftCopy->addNotify($notgroup->getID(), false);
+				if($requestHardCopy->getGroupAccessMode($notgroup) >= M_READ)
+					$res = $requestHardCopy->addNotify($notgroup->getID(), false);
 			}
-		} elseif($requestSoftCopy === false) {
+		} elseif($requestHardCopy === false) {
 			if(empty($this->errormsg))
-				$this->errormsg = 'hook_addSoftCopy_failed';
+				$this->errormsg = 'hook_addHardCopy_failed';
 			return false;
 		}
 
-		if($fulltextservice && ($index = $fulltextservice->Indexer()) && $requestSoftCopy) {
-			$idoc = $fulltextservice->IndexedDocument($requestSoftCopy);
-			if(false !== $this->callHook('preIndexSoftCopy', $requestSoftCopy, $idoc)) {
+		if($fulltextservice && ($index = $fulltextservice->Indexer()) && $requestHardCopy) {
+			$idoc = $fulltextservice->IndexedDocument($requestHardCopy);
+			if(false !== $this->callHook('preIndexHardCopy', $requestHardCopy, $idoc)) {
 				$index->addDocument($idoc);
 				$index->commit();
 			}
 		}
 
-		if(false === $this->callHook('postRequestSoftCOpy', $requestSoftCopy)) {
+		if(false === $this->callHook('postRequestHardCopy', $requestHardCopy)) {
 			if(empty($this->errormsg))
-				$this->errormsg = 'hook_postRequestSoftCopy_failed';
+				$this->errormsg = 'hook_postRequestHardCopy_failed';
 			return false;
 		}
 
-		return $requestSoftCopy;
+		return $requestHardCopy;
 	} /* }}} */
 }
 

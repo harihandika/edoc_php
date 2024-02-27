@@ -21,7 +21,7 @@
  * @copyright  Copyright (C) 2002-2005 Markus Westphal, 2006-2008 Malcolm Cowe, 2010 Uwe Steinmann
  * @version    Release: 6.0.15
  */
-class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
+class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 	/**
 	 * The id of the user group
 	 *
@@ -117,6 +117,21 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 */
 	protected $_expires;
 
+	/**
+	 * @var string
+	 */
+	protected $_origin;
+
+	/**
+	 * @var string
+	 */
+	protected $_documentlocation;
+
+	/**
+	 * @var string
+	 */
+	protected $_destiny;
+
 		/**
 	 * SeedDMS_Core_Folder constructor.
 	 * @param $id
@@ -129,9 +144,12 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 * @param $defaultAccess
 	 * @param $status
 	 * @param $expires
+	 * @param $documentlocation
+	 * @param $origin
+	 * @param $destiny
 	 */
 
-	function __construct($id, $documentID, $keterangan, $keperluan, $date, $ownerID, $inheritAccess, $defaultAccess, $status, $expires) { /* {{{ */
+	function __construct($id, $documentID, $keterangan, $keperluan, $date, $ownerID, $inheritAccess, $defaultAccess, $status, $expires,$documentlocation, $origin, $destiny) { /* {{{ */
 		$this->_id = $id;
 		$this->_documentID = (int) $documentID;
 		$this->_keterangan = $keterangan;
@@ -142,6 +160,9 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		$this->_defaultAccess = $defaultAccess;
 		$this->_status = $status;
 		$this->_expires = $expires;
+		$this->_documentlocation = $documentlocation;
+		$this->_origin = $origin;
+		$this->_destiny = $destiny;
 	} /* }}} */
 
 	/**
@@ -149,28 +170,27 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	 *
 	 * @param array $resArr array of folder data as returned by database
 	 * @param SeedDMS_Core_DMS $dms
-	 * @return SeedDMS_Core_RequestSoftCopy|bool instance of SeedDMS_Core_SoftCOpy if document exists
+	 * @return SeedDMS_Core_GudangCenter|bool instance of SeedDMS_Core_HardCOpy if document exists
 	 */
 	public static function getInstanceByData($resArr, $dms) { /* {{{ */
-		$classname = $dms->getClassname('softcopy');
-		/** @var SeedDMS_Core_SoftCopy $softcopy */
-		$softcopy = new self($resArr["id"], $resArr["documentID"], $resArr["keterangan"], $resArr["keperluan"], $resArr["date"],$resArr["owner"], $resArr["inheritAccess"], $resArr["defaultAccess"], $resArr["status"],$resArr["expires"]);
-		$softcopy->setDMS($dms);
-		$softcopy = $softcopy->applyDecorators();
-		return $softcopy;
+		$classname = $dms->getClassname('gudangcenter');
+		/** @var SeedDMS_Core_GudangCenter $gudangcenter */
+		$gudangcenter = new self($resArr["id"], $resArr["documentID"], $resArr["keterangan"], $resArr["keperluan"], $resArr["date"],$resArr["owner"], $resArr["inheritAccess"], $resArr["defaultAccess"], $resArr["status"],$resArr["expires"], $resArr["documentlocation"],$resArr["origin"],$resArr["destiny"]);
+		$gudangcenter->setDMS($dms);
+		$gudangcenter = $gudangcenter->applyDecorators();
+		return $gudangcenter;
 	} /* }}} */
 
 	/**
-	 * Return a softcopy by its id
 	 *
 	 * @param integer $id id of folder
 	 * @param SeedDMS_Core_DMS $dms
-	 * @return SeedDMS_Core_SoftCOpy|bool instance of SeedDMS_Core_SoftCOpy if document exists, null
+	 * @return SeedDMS_Core_GudangCenter|bool instance of SeedDMS_Core_HardCOpy if document exists, null
 	 * if document does not exist, false in case of error
 	 */
 	public static function getInstance($id, $dms) { /* {{{ */
 		$db = $dms->getDB();
-		$queryStr = "SELECT * FROM `tblRequestSoftCopy` WHERE `id` = " . (int) $id;
+		$queryStr = "SELECT * FROM `tblGudangCenter` WHERE `id` = " . (int) $id;
 		$resArr = $db->getResultArray($queryStr);
 		if (is_bool($resArr) && $resArr == false)
 			return false;
@@ -184,20 +204,20 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	public static function getAllInstances($orderby, $dms) { /* {{{ */
 		$db = $dms->getDB();
 
-		$queryStr = "SELECT * FROM `tblRequestSoftCopy` ORDER BY `id` DESC";
+		$queryStr = "SELECT * FROM `tblGudangCenter` ORDER BY `id` DESC";
 		$resArr = $db->getResultArray($queryStr);
 		if (is_bool($resArr) && $resArr == false){
 			return false;
 		}
 
-			$requestsoftcopys = array();
+			$gudangcenters = array();
 			for ($i = 0; $i < count($resArr); $i++) {
-				$requestsoftcopy = new self($resArr[$i]["id"], $resArr[$i]["documentID"], $resArr[$i]["keterangan"],$resArr[$i]["keperluan"],$resArr[$i]["date"],$resArr[$i]["owner"],$resArr[$i]["inheritAccess"],$resArr[$i]["defaultAccess"],$resArr[$i]["status"],$resArr[$i]["expires"]);
-				$requestsoftcopy->setDMS($dms);
-				$requestsoftcopys[$i] = $requestsoftcopy;
+				$gudangcenter = new self($resArr[$i]["id"], $resArr[$i]["documentID"], $resArr[$i]["keterangan"],$resArr[$i]["keperluan"],$resArr[$i]["date"],$resArr[$i]["owner"],$resArr[$i]["inheritAccess"],$resArr[$i]["defaultAccess"],$resArr[$i]["status"],$resArr[$i]["expires"],$resArr[$i]["documentlocation"],$resArr[$i]["origin"],$resArr[$i]["destiny"]);
+				$gudangcenter->setDMS($dms);
+				$gudangcenters[$i] = $gudangcenter;
 			}
 	
-			return $requestsoftcopys;
+			return $gudangcenters;
 	} /* }}} */
 
 		/**
@@ -220,7 +240,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	/**
 	 * Get the documentid of the folder.
 	 *
-	 * @return string documentid of softcopy
+	 * @return string documentid of hardcopy
 	 */
 	public function getDocumentID() { return $this->_documentID; }
 
@@ -233,7 +253,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	public function setDocumentID($newDocumentID) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `documentID` = " . $db->qstr($newDocumentID) . " WHERE `id` = ". $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `documentID` = " . $db->qstr($newDocumentID) . " WHERE `id` = ". $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 
@@ -254,7 +274,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	public function setKeterangan($newKeterangan) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `keterangan` = " . $db->qstr($newKeterangan) . " WHERE `id` = ". $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `keterangan` = " . $db->qstr($newKeterangan) . " WHERE `id` = ". $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 
@@ -274,7 +294,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	public function setKeperluan($newKeperluan) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `keperluan` = " . $db->qstr($newKeperluan) . " WHERE `id` = ". $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `keperluan` = " . $db->qstr($newKeperluan) . " WHERE `id` = ". $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 
@@ -282,10 +302,76 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		return true;
 	} /* }}} */
 
+
 	/**
 	 * @return string
 	 */
-	public function getStatus() { return $this->_status; }
+	public function getDocumentLocation() { return $this->_documentlocation; }
+
+	/**
+	 * @param $newDocumentLocation
+	 * @return bool
+	 */
+	public function setDocumentLocation($newDocumentLocation) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblGudangCenter` SET `documentlocation` = " . $db->qstr($newDocumentLocation) . " WHERE `id` = ". $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+
+		$this->_documentlocation = $newDocumentLocation;
+		return true;
+	} /* }}} */
+
+
+	/**
+	 * @return string
+	 */
+	public function getOrigin() { return $this->_origin; }
+
+	/**
+	 * @param $newOrigin
+	 * @return bool
+	 */
+	public function setOrigin($newOrigin) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblGudangCenter` SET `origin` = " . $db->qstr($newOrigin) . " WHERE `id` = ". $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+
+		$this->_origin = $newOrigin;
+		return true;
+	} /* }}} */
+
+
+	/**
+	 * @return string
+	 */
+	public function getDestiny() { return $this->_destiny; }
+
+	/**
+	 * @param $newDestiny
+	 * @return bool
+	 */
+	public function setDestiny($newDestiny) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		$queryStr = "UPDATE `tblGudangCenter` SET `destiny` = " . $db->qstr($newDestiny) . " WHERE `id` = ". $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+
+		$this->_destiny = $newDestiny;
+		return true;
+	} /* }}} */
+
+
+
+	/**
+	 * @return string
+	 */
+
+	 public function getStatus() { return $this->_status; }
 
 	/**
 	 * @param $newStatus
@@ -294,7 +380,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	public function setStatus($newStatus) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `status` = " . $db->qstr($newStatus) . " WHERE `id` = ". $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `status` = " . $db->qstr($newStatus) . " WHERE `id` = ". $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 
@@ -339,7 +425,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 				return false;
 		}
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `date` = " . (int) $date . " WHERE `id` = ". $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `date` = " . (int) $date . " WHERE `id` = ". $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 		$this->_date = $date;
@@ -366,7 +452,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	function setOwner($newOwner) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` set `owner` = " . $newOwner->getID() . " WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` set `owner` = " . $newOwner->getID() . " WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 
@@ -405,7 +491,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 	function setDefaultAccess($mode, $noclean=false) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` set `defaultAccess` = " . (int) $mode . " WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` set `defaultAccess` = " . (int) $mode . " WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 
@@ -438,7 +524,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 
 		$inheritAccess = ($inheritAccess) ? "1" : "0";
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `inheritAccess` = " . (int) $inheritAccess . " WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `inheritAccess` = " . (int) $inheritAccess . " WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 
@@ -468,7 +554,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		if (empty($this->_notifyList)) {
 			$db = $this->_dms->getDB();
 
-			$queryStr ="SELECT * FROM `tblNotify` WHERE `targetType` = " . T_REQUESTSOFTCOPY . " AND `target` = " . $this->_id;
+			$queryStr ="SELECT * FROM `tblNotify` WHERE `targetType` = " . T_GUDANGCENTER . " AND `target` = " . $this->_id;
 			$resArr = $db->getResultArray($queryStr);
 			if (is_bool($resArr) && $resArr == false)
 				return false;
@@ -629,7 +715,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		//
 		
 		$queryStr = "SELECT * FROM `tblNotify` WHERE `tblNotify`.`target` = '".$this->_id."' ".
-			"AND `tblNotify`.`targetType` = '".T_REQUESTSOFTCOPY."' ".
+			"AND `tblNotify`.`targetType` = '".T_GUDANGCENTER."' ".
 			"AND `tblNotify`.".$userOrGroup." = '". (int) $userOrGroupID."'";
 		$resArr = $db->getResultArray($queryStr);
 		if (is_bool($resArr)) {
@@ -639,7 +725,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 			return -3;
 		}
 
-		$queryStr = "INSERT INTO `tblNotify` (`target`, `targetType`, " . $userOrGroup . ") VALUES (" . $this->_id . ", " . T_REQUESTSOFTCOPY . ", " .  (int) $userOrGroupID . ")";
+		$queryStr = "INSERT INTO `tblNotify` (`target`, `targetType`, " . $userOrGroup . ") VALUES (" . $this->_id . ", " . T_GUDANGCENTER . ", " .  (int) $userOrGroupID . ")";
 		if (!$db->getResult($queryStr))
 		return -4;
 	
@@ -783,7 +869,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 			if ($mode!=M_ANY) {
 				$modeStr = " AND mode".$op.(int)$mode;
 			}
-			$queryStr = "SELECT * FROM `tblACLs` WHERE `targetType` = ".T_REQUESTSOFTCOPY.
+			$queryStr = "SELECT * FROM `tblACLs` WHERE `targetType` = ".T_GUDANGCENTER.
 				" AND `target` = " . $this->_id .	$modeStr . " ORDER BY `targetType`";
 			$resArr = $db->getResultArray($queryStr);
 			if (is_bool($resArr) && !$resArr)
@@ -858,6 +944,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		if ($user->isGuest()) {
 			if ($mode >= M_READ) $mode = M_READ;
 		}
+
 		return $mode;
 	} /* }}} */
 
@@ -1061,7 +1148,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		/* Verify that user / group exists. */
 		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `status` = ". 1 ." WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `status` = ". 1 ." WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 		return true;
@@ -1073,7 +1160,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		/* Verify that user / group exists. */
 		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `status` = ". -1 ." WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `status` = ". -1 ." WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 		return true;
@@ -1085,7 +1172,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		/* Verify that user / group exists. */
 		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `status` = ". 2 ." WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `status` = ". 2 .", `documentlocation` = `destiny` WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 		return true;
@@ -1097,7 +1184,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		/* Verify that user / group exists. */
 		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `status` = ". -2 ." WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `status` = ". -2 ." WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 		return true;
@@ -1109,7 +1196,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		/* Verify that user / group exists. */
 		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
 
-		$queryStr = "UPDATE `tblRequestSoftCopy` SET `status` = ". 3 ." WHERE `id` = " . $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `status` = ". 3 ." WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 		return true;
@@ -1121,7 +1208,7 @@ class SeedDMS_Core_RequestSoftCopy extends SeedDMS_Core_Object { /* {{{ */
 		/* Verify that user / group exists. */
 		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
 
-		$queryStr = "DELETE FROM `tblRequestSoftCopy` WHERE `id` = " . $this->_id;
+		$queryStr = "DELETE FROM `tblGudangCenter` WHERE `id` = " . $this->_id;
 
 		if (!$db->getResult($queryStr))
 			return false;

@@ -21,6 +21,8 @@ require_once("inc.ClassObject.php");
 require_once("inc.ClassFolder.php");
 require_once("inc.ClassDocument.php");
 require_once("inc.ClassRequestSoftCopy.php");
+require_once("inc.ClassRequestHardCopy.php");
+require_once("inc.ClassGudangCenter.php");
 require_once("inc.ClassGroup.php");
 require_once("inc.ClassWorkLocation.php");
 require_once("inc.ClassUser.php");
@@ -487,6 +489,8 @@ class SeedDMS_Core_DMS {
 		$this->classnames = array();
 		$this->classnames['folder'] = 'SeedDMS_Core_Folder';
 		$this->classnames['requestsoftcopy'] = 'SeedDMS_Core_RequestSoftCopy';
+		$this->classnames['requesthardcopy'] = 'SeedDMS_Core_RequestHardCopy';
+		$this->classnames['gudangcenter'] = 'SeedDMS_Core_GudangCenter';
 		$this->classnames['document'] = 'SeedDMS_Core_Document';
 		$this->classnames['documentcontent'] = 'SeedDMS_Core_DocumentContent';
 		$this->classnames['user'] = 'SeedDMS_Core_User';
@@ -2679,13 +2683,29 @@ class SeedDMS_Core_DMS {
 		return $classname::getAllInstances('name', $this);
 	} /* }}} */
 
+	function getRequestHardCopy($id) { /* {{{ */
+		$classname = $this->classnames['requesthardcopy'];
+		return $classname::getInstance($id, $this, '');
+	} /* }}} */
+
+	function getAllRequestHardCopy() { /* {{{ */
+		$classname = $this->classnames['requesthardcopy'];
+		return $classname::getAllInstances('name', $this);
+	} /* }}} */
+
+
+	//  gudang center
+	function getGudangCenter($id) { /* {{{ */
+		$classname = $this->classnames['gudangcenter'];
+		return $classname::getInstance($id, $this, '');
+	} /* }}} */
+
+	function getAllGudangCenter() { /* {{{ */
+		$classname = $this->classnames['gudangcenter'];
+		return $classname::getAllInstances('name', $this);
+	} /* }}} */
+
 	/**
-	 * Return a folder by its name
-	 *
-	 * This function retrieves a folder from the database by its name. The
-	 * search covers the whole database. If
-	 * the parameter $folder is not null, it will search for the name
-	 * only within this parent folder. It will not be done recursively.
 	 *
 	 * @param string $name name of the folder
 	 * @param SeedDMS_Core_Folder $folder parent folder

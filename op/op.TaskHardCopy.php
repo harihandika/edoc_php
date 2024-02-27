@@ -13,55 +13,52 @@ if ($user->isGuest()) {
 	UI::exitError(getMLText("my_account"),getMLText("access_denied"));
 }
 	
-if ($_GET["type"]=="requestsoftcopy"){
+if ($_GET["type"]=="requesthardcopy"){
 
 	if ($_GET["action"]=="add"){
-		if (!isset($_POST["requestsoftcopyid"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
-		$requestsoftcopyid = $_POST["requestsoftcopyid"];
+		if (!isset($_POST["requesthardcopyid"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
+		$requesthardcopyid = $_POST["requesthardcopyid"];
 
 	}else if ($_GET["action"]=="del"){
 		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
-		$requestsoftcopyid = $_GET["id"];
+		$requesthardcopyid = $_GET["id"];
 
 	}else if($_GET["action"]=="app"){
 		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
-		$requestsoftcopyid = $_GET["id"];
+		$requesthardcopyid = $_GET["id"];
 
 	}else if($_GET["action"]=="rej"){
 		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
-		$requestsoftcopyid = $_GET["id"];
+		$requesthardcopyid = $_GET["id"];
 
 	}else if ($_GET["action"]=="rec"){
 		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
-		$requestsoftcopyid = $_GET["id"];
+		$requesthardcopyid = $_GET["id"];
 
 	}else if ($_GET["action"]=="dec"){
 		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
-		$requestsoftcopyid = $_GET["id"];
+		$requesthardcopyid = $_GET["id"];
 
 	}else if ($_GET["action"]=="ex"){
 		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
-		$requestsoftcopyid = $_GET["id"];
+		$requesthardcopyid = $_GET["id"];
 
 	}else UI::exitError(getMLText("my_account"),getMLText("error_occured"));
 
-	if(!$requestsoftcopyid || !($requestsoftcopy = $dms->getRequestSoftCopy($requestsoftcopyid))) {
+	if(!$requesthardcopyid || !($requesthardcopy = $dms->getRequestHardCopy($requesthardcopyid))) {
 		UI::exitError(getMLText("my_account"),getMLText("error_no_document_selected"));
 	}
-	
-	// if ($document->getAccessMode($user) < M_READ) 
-	// 	UI::exitError(getMLText("my_account"),getMLText("error_occured"));
 
-	if ($_GET["action"]=="add") $requestsoftcopy->addNotify($userid, true);
-	else if ($_GET["action"]=="del") $requestsoftcopy->removeNotify($userid, true);
-	else if ($_GET["action"]=="app") $requestsoftcopy->approveNotify($userid, true);
-	else if ($_GET["action"]=="rej")$requestsoftcopy->rejectNotify($userid, true);
-	else if ($_GET["action"]=="rec")$requestsoftcopy->receiveNotify($userid, true);
-	else if ($_GET["action"]=="dec") $requestsoftcopy->declineNotify($userid, true);
-	else if ($_GET["action"]=="ex") $requestsoftcopy->expiredNotify($userid, true);
+	if ($_GET["action"]=="add") $requesthardcopy->addNotify($userid, true);
+	else if ($_GET["action"]=="del") $requesthardcopy->removeNotify($userid, true);
+	else if ($_GET["action"]=="app") $requesthardcopy->approveNotify($userid, true);
+	else if ($_GET["action"]=="rej")$requesthardcopy->rejectNotify($userid, true);
+	else if ($_GET["action"]=="rec")$requesthardcopy->receiveNotify($userid, true);
+	else if ($_GET["action"]=="dec") $requesthardcopy->declineNotify($userid, true);
+	else if ($_GET["action"]=="ex") $requesthardcopy->expiredNotify($userid, true);
 
 }
 
-header("Location:../out/out.Tasks.php");
+header("Location:../out/out.StatusTaskHard.php");
 
 ?>

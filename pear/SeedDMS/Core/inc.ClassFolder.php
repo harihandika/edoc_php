@@ -104,6 +104,11 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 	protected $_softcopyss;
 
 	/**
+	 * @var SeedDMS_Core_HardCopy[]
+	 */
+	protected $_hardcopys;
+
+	/**
 	 * @var SeedDMS_Core_UserAccess[]|SeedDMS_Core_GroupAccess[]
 	 */
 	protected $_accessList;
@@ -791,6 +796,65 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		}
 
 		return $requestSoftCopy;
+	} /* }}} */
+
+	function requestHardCopy($documentid, $keterangan, $keperluan, $owner, $attributes=array(),$reviewers=array(), $approvers=array(), $status=0, $expires, $origin, $destiny) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		// Set the folderList of the folder
+		$pathPrefix="";
+		$path = $this->getPath();
+		foreach ($path as $f) {
+			$pathPrefix .= ":".$f->getID();
+		}
+
+		if (strlen($pathPrefix)>1) {
+			$pathPrefix .= ":";
+		}
+
+		$db->startTransaction();
+		//inheritAccess = true, defaultAccess = M_READ
+		$queryStr = "INSERT INTO `tblRequestHardCopy` (`documentid`, `keterangan`, `keperluan`, `date`, `owner`, `inheritAccess`, `defaultAccess`,`status`,`expires`,`documentlocation`,`origin`,`destiny`) ".
+					"VALUES (".$documentid.", ".$db->qstr($keterangan).",".$db->qstr($keperluan).", ".$db->getCurrentTimestamp().", ".$owner->getID().",1, ".M_READ." ,0, " .(int) $expires. ", ".$db->qstr($origin).",".$db->qstr($origin).",".$db->qstr($destiny).")";
+		if (!$db->getResult($queryStr)) {
+			$db->rollbackTransaction();
+			return false;
+		}
+		
+		$requestHardCopy = $this->_dms->getRequestHardCopy($db->getInsertID('tblRequestHardCopy'));
+
+
+		if($attributes) {
+			foreach($attributes as $attrdefid=>$attribute) {
+				/* $attribute can be a string or an array */
+				if($attribute) {
+					if($attrdef = $this->_dms->getAttributeDefinition($attrdefid)) {
+						if(!$requestHardCopy->setAttributeValue($attrdef, $attribute)) {
+							$requestHardCopy->remove();
+							$db->rollbackTransaction();
+							return false;
+						}
+					} else {
+						$requestHardCopy->remove();
+						$db->rollbackTransaction();
+						return false;
+					}
+				}
+			}
+		}
+
+		$db->commitTransaction();
+
+		/* Check if 'onPostAddSubFolder' callback is set */
+		if(isset($this->_dms->callbacks['onPostRequestHardCopy'])) {
+			foreach($this->_dms->callbacks['onPostRequestHardCopy'] as $callback) {
+					/** @noinspection PhpStatementHasEmptyBodyInspection */
+					if(!call_user_func($callback[0], $callback[1], $requestHardCopy)) {
+				}
+			}
+		}
+
+		return $requestHardCopy;
 	} /* }}} */
 
 

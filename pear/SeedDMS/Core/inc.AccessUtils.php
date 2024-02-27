@@ -59,6 +59,15 @@ define("T_DOCUMENT", 2);	//    "      = Document
 define("T_REQUESTSOFTCOPY", 3);	//    "      = RequestSoftCopy
 
 /**
+ * Document notification
+ */
+define("T_REQUESTHARDCOPY", 4);	//    "      = RequestSoftCopy
+
+/**
+ * Document notification
+ */
+define("T_GUDANGCENTER", 5);	//    "      = Gudang Center
+/**
  * Notify on all actions on the folder/document
  */
 define("N_ALL", 0);

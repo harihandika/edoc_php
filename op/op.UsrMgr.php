@@ -47,6 +47,7 @@ if ($action == "adduser") {
 
 	$login   = $_POST["login"];
 	$pwd     = $_POST["pwd"];
+
 	if(!isset($_POST["pwdexpiration"]))
 		$pwdexpiration = '';
 	else

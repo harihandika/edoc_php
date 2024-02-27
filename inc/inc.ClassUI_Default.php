@@ -230,6 +230,7 @@ class UI_Default {
 			echo "<li><a href=\"../out/out.MoveFolder.php?folderid=". $folderID ."&showtree=".showtree()."\">".getMLText("move_folder")."</a></li>\n";
 		/**************************** request document   ******** */
 			echo "<li><a href=\"../out/out.RequestSoftCopy.php?folderid=". $folderID."&showtree=".showtree()."\">".getMLText("request_soft_copy")."</a></li>\n";
+			echo "<li><a href=\"../out/out.RequestHardCopy.php?folderid=". $folderID."&showtree=".showtree()."\">".getMLText("request_hard_copy")."</a></li>\n";
 		}
 		if ($accessMode == M_ALL) {
 			if ($folderID != $settings->_rootFolderID && $folder->getParent())

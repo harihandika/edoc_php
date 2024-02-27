@@ -130,7 +130,7 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		if(!empty($this->extraheader['favicon']))
 			echo $this->extraheader['favicon'];
 		else {
-			echo '<link rel="icon" href="../views/'.$this->theme.'/images/favicon.svg" type="image/svg+xml"/>'."\n";
+			echo '<link rel="icon" href="../views/'.$this->theme.'/images/acset-dms-logo.png" type="image/svg+xml"/>'."\n";
 			echo '<link rel="apple-touch-icon" sizes="180x180" href="../views/'.$this->theme.'/images/apple-touch-icon.png">'."\n";
 		}
 		if($this->params['session'] && $this->params['session']->getSu()) {
@@ -462,16 +462,6 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 			echo "    </li>\n";
 			echo "   </ul>\n";
 
-			
-	// 		if($this->params['enablemenutasks']) {
-	// 			if($accessobject->check_view_access('Tasks', array('action'=>'menuTasks'))) {
-	// 				echo "   <div id=\"menu-tasks\">";
-	// 				echo "     <div class=\"ajax\" data-no-spinner=\"true\" data-view=\"Tasks\" data-action=\"menuTasks\"></div>";
-
-	// echo "   </div>";
-	// 			}
-	// 		}
-
 			if($this->params['dropfolderdir'] && $this->params['enabledropfolderlist']) {
 				echo "   <div id=\"menu-dropfolder\">";
 				echo "     <div class=\"ajax\" data-no-spinner=\"true\" data-view=\"DropFolderChooser\" data-action=\"menuList\"";
@@ -493,17 +483,34 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 
 			echo "   <ul class=\"nav\">\n";
 			$menuitems = array();
+// *********************
 
 // *********** Tasks 
 			if ($accessobject->check_view_access('Tasks')) {
 				// $menuitems['tasks'] = array('link'=>'../out/out.Tasks.php', 'label'=>"tasks");
+// $c=0;
+// $allRequestsoftcopy = $dms->getAllRequestSoftCopy();
+// $user = $this->params['user'];
+
+// foreach ($allRequestsoftcopy as $requestsoftcopy) {
+// 	foreach ($user->getNotifications(T_REQUESTSOFTCOPY) as $request){
+// 		if ($request->getTarget() == $requestsoftcopy->getID()){
+// 			$c++;
+// 		}
+// 	}
+// }
 			$menuitems['user_group_management'] = array('link'=>"#", 'label'=>'tasks');
 			if ($accessobject->check_view_access('Tasks'))
-			$menuitems['user_group_management']['children']['request_tasks'] = array('link'=>"../out/out.Tasks.php", 'label'=>'request_tasks');
+			$menuitems['user_group_management']['children']['request_tasks_soft_copy'] = array('link'=>"../out/out.Tasks.php", 'label'=>'request_tasks_soft_copy');
 			if ($accessobject->check_view_access('Tasks'))
-			$menuitems['user_group_management']['children']['status_tasks'] = array('link'=>"../out/out.StatusTasks.php", 'label'=>'status_tasks');
+			$menuitems['user_group_management']['children']['status_tasks_soft_copy'] = array('link'=>"../out/out.StatusTasks.php", 'label'=>'status_tasks_soft_copy');
+			if ($accessobject->check_view_access('Tasks'))
+			$menuitems['user_group_management']['children']['request_tasks_hard_copy'] = array('link'=>"../out/out.RequestTaskHard.php", 'label'=>'request_tasks_hard_copy');
+			if ($accessobject->check_view_access('Tasks'))
+			$menuitems['user_group_management']['children']['status_tasks_hard_copy'] = array('link'=>"../out/out.StatusTaskHard.php", 'label'=>'status_tasks_hard_copy');
 			}
 			echo "   <ul class=\"nav\">\n";
+
 //  ************* Calender
 			if ($this->params['enablecalendar'] && $accessobject->check_view_access('Calendar')) $menuitems['calendar'] = array('link'=>'../out/out.Calendar.php?mode='.$this->params['calendardefaultview'], 'label'=>"calendar");
 
@@ -541,10 +548,7 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 			echo "      <input name=\"query\" class=\"search-query\" ".($this->params['defaultsearchmethod'] == 'fulltext_' ? "" : "id=\"searchfield\"")." data-provide=\"typeahead\" type=\"search\" style=\"width: 150px;\" placeholder=\"".getMLText("search")."\"/>";
 			if($this->params['defaultsearchmethod'] == 'fulltext')
 				echo "      <input type=\"hidden\" name=\"fullsearch\" value=\"1\" />";
-//			if($this->params['enablefullsearch']) {
-//				echo "      <label class=\"checkbox\" style=\"color: #999999;\"><input type=\"checkbox\" name=\"fullsearch\" value=\"1\" title=\"".getMLText('fullsearch_hint')."\"/> ".getMLText('fullsearch')."</label>";
-//			}
-	//		echo "      <input type=\"submit\" value=\"".getMLText("search")."\" id=\"searchButton\" class=\"btn\"/>";
+
 			echo "</form>\n";
 			echo "    </div>\n";
 		}
@@ -690,8 +694,17 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		// ***********************
 		if ($accessobject->check_view_access('RequestSoftCopy'))
 		$menuitems['request_soft_copy'] = array('link'=>"../out/out.RequestSoftCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_soft_copy');
-		if ($accessobject->check_view_access('RequestHardCopy'))
-		$menuitems['request_hard_copy'] = array('link'=>"../out/out.RequestHardCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_hard_copy');
+	
+		if ($accessobject->check_view_access('RequestHardCopy')){
+			$menuitems['user_group_management'] = array('link'=>"#", 'label'=>'request_hard_copy');
+			if ($accessobject->check_view_access('RequestHardCopy'))
+			$menuitems['user_group_management']['children']['request_hard_copy'] = array('link'=>"../out/out.RequestHardCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_hard_copy');
+			if ($accessobject->check_view_access('RequestHardCopy'))
+			$menuitems['user_group_management']['children']['kirim_dokumen_gudang_center'] = array('link'=>"../out/out.GudangCenter.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'kirim_dokumen_gudang_center');
+
+		}
+		// if ($accessobject->check_view_access('RequestHardCopy'))
+		// $menuitems['request_hard_copy'] = array('link'=>"../out/out.RequestHardCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_hard_copy');
 // ***********************
 		}
 		if ($accessobject->check_view_access('Indexer') && $this->params['enablefullsearch']) {

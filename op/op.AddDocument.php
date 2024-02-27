@@ -570,9 +570,9 @@ for ($file_num=0;$file_num<count($_FILES["userfile"]["tmp_name"]);$file_num++){
 					$params['sitename'] = $settings->_siteName;
 					$params['http_root'] = $settings->_httpRoot;
 
-					foreach($approvers['i'] as $approverid) {
-						$notifier->toIndividual($user, $dms->getUser($approverid), $subject, $message, $params, SeedDMS_NotificationService::RECV_APPROVER);
-					}
+					// foreach($approvers['i'] as $approverid) {
+					// 	$notifier->toIndividual($user, $dms->getUser($approverid), $subject, $message, $params, SeedDMS_NotificationService::RECV_APPROVER);
+					// }
 					foreach($approvers['g'] as $approvergrpid) {
 						$notifier->toGroup($user, $dms->getGroup($approvergrpid), $subject, $message, $params, SeedDMS_NotificationService::RECV_APPROVER);
 					}
