@@ -1,4 +1,4 @@
-<?php
+  <?php
 /**
  * Implementation of the group object in the document management system
  *
@@ -1197,6 +1197,18 @@ class SeedDMS_Core_RequestHardCopy extends SeedDMS_Core_Object { /* {{{ */
 		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
 
 		$queryStr = "UPDATE `tblRequestHardCopy` SET `status` = ". 3 ." WHERE `id` = " . $this->_id;
+		if (!$db->getResult($queryStr))
+			return false;
+		return true;
+	} /* }}} */
+
+	function finishNotify() { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		/* Verify that user / group exists. */
+		/** @var SeedDMS_Core_Group|SeedDMS_Core_User $obj */
+
+		$queryStr = "UPDATE `tblRequestHardCopy` SET `status` = ". 4 ." , `documentlocation` = `origin` WHERE `id` = " . $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 		return true;

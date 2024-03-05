@@ -35,9 +35,12 @@ class SeedDMS_Controller_GudangCenter extends SeedDMS_Controller_Common {
 		
 		$documentid = $this->getParam('documentid');
 		$keterangan = $this->getParam('keterangan');
-		$keperluan = $this->getParam('keperluan');
+
 		$origin = $this->getParam('origin');
 		$destiny = $this->getParam('destiny');
+		$kode = $this->getParam('kode');
+		$nomor = $this->getParam('nomor');
+		$baris = $this->getParam('baris');
 		$expires = $this->getParam('expires');
 		$owner = $this->getParam('owner');
 		$attributes = $this->getParam('attributes');
@@ -77,7 +80,7 @@ class SeedDMS_Controller_GudangCenter extends SeedDMS_Controller_Common {
 
 		$gudangCenter = $this->callHook('gudangCenter');
 		if($gudangCenter === null) {
-			$gudangCenter = $folder->gudangCenter($documentid, $keterangan, $keperluan, $owner,  $attributes, $reviewers, $approvers, $status, $expires, $origin, $destiny);
+			$gudangCenter = $folder->gudangCenter($documentid, $keterangan, $owner,  $attributes, $reviewers, $approvers, $status, $expires, $origin, $destiny, $kode, $nomor, $baris);
 			if (!is_object($gudangCenter)) {
 				$this->errormsg = "error_occured";
 				return false;

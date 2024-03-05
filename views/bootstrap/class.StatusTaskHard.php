@@ -144,7 +144,9 @@ if($res) {
 			} else if ($status == -2){
 				echo "Reject";
 			} else if ($status == 3){
-				echo "Expired";
+				echo "Request Balik";
+			} else if ($status == 4){
+				echo "Tiba di ".$requesthardcopy->getOrigin();
 			}
 			echo "</td>";
 			echo "</tr>";

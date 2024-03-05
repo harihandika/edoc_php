@@ -696,7 +696,7 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 		$menuitems['request_soft_copy'] = array('link'=>"../out/out.RequestSoftCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_soft_copy');
 	
 		if ($accessobject->check_view_access('RequestHardCopy')){
-			$menuitems['user_group_management'] = array('link'=>"#", 'label'=>'request_hard_copy');
+			$menuitems['user_group_management'] = array('link'=>"#", 'label'=>'hard_copy');
 			if ($accessobject->check_view_access('RequestHardCopy'))
 			$menuitems['user_group_management']['children']['request_hard_copy'] = array('link'=>"../out/out.RequestHardCopy.php?folderid=".$folderID."&showtree=".showtree(), 'label'=>'request_hard_copy');
 			if ($accessobject->check_view_access('RequestHardCopy'))

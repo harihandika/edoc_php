@@ -857,6 +857,65 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		return $requestHardCopy;
 	} /* }}} */
 
+	function gudangcenter($documentid, $keterangan, $owner, $attributes=array(),$reviewers=array(), $approvers=array(), $status=0, $expires, $origin, $destiny, $kode, $nomor, $baris ) { /* {{{ */
+		$db = $this->_dms->getDB();
+
+		// Set the folderList of the folder
+		$pathPrefix="";
+		$path = $this->getPath();
+		foreach ($path as $f) {
+			$pathPrefix .= ":".$f->getID();
+		}
+
+		if (strlen($pathPrefix)>1) {
+			$pathPrefix .= ":";
+		}
+
+		$db->startTransaction();
+		//inheritAccess = true, defaultAccess = M_READ
+		$queryStr = "INSERT INTO `tblGudangCenter` (`documentid`, `keterangan`, `date`, `owner`, `inheritAccess`, `defaultAccess`,`status`,`expires`,`documentlocation`,`origin`,`destiny`,`kode`,`nomor`,`baris`) ".
+					"VALUES (".$documentid.", ".$db->qstr($keterangan).", ".$db->getCurrentTimestamp().", ".$owner->getID().",1, ".M_READ." ,0, " .(int) $expires. ", ".$db->qstr($origin).",".$db->qstr($origin).",".$db->qstr($destiny).",".$db->qstr($kode).",".$db->qstr($nomor).",".$db->qstr($baris).")";
+		if (!$db->getResult($queryStr)) {
+			$db->rollbackTransaction();
+			return false;
+		}
+		
+		$gudangCenter = $this->_dms->getGudangCenter($db->getInsertID('tblGudangCenter'));
+
+
+		if($attributes) {
+			foreach($attributes as $attrdefid=>$attribute) {
+				/* $attribute can be a string or an array */
+				if($attribute) {
+					if($attrdef = $this->_dms->getAttributeDefinition($attrdefid)) {
+						if(!$gudangCenter->setAttributeValue($attrdef, $attribute)) {
+							$gudangCenter->remove();
+							$db->rollbackTransaction();
+							return false;
+						}
+					} else {
+						$gudangCenter->remove();
+						$db->rollbackTransaction();
+						return false;
+					}
+				}
+			}
+		}
+
+		$db->commitTransaction();
+
+		/* Check if 'onPostAddSubFolder' callback is set */
+		if(isset($this->_dms->callbacks['onPostGudangCenter'])) {
+			foreach($this->_dms->callbacks['onPostGudangCenter'] as $callback) {
+					/** @noinspection PhpStatementHasEmptyBodyInspection */
+					if(!call_user_func($callback[0], $callback[1], $gudangCenter)) {
+				}
+			}
+		}
+
+		return $gudangCenter;
+	} /* }}} */
+
 
 
 	/**

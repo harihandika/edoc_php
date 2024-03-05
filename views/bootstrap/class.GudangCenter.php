@@ -84,7 +84,6 @@ $(document).ready( function() {
 	<div class="ajax" data-view="ViewFolder" data-action="navigation" data-no-spinner="true" <?php echo ($folder ? "data-query=\"gudangcenterid=".$folder->getID()."\"" : "") ?>></div>
 <?php
 		$this->contentHeading(getMLText("gudang_center"));
-		$this->contentContainerStart();
 ?>
 
 <form class="form-horizontal" action="../op/op.GudangCenter.php" id="form1" name="form1" method="post">
@@ -93,7 +92,41 @@ $(document).ready( function() {
 	<input type="hidden" name="showtree" value="<?php echo showtree();?>">
 <?php	
 
+$this->contentContainerStart();
 
+$users = $user->getFullName();
+			
+$this->formField(
+	getMLText("user_request"),
+	array(
+		'element'=>'text',
+		'id'=>'ownerid',
+		'name'=>'ownerid',
+		'value'=>$users,
+		'placeholder'=>'please input requestor',
+		'required'=>true,
+		'disabled'=>'true'
+	)
+);
+
+
+foreach($worklocations as $worklocation) {
+	if ($user && $worklocation->isMember($user)){
+		$options = htmlspecialchars($worklocation->getName());
+	}
+}
+$this->formField(
+	"Lokasi Requestor",	
+	array(
+		'element'=>'text',
+		'name'=>'destiny',
+		'placeholder'=>'Input work location',
+		'value'=>$options,
+		'required'=>true
+	)
+);
+
+$this->contentContainerEnd();
 
 $options = array();
 foreach($documents as $document) {
@@ -110,21 +143,6 @@ foreach($documents as $document) {
 			)
 		);
 
-			$users = $user->getFullName();
-			
-			$this->formField(
-				getMLText("user_request"),
-				array(
-					'element'=>'text',
-					'id'=>'ownerid',
-					'name'=>'ownerid',
-					'value'=>$users,
-					'placeholder'=>'please input requestor',
-					'required'=>true,
-					'disabled'=>'true'
-				)
-			);
-
 			$options = array();
 			foreach($worklocations as $worklocation) {
 					$options[] =  array($worklocation->getName(), htmlspecialchars($worklocation->getName()));
@@ -137,22 +155,6 @@ foreach($documents as $document) {
 					'class'=>'chzn-select',
 					'placeholder'=>'Input work location',
 					'options'=>$options,
-					'required'=>true
-				)
-			);
-
-			foreach($worklocations as $worklocation) {
-				if ($user && $worklocation->isMember($user)){
-					$options = htmlspecialchars($worklocation->getName());
-				}
-			}
-			$this->formField(
-				"Lokasi Tujuan",	
-				array(
-					'element'=>'text',
-					'name'=>'destiny',
-					'placeholder'=>'Input work location',
-					'value'=>$options,
 					'required'=>true
 				)
 			);
@@ -184,24 +186,61 @@ foreach($documents as $document) {
 					array('field_wrap'=>array('', ($tmp ? '<div class="mandatories"><span>'.getMLText('mandatory_reviewers').':</span> '.implode(', ', $tmp).'</div>' : '')))
 				);
 
-		$options = array();
-		$options[] = array('Keperluan Audit','Keperluan Audit');
-		$options[] = array('Keperluan Tender','Keperluan Tender');
-		$options[] = array('Keperluan Review','Keperluan Review');
-		$options[] = array('Lain-lain','Lain-lain');
-		$this->formField(
-			getMLText("keperluan"),
-			array(
-				'element'=>'select',
-				'name'=>'keperluan',
-				'options'=>$options
-			)
-		);
+				$this->formField(
+					getMLText("kode_rak"),
+					array(
+						'element'=>'input',
+						'type'=>'text',
+						'id'=>'kode',
+						'name'=>'kode',
+						'required'=>true
+					)
+				);
+
+				$options = array();
+				$options[] = array('1','rak 1');
+				$options[] = array('2','rak 2');
+				$options[] = array('3','rak 3');
+				$options[] = array('4','rak 4');
+				$options[] = array('5','rak 5');
+				$options[] = array('6','rak 6');
+				$options[] = array('7','rak 7');
+				$options[] = array('8','rak 8');
+				$options[] = array('9','rak 9');
+				$options[] = array('10','rak 10');
+				$this->formField(
+					getMLText("nomor_rak"),
+					array(
+						'element'=>'select',
+						'name'=>'nomor',
+						'options'=>$options
+					)
+				);
+				
+				$options = array();
+				$options[] = array('1','baris 1');
+				$options[] = array('2','baris 2');
+				$options[] = array('3','baris 3');
+				$options[] = array('4','baris 4');
+				$options[] = array('5','baris 5');
+				$options[] = array('6','baris 6');
+				$options[] = array('7','baris 7');
+				$options[] = array('8','baris 8');
+				$options[] = array('9','baris 9');
+				$options[] = array('10','baris 10');
+		
+				$this->formField(
+					getMLText("baris_rak"),
+					array(
+						'element'=>'select',
+						'name'=>'baris',
+						'options'=>$options
+					)
+				);
 
 
 		$this->formField(
 			getMLText("periode_pinjam"),
-			// $this->getDateChooser((''), "expdate", $this->params['session']->getLanguage())
 			$this->getDateChooser('', "expdate", $this->params['session']->getLanguage())
 		);
 
@@ -220,10 +259,6 @@ foreach($documents as $document) {
 		$attrdefs = $dms->getAllAttributeDefinitions(array(SeedDMS_Core_AttributeDefinition::objtype_folder, SeedDMS_Core_AttributeDefinition::objtype_all));
 		if($attrdefs) {
 			foreach($attrdefs as $attrdef) {
-				/* The second parameter is null, to make this function call equal
-				 * to 'editFolderAttribute', which expects the folder as the second
-				 * parameter.
-				 */
 				$arr = $this->callHook('addFolderAttribute', null, $attrdef);
 				if(is_array($arr)) {
 					if($arr) {
@@ -253,7 +288,6 @@ foreach($documents as $document) {
 ?>
 </form>
 <?php
-		$this->contentContainerEnd();
 		$this->contentEnd();
 		$this->htmlEndPage();
 	} /* }}} */

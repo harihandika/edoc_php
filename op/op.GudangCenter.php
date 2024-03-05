@@ -58,9 +58,12 @@ if ($accessop->check_controller_access($controller, array('action'=>'setOwner'))
 }
 $documentid = $_POST["documentid"];
 $keterangan = $_POST["keterangan"];
-$keperluan = $_POST["keperluan"];
+
 $origin = $_POST["origin"];
 $destiny = $_POST["destiny"];
+$kode = $_POST["kode"];
+$nomor = $_POST["nomor"];
+$baris = $_POST["baris"];
 
 $documents = $dms->getAllDocuments();
 foreach($documents as $document) {
@@ -248,9 +251,12 @@ $docsource = 'upload';
 	$controller->setParam('fulltextservice', $fulltextservice);
 	$controller->setParam('documentid', $documentid);
 	$controller->setParam('keterangan', $keterangan);
-	$controller->setParam('keperluan', $keperluan);
+
 	$controller->setParam('destiny', $destiny);
 	$controller->setParam('origin', $origin);
+	$controller->setParam('kode', $kode);
+	$controller->setParam('nomor', $nomor);
+	$controller->setParam('baris', $baris);
 	$controller->setParam('expires', $expires);
 	$controller->setParam('categories', $cats);
 	$controller->setParam('owner', $owner);

@@ -122,7 +122,11 @@ if($res){
 								echo "Approve";
 							} else if ($status == -2){
 								echo "Reject";
-							} 
+							} else if ($status == 3){
+								echo "Request Balik";
+							} else if ($status == 4){
+								echo "Tiba di ".$requesthardcopy->getOrigin();
+							}
 							echo "</td>";
 							echo "</tr>";
 						}
@@ -184,11 +188,30 @@ if($res){
 											} else if ($status == -1){
 												echo "Decline by user";
 											} else if ($status == 2){
-												echo "Approve";
+												echo "Approve"
+?>
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dokumen Laporan Customer</title>
+</head>
+<body>
+    <form action="../pdf.php" method="POS T">
+        <input type="submit" name="pdf" value="Download PDF"/>
+    </form>
+
+</body>
+</html> -->
+<?php
 											} else if ($status == -2){
 												echo "Reject";
 											} else if ($status == 3){
-												echo "Expires";
+												echo "Request Balik";
+											} else if ($status == 4){
+												echo "Tiba di ".$requesthardcopy->getOrigin();
 											} else {
 											print "<a href='../op/op.RequestTaskHard.php?id=".$requesthardcopy->getID()."&type=requesthardcopy&action=rec' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Receive"."</a>";
 											
@@ -198,9 +221,12 @@ if($res){
 											echo "</td>";
 											echo "<td>";
 											if($status == 3 ){
-											echo "Expires";
-											}else{
-											print "<a href='../op/op.RequestTaskHard.php?id=".$requesthardcopy->getID()."&type=requesthardcopy&action=ex' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Expires"."</a>";
+											print "<a href='../op/op.RequestTaskHard.php?id=".$requesthardcopy->getID()."&type=requesthardcopy&action=done' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Finish"."</a>";
+											}else if($status == 4){
+												echo "Tiba di ".$requesthardcopy->getOrigin();
+												
+											}else {
+												print"<a href='../op/op.RequestTaskHard.php?id=".$requesthardcopy->getID()."&type=requesthardcopy&action=return' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."RequestBalik"."</a>";
 											}
 											echo "</td>";
 											echo "</tr>";

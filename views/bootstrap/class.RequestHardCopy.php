@@ -84,7 +84,7 @@ $(document).ready( function() {
 	<div class="ajax" data-view="ViewFolder" data-action="navigation" data-no-spinner="true" <?php echo ($folder ? "data-query=\"requesthardcopyid=".$folder->getID()."\"" : "") ?>></div>
 <?php
 		$this->contentHeading(getMLText("request_hard_copy"));
-		$this->contentContainerStart();
+		// $this->contentContainerStart();
 ?>
 
 <form class="form-horizontal" action="../op/op.RequestHardCopy.php" id="form1" name="form1" method="post">
@@ -93,7 +93,40 @@ $(document).ready( function() {
 	<input type="hidden" name="showtree" value="<?php echo showtree();?>">
 <?php	
 
+$this->contentContainerStart();
 
+$users = $user->getFullName();
+			
+$this->formField(
+	getMLText("user_request"),
+	array(
+		'element'=>'text',
+		'id'=>'ownerid',
+		'name'=>'ownerid',
+		'value'=>$users,
+		'placeholder'=>'please input requestor',
+		'required'=>true
+	)
+);
+
+
+foreach($worklocations as $worklocation) {
+	if ($user && $worklocation->isMember($user)){
+		$options = htmlspecialchars($worklocation->getName());
+	}
+}
+$this->formField(
+	"Lokasi Requestor",	
+	array(
+		'element'=>'text',
+		'name'=>'destiny',
+		'placeholder'=>'Input work location',
+		'value'=>$options,
+		'required'=>true
+	)
+);
+
+$this->contentContainerEnd();
 
 $options = array();
 foreach($documents as $document) {
@@ -110,21 +143,6 @@ foreach($documents as $document) {
 			)
 		);
 
-			$users = $user->getFullName();
-			
-			$this->formField(
-				getMLText("user_request"),
-				array(
-					'element'=>'text',
-					'id'=>'ownerid',
-					'name'=>'ownerid',
-					'value'=>$users,
-					'placeholder'=>'please input requestor',
-					'required'=>true,
-					'disabled'=>'true'
-				)
-			);
-
 			$options = array();
 			foreach($worklocations as $worklocation) {
 					$options[] =  array($worklocation->getName(), htmlspecialchars($worklocation->getName()));
@@ -137,22 +155,6 @@ foreach($documents as $document) {
 					'class'=>'chzn-select',
 					'placeholder'=>'Input work location',
 					'options'=>$options,
-					'required'=>true
-				)
-			);
-
-			foreach($worklocations as $worklocation) {
-				if ($user && $worklocation->isMember($user)){
-					$options = htmlspecialchars($worklocation->getName());
-				}
-			}
-			$this->formField(
-				"Lokasi Tujuan",	
-				array(
-					'element'=>'text',
-					'name'=>'destiny',
-					'placeholder'=>'Input work location',
-					'value'=>$options,
 					'required'=>true
 				)
 			);
@@ -253,7 +255,7 @@ foreach($documents as $document) {
 ?>
 </form>
 <?php
-		$this->contentContainerEnd();
+		// $this->contentContainerEnd();
 		$this->contentEnd();
 		$this->htmlEndPage();
 	} /* }}} */
