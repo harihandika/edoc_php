@@ -504,6 +504,7 @@ class SeedDMS_AccessOperation {
 				'SetWorkflow',
 				'SubstituteUser',
 				'Tasks',
+				'GudangCenter',
 				'TransmittalMgr',
 				'TriggerWorkflow',
 				'UpdateDocument',

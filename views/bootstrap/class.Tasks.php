@@ -103,10 +103,10 @@ if($res){
 							echo htmlspecialchars($requestsoftcopy->getOwner()->getFullName());
 							echo "</td>";
 							echo "<td>";
-							echo htmlspecialchars(getLongReadableDate($requestsoftcopy->getDate()));
+							echo htmlspecialchars(getReadableDate($requestsoftcopy->getDate()));
 							echo "</td>";
 							echo "<td>";
-							echo htmlspecialchars(getLongReadableDate($requestsoftcopy->getExpires()));
+							echo htmlspecialchars(getReadableDate($requestsoftcopy->getExpires()));
 							echo "</td>";
 							echo "<td>";
 							if ($status == 1){
@@ -165,10 +165,10 @@ if($res){
 											echo htmlspecialchars($requestsoftcopy->getOwner()->getFullName());
 											echo "</td>";
 											echo "<td>";
-											echo htmlspecialchars(getLongReadableDate($requestsoftcopy->getDate()));
+											echo htmlspecialchars(getReadableDate($requestsoftcopy->getDate()));
 											echo "</td>";
 											echo "<td>";
-											echo htmlspecialchars(getLongReadableDate($requestsoftcopy->getExpires()));
+											echo htmlspecialchars(getReadableDate($requestsoftcopy->getExpires()));
 											echo "</td>";
 											echo "<td>";
 											$status = $requestsoftcopy->getStatus();

@@ -874,7 +874,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		$db->startTransaction();
 		//inheritAccess = true, defaultAccess = M_READ
 		$queryStr = "INSERT INTO `tblGudangCenter` (`documentid`, `keterangan`, `date`, `owner`, `inheritAccess`, `defaultAccess`,`status`,`expires`,`documentlocation`,`origin`,`destiny`,`kode`,`nomor`,`baris`) ".
-					"VALUES (".$documentid.", ".$db->qstr($keterangan).", ".$db->getCurrentTimestamp().", ".$owner->getID().",1, ".M_READ." ,0, " .(int) $expires. ", ".$db->qstr($origin).",".$db->qstr($origin).",".$db->qstr($destiny).",".$db->qstr($kode).",".$db->qstr($nomor).",".$db->qstr($baris).")";
+					"VALUES (".$documentid.", ".$db->qstr($keterangan).", ".$db->getCurrentTimestamp().", ".$owner->getID().",1, ".M_READ." ,0, " .(int) $expires. ", ".$db->qstr($origin).",".$db->qstr($origin).",".$db->qstr($destiny).",".$db->qstr($kode).",".(int)$nomor.",".(int)$baris.")";
 		if (!$db->getResult($queryStr)) {
 			$db->rollbackTransaction();
 			return false;

@@ -2915,6 +2915,25 @@ class SeedDMS_Core_User { /* {{{ */
 		return $notifications;
 	} /* }}} */
 
+	function getPICNotificationGudangCenter($type=0) { /* {{{ */
+		$db = $this->_dms->getDB();
+		$queryStr = "SELECT `tblNotify`.* FROM `tblNotify` JOIN `tblGudangCenter` ON `tblNotify`.`target` = `tblGudangCenter`.`id`";
+		if($type) {
+			$queryStr .= " AND `tblNotify`.`targetType` = ". (int) $type;
+		}
+		$resArr = $db->getResultArray($queryStr);
+		if (is_bool($resArr) && !$resArr)
+			return false;
+		$notifications = array();
+		foreach ($resArr as $row) {
+			$not = new SeedDMS_Core_Notification($row["target"], $row["targetType"], $row["userID"], $row["groupID"]);
+			$not->setDMS($this);
+			array_push($notifications, $not);
+		}
+
+		return $notifications;
+	} /* }}} */
+
 	function getPICFullName($type=0) { /* {{{ */
 		$db = $this->_dms->getDB();
 		$queryStr = "SELECT `tblNotify`.*`tblUsers`.`userID` FROM `tblNotify` LEFT JOIN `tblUsers` ON `tblNotify`.`userID` = `tblUsers`.`id`";

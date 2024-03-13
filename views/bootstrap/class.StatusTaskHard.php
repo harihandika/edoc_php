@@ -127,10 +127,10 @@ if($res) {
 			echo htmlspecialchars($user->getPICName($request->getUserID())->getFullName());
 			echo "</td>";
 			echo "<td>";
-			echo htmlspecialchars(getLongReadableDate($requesthardcopy->getDate()));
+			echo htmlspecialchars(getReadableDate($requesthardcopy->getDate()));
 			echo "</td>";
 			echo "<td>";
-			echo htmlspecialchars(getLongReadableDate($requesthardcopy->getExpires()));
+			echo htmlspecialchars(getReadableDate($requesthardcopy->getExpires()));
 			echo "</td>";
 			echo "<td>";
 			if($status == 0 ){

@@ -34,7 +34,7 @@ require_once("SeedDMS/Preview.php");
  *             2010-2012 Uwe Steinmann
  * @version    Release: @package_version@
  */
-class SeedDMS_View_StatusTasks extends SeedDMS_Bootstrap_Style {
+class SeedDMS_View_StatusGudangCenter extends SeedDMS_Bootstrap_Style {
 
 	function js() { /* {{{ */
 		header('Content-Type: application/javascript; charset=UTF-8');
@@ -50,17 +50,17 @@ class SeedDMS_View_StatusTasks extends SeedDMS_Bootstrap_Style {
 <?php
 	} /* }}} */
 
-function statusRequestSoftCopy() { /* {{{ */
+function statusGudangCenter() { /* {{{ */
 
 	$dms = $this->params['dms'];
 	$user = $this->params['user'];
-	$allRequestsoftcopy = $this->params['allrequestsoftcopy'];
+	$allGudangcenter = $this->params['allgudangcenter'];
 	$showtree = $this->params['showtree'];
 	$previewwidth = $this->params['previewWidthList'];
 	?>
 	<table id="myTable" class="table">
 		<thead>
-		<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('keperluan');?></th><th><?php print('PIC'); ?></th><th><?php printMLText('from_date'); ?></th><th><?php printMLText('to_date'); ?></th><th><?php printMLText('status'); ?></th><th></th></tr>
+		<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('origin');?></th><th><?php printMLText('destiny');?></th><th><?php printMLText('location');?></th><th><?php print('PIC'); ?></th><th><?php printMLText('from_date'); ?></th><th><?php printMLText('to_date'); ?></th><th><?php printMLText('status'); ?></th><th></th></tr>
 		</thead>
 		<tbody>
 <?php
@@ -79,17 +79,17 @@ if($res) {
 	}
 }
 
-		foreach ($allRequestsoftcopy as $requestsoftcopy) {
-			foreach ($requestsoftcopy->getOwner()->getPICNotifications(T_REQUESTSOFTCOPY) as $request){
+		foreach ($allGudangcenter as $gudangcenter) {
+			foreach ($gudangcenter->getOwner()->getPICNotificationGudangCenter(T_GUDANGCENTER) as $request){
 				foreach ($documents as $document) {
-					if($document->getID() == $requestsoftcopy->getDocumentID()){
-				if ($request->getTarget() == $requestsoftcopy->getID() && $user->getID() == $requestsoftcopy->getOwner()->getID()){
+					if($document->getID() == $gudangcenter->getDocumentID()){
+				if ($request->getTarget() == $gudangcenter->getID() && $user->getID() == $gudangcenter->getOwner()->getID()){
 			
 			echo "<td>";
 
 			$docID = $document->getID();
 			$latestContent = $document->getLatestContent();
-			$status = $requestsoftcopy->getStatus();
+			$status = $gudangcenter->getStatus();
 			$res = $user->getMandatoryApproverTasks($request->getUserID());
 			$tmp = array();
 			foreach ($res as $r) {
@@ -112,19 +112,25 @@ if($res) {
 		echo htmlspecialchars($document->getName()) ."<br />";
 		}
 
-			echo "<small>".htmlspecialchars($requestsoftcopy->getKeterangan())."</small>";
+			echo "<small>".htmlspecialchars($gudangcenter->getKeterangan())."</small>";
 			echo "</td>";
 			echo "<td>";
-			echo "<small>".htmlspecialchars($requestsoftcopy->getKeperluan())."</small>";
+			echo "<small>".htmlspecialchars($gudangcenter->getOrigin())."</small>";
+			echo "</td>";
+			echo "<td>";
+			echo "<small>".htmlspecialchars($gudangcenter->getDestiny())."</small>";
+			echo "</td>";
+			echo "<td>";
+			echo "<small>".htmlspecialchars($gudangcenter->getDocumentLocation())."</small>";
 			echo "</td>";
 			echo "<td>";
 			echo htmlspecialchars($user->getPICName($request->getUserID())->getFullName());
 			echo "</td>";
 			echo "<td>";
-			echo htmlspecialchars(getReadableDate($requestsoftcopy->getDate()));
+			echo htmlspecialchars(getReadableDate($gudangcenter->getDate()));
 			echo "</td>";
 			echo "<td>";
-			echo htmlspecialchars(getReadableDate($requestsoftcopy->getExpires()));
+			echo htmlspecialchars(getReadableDate($gudangcenter->getExpires()));
 			echo "</td>";
 			echo "<td>";
 			if($status == 0 ){
@@ -138,7 +144,9 @@ if($res) {
 			} else if ($status == -2){
 				echo "Reject";
 			} else if ($status == 3){
-				echo "Expired";
+				echo "Request Balik";
+			} else if ($status == 4){
+				echo "Tiba di ".$gudangcenter->getOrigin();
 			}
 			echo "</td>";
 			echo "</tr>";
@@ -153,19 +161,16 @@ if($res) {
 	function show() { /* {{{ */
 		$dms = $this->params['dms'];
 		$user = $this->params['user'];
-		$allRequestsoftcopy = $this->params['allrequestsoftcopy'];
+		$allGudangcenter = $this->params['allgudangcenter'];
 
-		$this->htmlStartPage(getMLText("request_soft_copy"));
+		$this->htmlStartPage(getMLText("gudang_center"));
 		$this->globalNavigation();
 		$this->contentStart();
 		$this->pageNavigation(getMLText("admin_tools"), "admin_tools");
 
-		// $this->contentHeading(getMLText("request_soft_copy"));
+	$this->contentHeading(getMLText("status_gudang_center"));
 
-	$this->contentHeading(getMLText("status"));
-
-	// $this->requestSoftCopy();
-	$this->statusRequestSoftCopy();
+	$this->statusGudangCenter();
 
 		$this->contentEnd();
 		$this->htmlEndPage();

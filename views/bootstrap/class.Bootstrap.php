@@ -510,6 +510,15 @@ class SeedDMS_Bootstrap_Style extends SeedDMS_View_Common {
 			$menuitems['user_group_management']['children']['status_tasks_hard_copy'] = array('link'=>"../out/out.StatusTaskHard.php", 'label'=>'status_tasks_hard_copy');
 			}
 			echo "   <ul class=\"nav\">\n";
+			
+			if ($accessobject->check_view_access('GudangCenter')) {
+			$menuitems['gudang_center'] = array('link'=>"#", 'label'=>'gudang_center');
+			if ($accessobject->check_view_access('GudangCenter'))
+			$menuitems['gudang_center']['children']['terima_gudang_center'] = array('link'=>"../out/out.TerimaGudangCenter.php", 'label'=>'terima_gudang_center');
+			if ($accessobject->check_view_access('GudangCenter'))
+			$menuitems['gudang_center']['children']['status_gudang_center'] = array('link'=>"../out/out.StatusGudangCenter.php", 'label'=>'status_gudang_center');
+	}
+	echo "   <ul class=\"nav\">\n";
 
 //  ************* Calender
 			if ($this->params['enablecalendar'] && $accessobject->check_view_access('Calendar')) $menuitems['calendar'] = array('link'=>'../out/out.Calendar.php?mode='.$this->params['calendardefaultview'], 'label'=>"calendar");

@@ -49,18 +49,11 @@ class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 		/**
 	 * The comment of the user group
 	 *
-	 * @var string
-	 */
-	protected $_keperluan;
-
-		/**
-	 * The comment of the user group
-	 *
-	 * @var string
+	 * @var integer
 	 */
 	protected $_status;
 	/**
-	 * @var string
+	 * @var integer
 	 */
 	protected $_date;
 
@@ -113,7 +106,7 @@ class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 	protected $_parentID;
 
 		/**
-	 * @var string
+	 * @var integer
 	 */
 	protected $_expires;
 
@@ -131,6 +124,18 @@ class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 	 * @var string
 	 */
 	protected $_destiny;
+	/**
+	 * @var string
+	 */
+	protected $_kode;
+	/**
+	 * @var integer
+	 */
+	protected $_nomor;
+	/**
+	 * @var integer
+	 */
+	protected $_baris;
 
 		/**
 	 * SeedDMS_Core_Folder constructor.
@@ -147,13 +152,15 @@ class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 	 * @param $documentlocation
 	 * @param $origin
 	 * @param $destiny
+	 * @param $kode
+	 * @param $nomor
+	 * @param $baris
 	 */
 
-	function __construct($id, $documentID, $keterangan, $keperluan, $date, $ownerID, $inheritAccess, $defaultAccess, $status, $expires,$documentlocation, $origin, $destiny) { /* {{{ */
+	function __construct($id, $documentID, $keterangan,  $date, $ownerID, $inheritAccess, $defaultAccess, $status, $expires,$documentlocation, $origin, $destiny, $kode, $nomor, $baris) { /* {{{ */
 		$this->_id = $id;
 		$this->_documentID = (int) $documentID;
 		$this->_keterangan = $keterangan;
-		$this->_keperluan = $keperluan;
 		$this->_date = $date;
 		$this->_ownerID = $ownerID;
 		$this->_inheritAccess = $inheritAccess;
@@ -163,6 +170,9 @@ class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 		$this->_documentlocation = $documentlocation;
 		$this->_origin = $origin;
 		$this->_destiny = $destiny;
+		$this->_kode = $kode;
+		$this->_nomor = $nomor;
+		$this->_baris = $baris;
 	} /* }}} */
 
 	/**
@@ -175,7 +185,7 @@ class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 	public static function getInstanceByData($resArr, $dms) { /* {{{ */
 		$classname = $dms->getClassname('gudangcenter');
 		/** @var SeedDMS_Core_GudangCenter $gudangcenter */
-		$gudangcenter = new self($resArr["id"], $resArr["documentID"], $resArr["keterangan"], $resArr["keperluan"], $resArr["date"],$resArr["owner"], $resArr["inheritAccess"], $resArr["defaultAccess"], $resArr["status"],$resArr["expires"], $resArr["documentlocation"],$resArr["origin"],$resArr["destiny"]);
+		$gudangcenter = new self($resArr["id"], $resArr["documentID"], $resArr["keterangan"], $resArr["date"],$resArr["owner"], $resArr["inheritAccess"], $resArr["defaultAccess"], $resArr["status"],$resArr["expires"], $resArr["documentlocation"],$resArr["origin"],$resArr["destiny"],$resArr["kode"],$resArr["nomor"],$resArr["baris"]);
 		$gudangcenter->setDMS($dms);
 		$gudangcenter = $gudangcenter->applyDecorators();
 		return $gudangcenter;
@@ -212,7 +222,7 @@ class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 
 			$gudangcenters = array();
 			for ($i = 0; $i < count($resArr); $i++) {
-				$gudangcenter = new self($resArr[$i]["id"], $resArr[$i]["documentID"], $resArr[$i]["keterangan"],$resArr[$i]["keperluan"],$resArr[$i]["date"],$resArr[$i]["owner"],$resArr[$i]["inheritAccess"],$resArr[$i]["defaultAccess"],$resArr[$i]["status"],$resArr[$i]["expires"],$resArr[$i]["documentlocation"],$resArr[$i]["origin"],$resArr[$i]["destiny"]);
+				$gudangcenter = new self($resArr[$i]["id"], $resArr[$i]["documentID"], $resArr[$i]["keterangan"],$resArr[$i]["date"],$resArr[$i]["owner"],$resArr[$i]["inheritAccess"],$resArr[$i]["defaultAccess"],$resArr[$i]["status"],$resArr[$i]["expires"],$resArr[$i]["documentlocation"],$resArr[$i]["origin"],$resArr[$i]["destiny"],$resArr[$i]["kode"],$resArr[$i]["nomor"],$resArr[$i]["baris"]);
 				$gudangcenter->setDMS($dms);
 				$gudangcenters[$i] = $gudangcenter;
 			}
@@ -243,6 +253,9 @@ class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 	 * @return string documentid of hardcopy
 	 */
 	public function getDocumentID() { return $this->_documentID; }
+	public function getKode() { return $this->_kode; }
+	public function getNomor() { return $this->_nomor; }
+	public function getBaris() { return $this->_baris; }
 
 	/**
 	 * Set the name of the folder.
@@ -281,27 +294,6 @@ class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 		$this->_keterangan = $newKeterangan;
 		return true;
 	} /* }}} */
-
-	/**
-	 * @return string
-	 */
-	public function getKeperluan() { return $this->_keperluan; }
-
-	/**
-	 * @param $newKeperluan
-	 * @return bool
-	 */
-	public function setKeperluan($newKeperluan) { /* {{{ */
-		$db = $this->_dms->getDB();
-
-		$queryStr = "UPDATE `tblGudangCenter` SET `keperluan` = " . $db->qstr($newKeperluan) . " WHERE `id` = ". $this->_id;
-		if (!$db->getResult($queryStr))
-			return false;
-
-		$this->_keperluan = $newKeperluan;
-		return true;
-	} /* }}} */
-
 
 	/**
 	 * @return string
@@ -380,7 +372,7 @@ class SeedDMS_Core_GudangCenter extends SeedDMS_Core_Object { /* {{{ */
 	public function setStatus($newStatus) { /* {{{ */
 		$db = $this->_dms->getDB();
 
-		$queryStr = "UPDATE `tblGudangCenter` SET `status` = " . $db->qstr($newStatus) . " WHERE `id` = ". $this->_id;
+		$queryStr = "UPDATE `tblGudangCenter` SET `status` = " . (int)$newStatus . " WHERE `id` = ". $this->_id;
 		if (!$db->getResult($queryStr))
 			return false;
 

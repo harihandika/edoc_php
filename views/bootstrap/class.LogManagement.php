@@ -35,7 +35,6 @@ class SeedDMS_View_LogManagement extends SeedDMS_Bootstrap_Style {
 		$accessop = $this->params['accessobject'];
 		$print_header = true;
 		foreach ($entries as $entry){
-
 			if ($print_header){
 				print "<form action=\"out.RemoveLog.php\" method=\"get\">\n";
 				print "<table class=\"table-condensed\">\n";
