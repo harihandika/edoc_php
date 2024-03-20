@@ -57,6 +57,7 @@ function requestTaskHard() { /* {{{ */
 	$allRequesthardcopy = $this->params['allrequesthardcopy'];
 	$showtree = $this->params['showtree'];
 	$previewwidth = $this->params['previewWidthList'];
+
 	?>
 	<table id="myTable" class="table">
 		<thead>
@@ -116,7 +117,7 @@ if($res){
 							echo "</td>";
 							echo "<td>";
 							if ($status == 1){
-								print "<a href='../op/op.RequestTaskHard.php?id=".$requesthardcopy->getID()."&type=requesthardcopy&action=app' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Approve"."</a>";
+								print "<a href='../op/op.RequestTaskHard.php?id=".$requesthardcopy->getID()."&ownerid=".$requesthardcopy->getOwner()->getID()."&type=requesthardcopy&action=app' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> Approve</a>";
 								print "<a href='../op/op.RequestTaskHard.php?id=".$requesthardcopy->getID()."&type=requesthardcopy&action=rej' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Reject"."</a>";
 							} else if ($status == 2){
 								echo "Approve";
@@ -223,8 +224,7 @@ if($res){
 											if($status == 3 ){
 											print "<a href='../op/op.RequestTaskHard.php?id=".$requesthardcopy->getID()."&type=requesthardcopy&action=done' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."Finish"."</a>";
 											}else if($status == 4){
-												echo "Tiba di ".$requesthardcopy->getOrigin();
-												
+	
 											}else {
 												print"<a href='../op/op.RequestTaskHard.php?id=".$requesthardcopy->getID()."&type=requesthardcopy&action=return' class=\"btn btn-mini\"><i class=\"fa fa-remove\"></i> "."RequestBalik"."</a>";
 											}

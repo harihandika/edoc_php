@@ -39,6 +39,7 @@ class SeedDMS_Controller_RequestHardCopy extends SeedDMS_Controller_Common {
 		$origin = $this->getParam('origin');
 		$destiny = $this->getParam('destiny');
 		$expires = $this->getParam('expires');
+		$date = $this->getParam('date');
 		$owner = $this->getParam('owner');
 		$attributes = $this->getParam('attributes');
 		$version_comment = $this->getParam('versioncomment');
@@ -77,7 +78,7 @@ class SeedDMS_Controller_RequestHardCopy extends SeedDMS_Controller_Common {
 
 		$requestHardCopy = $this->callHook('requestHardCopy');
 		if($requestHardCopy === null) {
-			$requestHardCopy = $folder->requestHardCopy($documentid, $keterangan, $keperluan, $owner,  $attributes, $reviewers, $approvers, $status, $expires, $origin, $destiny);
+			$requestHardCopy = $folder->requestHardCopy($documentid, $keterangan, $keperluan, $owner,  $attributes, $reviewers, $approvers, $status, $date, $expires, $origin, $destiny);
 			if (!is_object($requestHardCopy)) {
 				$this->errormsg = "error_occured";
 				return false;

@@ -1167,6 +1167,7 @@ class SeedDMS_Core_RequestHardCopy extends SeedDMS_Core_Object { /* {{{ */
 	} /* }}} */
 
 	function approveNotify() { /* {{{ */
+
 		$db = $this->_dms->getDB();
 
 		/* Verify that user / group exists. */
@@ -1224,6 +1225,47 @@ class SeedDMS_Core_RequestHardCopy extends SeedDMS_Core_Object { /* {{{ */
 
 		if (!$db->getResult($queryStr))
 			return false;
+		return true;
+	} /* }}} */
+
+	function transferToUser($newuser) { /* {{{ */
+
+		$db = $this->_dms->getDB();
+
+
+		// if($newuser->getId() == $this->_ownerID)
+		// 	return true;
+
+		$db->startTransaction();
+		$queryStr = "UPDATE `tblDocuments` SET `owner` = ".$newuser->getId()." WHERE `id` = " . $this->_documentID;
+		if (!$db->getResult($queryStr)) {
+			$db->rollbackTransaction();
+			return false;
+		}
+
+
+		$queryStr = "UPDATE `tblDocumentLocks` SET `userID` = ".$newuser->getId()." WHERE `document` = " . $this->_documentID . " AND `userID` = ".$this->_ownerID;
+		if (!$db->getResult($queryStr)) {
+			$db->rollbackTransaction();
+			return false;
+		}
+
+		$queryStr = "UPDATE `tblDocumentLinks` SET `userID` = ".$newuser->getId()." WHERE `document` = " . $this->_documentID . " AND `userID` = ".$this->_ownerID;
+		if (!$db->getResult($queryStr)) {
+			$db->rollbackTransaction();
+			return false;
+		}
+
+		$queryStr = "UPDATE `tblDocumentFiles` SET `userID` = ".$newuser->getId()." WHERE `document` = " . $this->_documentID . " AND `userID` = ".$this->_ownerID;
+		if (!$db->getResult($queryStr)) {
+			$db->rollbackTransaction();
+			return false;
+		}
+
+		$this->_ownerID = $newuser->getID();
+		$this->_owner = $newuser;
+
+		$db->commitTransaction();
 		return true;
 	} /* }}} */
 

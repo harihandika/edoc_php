@@ -44,6 +44,8 @@ if (!is_object($document)) {
 	UI::exitError(getMLText("document_title", array("documentname" => getMLText("invalid_doc_id"))),getMLText("invalid_doc_id"));
 }
 
+$worklocations = $dms->getAllWorkLocations();
+
 $folder = $document->getFolder();
 
 if ($document->getAccessMode($user) < M_READ || !$document->getLatestContent()) {
@@ -75,6 +77,7 @@ if($view) {
 	$view->setParam('fulltextservice', $fulltextservice);
 	$view->setParam('folder', $folder);
 	$view->setParam('document', $document);
+	$view->setParam('worklocations', $worklocations);
 	$view->setParam('showtree', showtree());
 	$view->setParam('accessobject', $accessop);
 	$view->setParam('viewonlinefiletypes', $settings->_viewOnlineFileTypes);

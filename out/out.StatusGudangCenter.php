@@ -44,7 +44,6 @@ if (is_bool($allGudangcenter)) {
 }
 
 if($view) {
-	$view->setParam('showtree', showtree());
 	$view->setParam('orderby', $orderby);
 	$view->setParam('orderdir', $orderdir);
 	$view->setParam('showtree', showtree());

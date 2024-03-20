@@ -144,6 +144,7 @@ if($res){
 											$docID = $document->getID();
 											$latestContent = $document->getLatestContent();
 											$res = $user->getMandatoryApprovers();
+			if($res){
 			foreach ($res as $r) {
 				if($r['approverUserID'] > 0) {
 					$u = $dms->getUser($r['approverUserID']);
@@ -152,6 +153,7 @@ if($res){
 			};
 			foreach($tmp as $t){
 			}
+		}
 								
 											echo "<img draggable=\"false\" class=\"mimeicon\" width=\"".$previewwidth."\" src=\"".$this->getMimeIcon($latestContent->getFileType())."\" ".($previewwidth ? "width=\"".$previewwidth."\"" : "")."\" title=\"".htmlspecialchars($latestContent->getMimeType())."\">". "      ".
 											"<a draggable=\"false\" href=\"../out/out.ViewDocumentReq.php?documentid=".$docID."&showtree=".$showtree."\">" . htmlspecialchars($document->getName()) . "</a>"."<br />";

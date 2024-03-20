@@ -798,7 +798,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		return $requestSoftCopy;
 	} /* }}} */
 
-	function requestHardCopy($documentid, $keterangan, $keperluan, $owner, $attributes=array(),$reviewers=array(), $approvers=array(), $status=0, $expires, $origin, $destiny) { /* {{{ */
+	function requestHardCopy($documentid, $keterangan, $keperluan, $owner, $attributes=array(),$reviewers=array(), $approvers=array(), $status=0, $date, $expires, $origin, $destiny) { /* {{{ */
 		$db = $this->_dms->getDB();
 
 		// Set the folderList of the folder
@@ -815,7 +815,7 @@ class SeedDMS_Core_Folder extends SeedDMS_Core_Object {
 		$db->startTransaction();
 		//inheritAccess = true, defaultAccess = M_READ
 		$queryStr = "INSERT INTO `tblRequestHardCopy` (`documentid`, `keterangan`, `keperluan`, `date`, `owner`, `inheritAccess`, `defaultAccess`,`status`,`expires`,`documentlocation`,`origin`,`destiny`) ".
-					"VALUES (".$documentid.", ".$db->qstr($keterangan).",".$db->qstr($keperluan).", ".$db->getCurrentTimestamp().", ".$owner->getID().",1, ".M_READ." ,0, " .(int) $expires. ", ".$db->qstr($origin).",".$db->qstr($origin).",".$db->qstr($destiny).")";
+					"VALUES (".$documentid.", ".$db->qstr($keterangan).",".$db->qstr($keperluan).", ".(int) $date.", ".$owner->getID().",1, ".M_READ." ,0, " .(int) $expires. ", ".$db->qstr($origin).",".$db->qstr($origin).",".$db->qstr($destiny).")";
 		if (!$db->getResult($queryStr)) {
 			$db->rollbackTransaction();
 			return false;

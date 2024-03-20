@@ -56,6 +56,7 @@ if (!isset($_POST["userid"]) || !is_numeric($_POST["userid"]) || intval($_POST["
 $userid = $_POST["userid"];
 $newuser = $dms->getUser($userid);
 
+
 if (!is_object($newuser)) {
 	UI::exitError(getMLText("document_title", array("documentname" => getMLText("invalid_doc_id"))),getMLText("invalid_doc_id"));
 }

@@ -333,6 +333,7 @@ $(document).ready( function() {
 				'value'=>($currUser ? htmlspecialchars($currUser->getEmail()) : '')
 			)
 		);
+		
 		$options = array();
 		foreach($worklocations as $worklocation) {
 			$options[] = array($worklocation->getID(), htmlspecialchars($worklocation->getName()), ($currUser && $worklocation->isMember($currUser)));

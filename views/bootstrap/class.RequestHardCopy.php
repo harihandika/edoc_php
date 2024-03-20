@@ -159,32 +159,32 @@ foreach($documents as $document) {
 				)
 			);
 
-		$res=$user->getMandatoryReviewers();
-				$tmp = array();
-				if($res) {
-					foreach ($res as $r) {
-						if($r['reviewerUserID'] > 0) {
-							$u = $dms->getUser($r['reviewerUserID']);
-							$tmp[] =  htmlspecialchars($u->getFullName().' ('.$u->getLogin().')');
-						}
-					}
-				}
-				$options = array();
-				$allUsers = $dms->getAllUsers($sortusersinlist);
-				foreach ($allUsers as $userObj) {
-						$options[] = array($userObj->getID(), htmlspecialchars($userObj->getLogin() . " - " . $userObj->getFullName()));
-				}		
-				$this->formField(
-					getMLText("pilih_pic"),
-					array(
-						'element'=>'select',
-						'name'=>'notification_users[]',
-						'class'=>'chzn-select',
-						'attributes'=>array(array('data-placeholder', getMLText('select_pic'))),
-						'options'=>$options
-					),
-					array('field_wrap'=>array('', ($tmp ? '<div class="mandatories"><span>'.getMLText('mandatory_reviewers').':</span> '.implode(', ', $tmp).'</div>' : '')))
-				);
+		// $res=$user->getMandatoryReviewers();
+		// 		$tmp = array();
+		// 		if($res) {
+		// 			foreach ($res as $r) {
+		// 				if($r['reviewerUserID'] > 0) {
+		// 					$u = $dms->getUser($r['reviewerUserID']);
+		// 					$tmp[] =  htmlspecialchars($u->getFullName().' ('.$u->getLogin().')');
+		// 				}
+		// 			}
+		// 		}
+		// 		$options = array();
+		// 		$allUsers = $dms->getAllUsers($sortusersinlist);
+		// 		foreach ($allUsers as $userObj) {
+		// 				$options[] = array($userObj->getID(), htmlspecialchars($userObj->getLogin() . " - " . $userObj->getFullName()));
+		// 		}		
+		// 		$this->formField(
+		// 			getMLText("pilih_pic"),
+		// 			array(
+		// 				'element'=>'select',
+		// 				'name'=>'notification_users[]',
+		// 				'class'=>'chzn-select',
+		// 				'attributes'=>array(array('data-placeholder', getMLText('select_pic'))),
+		// 				'options'=>$options
+		// 			),
+		// 			array('field_wrap'=>array('', ($tmp ? '<div class="mandatories"><span>'.getMLText('mandatory_reviewers').':</span> '.implode(', ', $tmp).'</div>' : '')))
+		// 		);
 
 		$options = array();
 		$options[] = array('Keperluan Audit','Keperluan Audit');
@@ -202,8 +202,12 @@ foreach($documents as $document) {
 
 
 		$this->formField(
-			getMLText("periode_pinjam"),
-			// $this->getDateChooser((''), "expdate", $this->params['session']->getLanguage())
+			getMLText("tanggal_pinjam"),
+			$this->getDateChooser('', "date", $this->params['session']->getLanguage())
+		);
+
+		$this->formField(
+			getMLText("tanggal_berakhir"),
 			$this->getDateChooser('', "expdate", $this->params['session']->getLanguage())
 		);
 

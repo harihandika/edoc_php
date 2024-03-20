@@ -81,8 +81,10 @@ $keperluan = $_POST["keperluan"];
 
 $documents = $dms->getAllDocuments();
 foreach($documents as $document) {
-	if($document->getID() == $documentid)
+	if($document->getID() == $documentid){
 	$names = array(htmlspecialchars($document->getName()));
+	$notuserid = $document->getOwner()->getID();
+}
 }
 $name = $names[0];
 
@@ -149,14 +151,13 @@ if($settings->_workflowMode == 'traditional' || $settings->_workflowMode == 'tra
 	}
 	
 	$notusers = array();
-if(!empty($_POST['notification_users'])) {
-	foreach($_POST['notification_users'] as $notuserid) {
+
 		$notuser = $dms->getUser($notuserid);
 		if($notuser) {
 			$notusers[] = $notuser;
-		}
-	}
-}
+
+		};
+
 $notgroups = array();
 if(!empty($_POST['notification_groups'])) {
 	foreach($_POST['notification_groups'] as $notgroupid) {

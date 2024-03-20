@@ -50,6 +50,9 @@ if($view) {
 	$view->setParam('allworklocations', $worklocations);
 	$view->setParam('documents', $documents);
 	$view->setParam('sortusersinlist', $settings->_sortUsersInList);
+	$view->setParam('showtree', showtree());
+	$view->setParam('previewWidthList', $settings->_previewWidthList);
+	$view->setParam('previewConverters', isset($settings->_converters['preview']) ? $settings->_converters['preview'] : array());
 	$view($_GET);
 	exit;
 }

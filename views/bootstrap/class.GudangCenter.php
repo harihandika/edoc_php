@@ -74,6 +74,8 @@ $(document).ready( function() {
 		$documents = $this->params['documents'];
 		$accessop = $this->params['accessobject'];
 		$folderid = $folder->getId();
+		$showtree = $this->params['showtree'];
+		$previewwidth = $this->params['previewWidthList'];
 
 		$this->htmlAddHeader('<script type="text/javascript" src="../views/'.$this->theme.'/vendors/jquery-validation/jquery.validate.js"></script>'."\n", 'js');
 
@@ -128,21 +130,6 @@ $this->formField(
 
 $this->contentContainerEnd();
 
-$options = array();
-foreach($documents as $document) {
-	$options[] = array(htmlspecialchars($document->getID()), htmlspecialchars($document->getName()) . '   --    ' . htmlspecialchars($document->getOwner()->getFullName()));
-}
-		$this->formField(
-			getMLText("name_document"),
-			array(
-				'element'=>'select',
-				'name'=>'documentid',
-				'required'=>true,
-				'class'=>'chzn-select',
-				'options'=>$options
-			)
-		);
-
 			$options = array();
 			foreach($worklocations as $worklocation) {
 					$options[] =  array($worklocation->getName(), htmlspecialchars($worklocation->getName()));
@@ -186,75 +173,42 @@ foreach($documents as $document) {
 					array('field_wrap'=>array('', ($tmp ? '<div class="mandatories"><span>'.getMLText('mandatory_reviewers').':</span> '.implode(', ', $tmp).'</div>' : '')))
 				);
 
-				$this->formField(
-					getMLText("kode_rak"),
-					array(
-						'element'=>'input',
-						'type'=>'text',
-						'id'=>'kode',
-						'name'=>'kode',
-						'required'=>true
-					)
-				);
+echo '<div class="row-fluid" style="margin-left: 80px;">';
 
-				$options = array();
-				$options[] = array('1','rak 1');
-				$options[] = array('2','rak 2');
-				$options[] = array('3','rak 3');
-				$options[] = array('4','rak 4');
-				$options[] = array('5','rak 5');
-				$options[] = array('6','rak 6');
-				$options[] = array('7','rak 7');
-				$options[] = array('8','rak 8');
-				$options[] = array('9','rak 9');
-				$options[] = array('10','rak 10');
-				$this->formField(
-					getMLText("nomor_rak"),
-					array(
-						'element'=>'select',
-						'name'=>'nomor',
-						'options'=>$options
-					)
-				);
-				
-				$options = array();
-				$options[] = array('1','baris 1');
-				$options[] = array('2','baris 2');
-				$options[] = array('3','baris 3');
-				$options[] = array('4','baris 4');
-				$options[] = array('5','baris 5');
-				$options[] = array('6','baris 6');
-				$options[] = array('7','baris 7');
-				$options[] = array('8','baris 8');
-				$options[] = array('9','baris 9');
-				$options[] = array('10','baris 10');
-		
-				$this->formField(
-					getMLText("baris_rak"),
-					array(
-						'element'=>'select',
-						'name'=>'baris',
-						'options'=>$options
-					)
-				);
+?>
+	<table id="myTable" class="table">
+	<thead>
+	<tr><th><?php printMLText('name'); ?></th><th><?php printMLText('creation_date');?></th><th><?php printMLText('owner');?></th>
+	<th></th></tr>
+	</thead>
+	<tbody>
+<?php
+
+foreach($documents as $document){
+	$docID = $document->getID();
+	$latestContent = $document->getLatestContent();
+
+if($user->getID()==$document->getOwner()->getID()){
+	// echo '<div class="row-fluid" style="margin-top: 20px;">';
+	
+	echo "<td>";
+	echo "<input style=\"margin-right:10px\" type=\"checkbox\" name=\"document[]\"value=\"".$document->getName()."\"/>";
+	echo "<a style=\"margin-left:10px\" draggable=\"false\" href=\"../out/out.ViewDocumentReq.php?documentid=".$docID."&showtree=".$showtree."\">" . htmlspecialchars($document->getName()) . "</a>"."<br />\n";
+
+	echo "</td>";
+	echo "<td>";
+	echo htmlspecialchars(getReadableDate($document->getDate()));
+	echo "</td>";
+	echo "<td>";
+	echo htmlspecialchars($document->getOwner()->getFullName());
+	echo "</td>";
+
+	echo "</tr>";
+}
+};
+?></table><?php
 
 
-		$this->formField(
-			getMLText("periode_pinjam"),
-			$this->getDateChooser('', "expdate", $this->params['session']->getLanguage())
-		);
-
-
-		$this->formField(
-			getMLText("keterangan"),
-			array(
-				'element'=>'textarea',
-				'name'=>'keterangan',
-				'rows'=>4,
-				'cols'=>80,
-				'required'=>$strictformcheck
-			)
-		);
 
 		$attrdefs = $dms->getAllAttributeDefinitions(array(SeedDMS_Core_AttributeDefinition::objtype_folder, SeedDMS_Core_AttributeDefinition::objtype_all));
 		if($attrdefs) {
@@ -284,7 +238,7 @@ foreach($documents as $document) {
 			echo $arrs;
 		}
 
-		$this->formSubmit("<i class=\"fa fa-save\"></i> ".getMLText('gudang_center'));
+		$this->formSubmit("<i class=\"fa fa-save\"></i> ".getMLText('kirim_gudang_center'));
 ?>
 </form>
 <?php

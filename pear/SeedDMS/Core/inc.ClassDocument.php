@@ -345,8 +345,11 @@ class SeedDMS_Core_Document extends SeedDMS_Core_Object { /* {{{ */
 		$db = $dms->getDB();
 //		$queryStr = "SELECT * FROM `tblDocuments` WHERE `id` = " . (int) $id;
 		$queryStr = "SELECT `tblDocuments`.*, `tblDocumentLocks`.`userID` as `lock` FROM `tblDocuments` LEFT JOIN `tblDocumentLocks` ON `tblDocuments`.`id` = `tblDocumentLocks`.`document` WHERE `id` = " . (int) $id;
-		if($dms->checkWithinRootDir)
+		if($dms->checkWithinRootDir == false){
 			// $queryStr .= " AND `folderList` LIKE '%:".$dms->rootFolderID.":%'";
+		} else {
+
+		}
 		$resArr = $db->getResultArray($queryStr);
 		if (is_bool($resArr) && $resArr == false)
 			return false;

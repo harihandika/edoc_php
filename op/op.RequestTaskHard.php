@@ -26,6 +26,8 @@ if ($_GET["type"]=="requesthardcopy"){
 	}else if($_GET["action"]=="app"){
 		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
 		$requesthardcopyid = $_GET["id"];
+		$ownerid = $_GET["ownerid"];
+		$newuser = $dms->getUser($ownerid);
 
 	}else if($_GET["action"]=="rej"){
 		if (!isset($_GET["id"])) UI::exitError(getMLText("my_account"),getMLText("error_occured"));
@@ -56,14 +58,17 @@ if ($_GET["type"]=="requesthardcopy"){
 	// if ($document->getAccessMode($user) < M_READ) 
 	// 	UI::exitError(getMLText("my_account"),getMLText("error_occured"));
 
-	if ($_GET["action"]=="add") $requesthardcopy->addNotify($userid, true);
-	else if ($_GET["action"]=="del") $requesthardcopy->removeNotify($userid, true);
-	else if ($_GET["action"]=="app") $requesthardcopy->approveNotify($userid, true);
-	else if ($_GET["action"]=="rej")$requesthardcopy->rejectNotify($userid, true);
-	else if ($_GET["action"]=="rec")$requesthardcopy->receiveNotify($userid, true);
-	else if ($_GET["action"]=="dec") $requesthardcopy->declineNotify($userid, true);
-	else if ($_GET["action"]=="return") $requesthardcopy->expiredNotify($userid, true);
-	else if ($_GET["action"]=="done") $requesthardcopy->finishNotify($userid, true);
+	if ($_GET["action"]=="add") $requesthardcopy->addNotify();
+	else if ($_GET["action"]=="del") $requesthardcopy->removeNotify();
+	else if ($_GET["action"]=="app") {
+		$requesthardcopy->approveNotify();
+		$requesthardcopy->transferToUser($newuser);
+	}
+	else if ($_GET["action"]=="rej")$requesthardcopy->rejectNotify();
+	else if ($_GET["action"]=="rec")$requesthardcopy->receiveNotify();
+	else if ($_GET["action"]=="dec") $requesthardcopy->declineNotify();
+	else if ($_GET["action"]=="return") $requesthardcopy->expiredNotify();
+	else if ($_GET["action"]=="done") $requesthardcopy->finishNotify();
 
 }
 

@@ -185,6 +185,7 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		$user = $this->params['user'];
 		$document = $this->params['document'];
 		$checkoutdir = $this->params['checkOutDir'];
+		$worklocations = $this->params['worklocations'];
 
 		$txt = $this->callHook('documentInfos', $document);
 		if(is_string($txt))
@@ -275,7 +276,28 @@ class SeedDMS_View_ViewDocument extends SeedDMS_Bootstrap_Style {
 		<td><?php printMLText("creation_date");?>:</td>
 		<td><?php print getLongReadableDate($document->getDate()); ?></td>
 		</tr>
+		
 <?php
+$userinfo = $dms->getUser($document->getOwner()->getID());
+$userinfos = $userinfo->getWorkLocations();
+
+if($userinfos != null) {
+
+foreach($userinfos as $userwork){
+	$work = $userwork->getName();
+}
+?>
+		<tr>
+		<td><?php printMLText("document_location");?>:</td>
+		<td>
+			<?php
+
+			print htmlspecialchars($work);?>
+		</td>
+		</tr>
+<?php
+		}
+		
 		if($document->expires()) {
 ?>
 		<tr>

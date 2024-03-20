@@ -32,7 +32,7 @@ $tmp = explode('.', basename($_SERVER['SCRIPT_FILENAME']));
 $controller = Controller::factory($tmp[1], array('dms'=>$dms, 'user'=>$user));
 $accessop = new SeedDMS_AccessOperation($dms, $user, $settings);
 if ($accessop->check_controller_access($controller, $_POST)) {
-	UI::exitError(getMLText("document_title", array("documentname" => "")),getMLText("access_denied"));
+	// UI::exitError(getMLText("document_title", array("documentname" => "")),getMLText("access_denied"));
 }
 
 $documentid = $_GET["documentid"];

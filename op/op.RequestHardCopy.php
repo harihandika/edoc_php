@@ -64,10 +64,14 @@ $destiny = $_POST["destiny"];
 
 $documents = $dms->getAllDocuments();
 foreach($documents as $document) {
-	if($document->getID() == $documentid)
+	if($document->getID() == $documentid){
 	$names = array(htmlspecialchars($document->getName()));
+	$notuserid = $document->getOwner()->getID();
+}
 }
 $name = $names[0];
+
+$date = makeTsFromDate($_POST["date"]);
 
 $expires = makeTsFromDate($_POST["expdate"]);
 
@@ -125,14 +129,13 @@ if($settings->_workflowMode == 'traditional' || $settings->_workflowMode == 'tra
 	}
 	
 	$notusers = array();
-if(!empty($_POST['notification_users'])) {
-	foreach($_POST['notification_users'] as $notuserid) {
+
 		$notuser = $dms->getUser($notuserid);
 		if($notuser) {
 			$notusers[] = $notuser;
-		}
-	}
-}
+
+		};
+
 $notgroups = array();
 if(!empty($_POST['notification_groups'])) {
 	foreach($_POST['notification_groups'] as $notgroupid) {
@@ -252,6 +255,7 @@ $docsource = 'upload';
 	$controller->setParam('destiny', $destiny);
 	$controller->setParam('origin', $origin);
 	$controller->setParam('expires', $expires);
+	$controller->setParam('date', $date);
 	$controller->setParam('categories', $cats);
 	$controller->setParam('owner', $owner);
 	$controller->setParam('reviewers', $reviewers);
